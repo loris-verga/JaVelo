@@ -1,6 +1,8 @@
 package ch.epfl.javelo;
 /**
- * class Math2
+ * Classe Math2
+ *
+ * La classe Math2 offre des méthodes statiques permettant d'effectuer certains calculs mathématiques.
  *
  * @author Juan Bautista Iaconucci (342153)
  */
@@ -11,15 +13,15 @@ public final class Math2 {
     private Math2() {}
 
     /**
-     * Retourne la partie entiere de la division de x par y
+     * Retourne la partie entière de la division de x par y
      *
      * @param x
-     *            la coordonnees x (ne doit pas etre negatif)
+     *            la coordonnée x (ne doit pas être negative)
      * @param y
-     *            la coordonnees y (ne doit pas etre negatif et non nul)
+     *            la coordonnée y (ne doit pas être negative et non nul)
      * @throws IllegalArgumentException
-     *             si x est negatif ou y est nul ou negatif
-     * @return la partie entiere de la division de x par y
+     *             si x est négatif ou y est nul ou négatif
+     * @return la partie entière de la division de x par y
      *
      */
     public static int ceilDiv(int x, int y){
@@ -119,6 +121,10 @@ public final class Math2 {
      */
     public static double dotProduct(double uX, double uY, double vX, double vY){
         //todo utiliser Math.fma ici mais je ne vois pas comment?
+
+        //todo Loris: Je pense qu'il faudra demander à un assistant
+
+
         //return Math.fma(uX,vX,Math.fma(uY,vY,0));
         //comme ça??
         return uX*vX + uY*vY;
