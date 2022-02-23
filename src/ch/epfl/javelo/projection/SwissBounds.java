@@ -39,7 +39,7 @@ public final class SwissBounds {
      */
     public static boolean containsEN(double e, double n){
 
-        if (e > MIN_E && e < MAX_E && n > MIN_N && n < MAX_N) {
+        if (e >= MIN_E && e <= MAX_E && n >= MIN_N && n <= MAX_N) {
             return true;
         }
         else {
