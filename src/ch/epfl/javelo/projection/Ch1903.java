@@ -23,7 +23,7 @@ public class Ch1903 {
         double longitude = Math.toDegrees(lon);
         double latitude = Math.toDegrees(lat);
         double lambda_un = Math.pow(10, -4) * (3600 * longitude - 26782.5);
-        double phi_un = (3600 * latitude - 169028.66);
+        double phi_un = Math.pow(10, -4) * (3600 * latitude - 169028.66);
         double e = 2600072.37
                 +211455.93 * phi_un
                 -10938.51 * lambda_un * phi_un
