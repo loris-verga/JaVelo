@@ -25,10 +25,10 @@ public class Ch1903 {
         double lambda_un = Math.pow(10, -4) * (3600 * longitude - 26782.5);
         double phi_un = Math.pow(10, -4) * (3600 * latitude - 169028.66);
         double e = 2600072.37
-                +211455.93 * phi_un
+                +211455.93 * lambda_un
                 -10938.51 * lambda_un * phi_un
-                -0.36 * lambda_un * phi_un * phi_un
-                -44.54 * phi_un * phi_un * phi_un;
+                -0.36 * lambda_un * Math.pow(phi_un, 2)
+                -44.54 * Math.pow(lambda_un, 3);
         return e;
 
     }
@@ -45,7 +45,7 @@ public class Ch1903 {
         double latitude = Math.toDegrees(lat);
 
         double lambda_un = Math.pow(10, -4) * (3600 * longitude - 26782.5);
-        double phi_un = (3600 * latitude - 169028.66);
+        double phi_un = Math.pow(10, -4) * (3600 * latitude - 169028.66);
         double n = 1200147.07
                 +308807.95 * phi_un
                 +3745.25 * lambda_un * lambda_un
@@ -90,7 +90,7 @@ public class Ch1903 {
 
         double phi_zero = 16.9023892
                 + 3.238272 * y
-                + 0.270978 * x * x
+                - 0.270978 * x * x
                 - 0.002528 * y * y
                 - 0.0447 * x * x * y
                 - 0.0140 * y * y *y;
