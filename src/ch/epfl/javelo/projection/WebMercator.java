@@ -1,5 +1,7 @@
 package ch.epfl.javelo.projection;
 
+import ch.epfl.javelo.Math2;
+
 /**
  * La classe WebMercator qui est une classe publique, finale et non instanciable offre des méthodes statiques qui permettent de
  * convertir entre les coordonnées WGS84 et les coordonnées Web Mercator
@@ -15,18 +17,20 @@ public final class WebMercator {
      * @param lon longitude d'un point donnée en radiant
      * @return coordonnée x de la projection
      */
-    public double x(double lon){
-        //TODO à remplir
+    public static double x(double lon){
+        double x = (1/(2 * Math.PI)) * (lon+Math.PI);
+        return x;
     }
+
 
     /**
      * Cette méthode retourne la coordonnée y de la projection d'un point se trouvant à la latitude lat, donnée en radian
      * @param lat longitude d'un point donnée en radiant
      * @return coordonnée y de la projection
      */
-    public double y(double lat){
-        //TODO à remplir
-
+    public static double y(double lat){
+        double y = (1/(2 * Math.PI)) * (Math.PI- Math2.asinh(Math.tan(lat)));
+        return y;
     }
 
     /**
@@ -34,8 +38,9 @@ public final class WebMercator {
      * @param x coordonnée x dans le système WebMercator
      * @return coordonnée longitude en radian dans le système WGS84
      */
-    public double lon(double x){
-        //TODO à remplir
+    public static double lon(double x){
+        double lambda = 2 * Math.PI * x - Math.PI;
+        return lambda;
     }
 
     /**
@@ -43,8 +48,9 @@ public final class WebMercator {
      * @param y coordonnée y dans le système WebMercator
      * @return coordonnée latitude en radian dans le système WGS84
      */
-    public double lat(double y){
-        //TODO à remplir
+    public static double lat(double y){
+        double phi = Math.atan(Math.sinh(Math.PI-2 * Math.PI*y));
+        return phi;
     }
 
 }
