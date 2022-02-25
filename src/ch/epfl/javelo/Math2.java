@@ -101,10 +101,7 @@ public final class Math2 {
      *            la coordonnée x
      * @return le sinus hyperbolique inverse de x
      */
-    public static double asinh(double x){
-
-        return Math.log(x + Math.sqrt(1 + x * x));
-    }
+    public static double asinh(double x){return Math.log(x + Math.sqrt(1 + x * x));}
 
     /**
      * Retourne le produit scalar entre un vecteur u et v
@@ -120,14 +117,7 @@ public final class Math2 {
      * @return le produit scalar entre u et v
      */
     public static double dotProduct(double uX, double uY, double vX, double vY){
-        //todo utiliser Math.fma ici mais je ne vois pas comment?
-
-        //todo Loris: Je pense qu'il faudra demander à un assistant
-
-
-        //return Math.fma(uX,vX,Math.fma(uY,vY,0));
-        //comme ça??
-        return uX*vX + uY*vY;
+        return Math.fma(uX,vX,uY*vY);
     }
 
     /**
