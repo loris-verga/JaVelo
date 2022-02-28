@@ -1,12 +1,16 @@
 package ch.epfl.javelo;
 
+
+
 /**
  * La classe Q28_4 contient des méthodes statiques qui permettent de convertir des nombres entre la représentation Q28.4
  * et d'autres représentations
  *
- * @author Loris Verga (345661)
+ * @author Juan B Iaconucci (342153)
  */
 public final class Q28_4 {
+
+    private Q28_4(){}
 
     /**
      * Cette méthode retourne la valeur Q28.4 correspondant à l'entier donné
@@ -14,8 +18,10 @@ public final class Q28_4 {
      * @return valeur convertie en Q28,4
      */
     public static int ofInt(int i){
-        //TODO à remplir
 
+        int newInt = i << 4;
+
+        return newInt;
     }
 
     /**
@@ -24,7 +30,10 @@ public final class Q28_4 {
      * @return valeur convertie en double
      */
     public static double asDouble(int q28_4){
-        //TODO à remplir
+
+        double newDouble = Math.scalb( (double) q28_4 , -4);
+
+        return newDouble;
     }
 
     /**
@@ -33,7 +42,9 @@ public final class Q28_4 {
      * @return valeur convertie en float
      */
     public static float asFloat(int q28_4){
-        //TODO à remplir
+        
+        float newFloat = Math.scalb( (float) q28_4, -4);
 
+        return newFloat;
     }
 }
