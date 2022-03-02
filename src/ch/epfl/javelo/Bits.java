@@ -22,20 +22,16 @@ public final class Bits {
     public static int extractSigned(int value, int start, int length){
         Preconditions.checkArgument(0<=start && start<=31 && 0<=start+length && start+length<=32 && length>=0);
 
-        //todo ask for this, how does >>> work and why doesn't it change the value??
         if (length == 0){return 0;}
 
         int leftShift = 32 - (start + length);
         int rightShift = start + leftShift;
 
-        int leftShiftedValue;
-        int finalValue;
-
         //Décalage de la plage de bit vers la gauche
-        leftShiftedValue = value << leftShift;
+        int leftShiftedValue = value << leftShift;
 
         //Décalage arithmétique de la plage de bit vers la droite
-        finalValue = leftShiftedValue >> rightShift;
+        int finalValue = leftShiftedValue >> rightShift;
 
         return finalValue;
     }
@@ -51,7 +47,6 @@ public final class Bits {
      */
     public static int extractUnsigned(int value, int start, int length){
 
-        //todo ask about length=32 in this example
         Preconditions.checkArgument(0<=start && start<=31 && 0<=start+length && start+length<=32 && length>=0 && length<32);
 
         if (length == 0){return 0;}
