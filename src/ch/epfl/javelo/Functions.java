@@ -1,5 +1,6 @@
 package ch.epfl.javelo;
 
+import java.util.ArrayList;
 import java.util.function.DoubleUnaryOperator;
 
 /**
@@ -50,7 +51,7 @@ public final class Functions {
      * @return
      */
     public static DoubleUnaryOperator sampled(float[] samples, double xMax){
-        return null;
+        return new Sampled(samples, xMax);
     }
 
 
@@ -65,9 +66,32 @@ public final class Functions {
         @Override
         public double applyAsDouble(double x){
 
+            // lève IllegalArgumentException si le tableau samples contient moins de deux éléments
+            // ou si xMax est inférieur ou égal à 0.
+            Preconditions.checkArgument(this.sampled.length>=2 || xMax > 0);
+
+            if (x<= 0){
+                return sampled[0];
+            }
+            if (x>=xMax){
+                return sampled[sampled.length-1];
+            }
 
 
-            return 0;
+            else{
+
+                double tailleIntervalle = xMax/(sampled.length-1);
+                double indexX = x / tailleIntervalle;
+
+                int valeurBasse =  (int)Math.floor(indexX);
+                int valeurHaute = (int) Math.ceil(indexX);
+
+                return Math2.interpolate(sampled[valeurBasse], sampled[valeurHaute], indexX);
+
+
+            }
+
+
         }
 
     }
