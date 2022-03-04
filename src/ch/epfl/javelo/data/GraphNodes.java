@@ -6,7 +6,7 @@ import java.nio.IntBuffer;
 import java.util.concurrent.locks.Condition;
 
 /**
- * représente le tableau de tous les nœuds du graphe JaVelo
+ * Cette Classe représente le tableau de tous les nœuds du graphe JaVelo.
  *
  * @author Juan B Iaconucci (342153)
  */
