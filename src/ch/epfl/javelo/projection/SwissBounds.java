@@ -12,22 +12,22 @@ public final class SwissBounds {
     //Liste de constantes utiles :
 
     //la plus petite coordonnée E de Suisse
-    final static double MIN_E = 2485000;
+    public final static double MIN_E = 2485000;
 
     //la plus grande coordonnée E de Suisse
-    final static double MAX_E = 2834000;
+    public final static double MAX_E = 2834000;
 
     //la plus petite coordonnée N de Suisse
-    final static double MIN_N = 1075000;
+    public final static double MIN_N = 1075000;
 
     //la plus grande coordonnée N de Suisse
-    final static double MAX_N = 1296000;
+    public final static double MAX_N = 1296000;
 
     //la largeur de la Suisse en mètres, définie comme la différence entre MAX_E et MIN_E
-    final static double WIDTH = MAX_E-MIN_E;
+    public final static double WIDTH = MAX_E-MIN_E;
 
     //la hauteur de la Suisse en mètres, définie comme la différence entre MAX_N et MIN_N.
-    final static double HEIGHT = MAX_N-MIN_N;
+    public final static double HEIGHT = MAX_N-MIN_N;
 
 
     /**
