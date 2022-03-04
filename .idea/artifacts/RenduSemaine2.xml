@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
-  <artifact name="RenduSemaine1">
-    <output-path>$PROJECT_DIR$/out/artifacts/RenduSemaine1</output-path>
+  <artifact name="RenduSemaine2">
+    <output-path>$PROJECT_DIR$/out/artifacts/RenduSemaine2</output-path>
     <root id="root">
       <element id="archive" name="projet-cs108-s1.zip">
         <element id="directory" name="MonProjet">
