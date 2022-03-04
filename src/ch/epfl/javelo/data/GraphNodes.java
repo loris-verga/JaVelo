@@ -1,6 +1,7 @@
 package ch.epfl.javelo.data;
 
 import ch.epfl.javelo.Preconditions;
+import ch.epfl.javelo.Q28_4;
 
 import java.nio.IntBuffer;
 import java.util.concurrent.locks.Condition;
@@ -33,7 +34,8 @@ public record GraphNodes(IntBuffer buffer) {
      * @return la coordonnée Est du nœud
      */
     public double nodeE(int nodeId){
-        return buffer.get( (nodeId) * NODE_INTS + OFFSET_E);
+        int intE = buffer.get( (nodeId) * NODE_INTS + OFFSET_E);
+        return Q28_4.asDouble(intE);
     }
 
     /**
@@ -43,7 +45,8 @@ public record GraphNodes(IntBuffer buffer) {
      * @return la coordonnée Nord du nœud
      */
     public double nodeN(int nodeId){
-        return buffer.get( (nodeId) * NODE_INTS + OFFSET_N);
+        int intN=buffer.get( (nodeId) * NODE_INTS + OFFSET_N);
+        return Q28_4.asDouble(intN);
     }
 
     /**
@@ -54,7 +57,7 @@ public record GraphNodes(IntBuffer buffer) {
      */
     public int outDegree(int nodeId){
         //todo really check this one
-        return buffer.get(( (nodeId) * NODE_INTS + OFFSET_OUT_EDGES) >>> 28);
+        return buffer.get(( (nodeId) * NODE_INTS + OFFSET_OUT_EDGES))>>> 28;
     }
 
     /**
