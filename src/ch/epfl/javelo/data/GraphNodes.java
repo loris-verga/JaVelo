@@ -1,5 +1,6 @@
 package ch.epfl.javelo.data;
 
+import ch.epfl.javelo.Bits;
 import ch.epfl.javelo.Preconditions;
 import ch.epfl.javelo.Q28_4;
 
@@ -56,8 +57,7 @@ public record GraphNodes(IntBuffer buffer) {
      * @return le nombre d'arêtes sortant du nœud
      */
     public int outDegree(int nodeId){
-        //todo really check this one
-        return buffer.get(( (nodeId) * NODE_INTS + OFFSET_OUT_EDGES))>>> 28;
+        return Bits.extractUnsigned(buffer.get( (nodeId) * NODE_INTS + OFFSET_OUT_EDGES),28,4);
     }
 
     /**
@@ -67,10 +67,9 @@ public record GraphNodes(IntBuffer buffer) {
      * @return l'identité de la edgeIndex-ième arête sortant du nœud
      */
     public int edgeId(int nodeId, int edgeIndex){
-        //todo really really need to check this one
         Preconditions.checkArgument(0 <= edgeIndex && edgeIndex < outDegree(nodeId));
 
-        int firstEdgeId = ((buffer.get(( (nodeId) * NODE_INTS + OFFSET_OUT_EDGES))) << 4 ) >>> 4;
+        int firstEdgeId = Bits.extractUnsigned(buffer.get( (nodeId) * NODE_INTS + OFFSET_OUT_EDGES),0,28);
 
         return firstEdgeId + edgeIndex;
     }
