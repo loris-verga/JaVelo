@@ -86,7 +86,7 @@ public final class Functions {
                 int valeurBasse =  (int)Math.floor(indexX);
                 int valeurHaute = (int) Math.ceil(indexX);
 
-                return Math2.interpolate(sampled[valeurBasse], sampled[valeurHaute], indexX);
+                return Math2.interpolate(sampled[valeurBasse], sampled[valeurHaute], indexX-Math.floor(indexX));
 
 
             }

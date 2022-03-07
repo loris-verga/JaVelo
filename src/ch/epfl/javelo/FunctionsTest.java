@@ -2,62 +2,99 @@ package ch.epfl.javelo;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.function.DoubleUnaryOperator;
-
+import static ch.epfl.test.TestRandomizer.RANDOM_ITERATIONS;
+import static ch.epfl.test.TestRandomizer.newRandom;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FunctionsTest {
-
     @Test
-    void constantWorksOnTrivialValue(){
-        double a = 0;
-        DoubleUnaryOperator function = Functions.constant(a);
-        assertEquals(0, function.applyAsDouble(7438));
-    }
-    @Test
-    void constantWorksOnNonTrivialValue(){
-        double a = 5;
-        DoubleUnaryOperator function = Functions.constant(5);
-        assertEquals(5, function.applyAsDouble(75892304));
+    void functionsConstantIsConstant() {
+        var rng = newRandom();
+        for (var y : new double[]{Double.NEGATIVE_INFINITY, -20.22, 0, 20.22}) {
+            var f = Functions.constant(y);
+            for (int i = 0; i < RANDOM_ITERATIONS; i += 1) {
+                var x = rng.nextDouble(-100_000, 100_000);
+                assertEquals(y, f.applyAsDouble(x));
+            }
+        }
     }
 
     @Test
-    void sampledWorksOnTrivialValue() {
-        float[] tableau = {0, 0, 0, 0, 0};
-        double xMax = 5;
-        DoubleUnaryOperator function = Functions.sampled(tableau, xMax);
-        assertEquals(function.applyAsDouble(4), 0);
+    void functionsSampledThrowsWithLessThanTwoSamples() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            Functions.sampled(new float[]{}, 1);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            Functions.sampled(new float[]{0}, 1);
+        });
     }
 
     @Test
-    void sampledWorksOnTrivialValue2() {
-        float[] tableau = {0, 1, 1};
-        double xMax = 2;
-        DoubleUnaryOperator function = Functions.sampled(tableau, xMax);
-        assertEquals(function.applyAsDouble(1.5), 1);
-    }
-    @Test
-    void sampledWorksOnNonTrivialValue1(){
-        float[] tableau = {0, 2, 0};
-        double xMax = 2;
-        DoubleUnaryOperator function = Functions.sampled(tableau, xMax);
-        assertEquals(function.applyAsDouble(0.5), 1);
+    void functionsSampledWorksWhenEvaluatedCloseToXMax() {
+        var rng = newRandom();
+        var halfWidth = 5000;
+        for (int l = 2; l < 40; l += 1) {
+            var samples = new float[l];
+            for (int i = 0; i < samples.length; i += 1)
+                samples[i] = rng.nextFloat(-halfWidth, halfWidth);
+            var xMax = rng.nextDouble(l, 4 * l);
+            var f = Functions.sampled(samples, xMax);
+
+            assertDoesNotThrow(() -> {
+                var xL = xMax;
+                var xH = xMax;
+                for (int i = 0; i < RANDOM_ITERATIONS; i += 1) {
+                    var yL = f.applyAsDouble(xL);
+                    var yH = f.applyAsDouble(xH);
+                    xL = Math.nextDown(xL);
+                    xH = Math.nextUp(xH);
+                }
+            });
+        }
     }
 
     @Test
-    void sampledWorksOnNonTrivialValue3(){
-        float [] tableau = {3, 4, 3 , 43 , 423, 423, 43, 43};
-        double xMax = 3;
-        DoubleUnaryOperator function = Functions.sampled(tableau, xMax);
-        assertEquals(43, function.applyAsDouble(985));
+    void functionsSampledIsConstantLeftAndRightOfSamples() {
+        var rng = newRandom();
+        var halfWidth = 5000;
+        for (int i = 0; i < RANDOM_ITERATIONS; i += 1) {
+            var sampleCount = rng.nextInt(2, 20);
+            var samples = new float[sampleCount];
+            for (int j = 0; j < sampleCount; j += 1)
+                samples[j] = rng.nextFloat(-halfWidth, halfWidth);
+            var xMax = rng.nextDouble(Math.nextUp(0), 100);
+            var f = Functions.sampled(samples, xMax);
+            assertEquals(samples[0], f.applyAsDouble(Math.nextDown(0)));
+            assertEquals(samples[0], f.applyAsDouble(-1000));
+            assertEquals(samples[sampleCount - 1], f.applyAsDouble(Math.nextUp(xMax)));
+            assertEquals(samples[sampleCount - 1], f.applyAsDouble(xMax + 1000));
+        }
     }
+
     @Test
-    void sampledWorksOnNonTrivialValue4(){
-        float [] tableau = {0, 1, 2, 3, 4, 5, 6, 7, 8 ,9, 10};
-        double xMax = 10;
-        DoubleUnaryOperator function = Functions.sampled(tableau, xMax);
-        assertEquals(Math2.interpolate(8, 9, 0.5), 8.5);
+    void functionsSampledInterpolatesBetweenSamples() {
+        var rng = newRandom();
+        var halfWidth = 5000;
+        for (int i = 0; i < RANDOM_ITERATIONS; i += 1) {
+            var sampleCount = rng.nextInt(2, 20);
+            var samples = new float[sampleCount];
+            for (int j = 0; j < sampleCount; j += 1)
+                samples[j] = rng.nextFloat(-halfWidth, halfWidth);
+            var xMax = rng.nextDouble(50, 100);
+            var f = Functions.sampled(samples, xMax);
+            var interSampleDistance = xMax / (sampleCount - 1);
+            var minDeltaX = interSampleDistance / 4;
+            for (int j = 1; j < sampleCount; j += 1) {
+                var xL = (j - 1) * interSampleDistance;
+                var yL = samples[j - 1];
+                var xR = j * interSampleDistance;
+                var yR = samples[j];
+                var x = rng.nextDouble(xL + minDeltaX, xR - minDeltaX);
+                var y = f.applyAsDouble(x);
+                var expectedSlope = (yR - yL) / interSampleDistance;
+                var actualSlope = (y - yL) / (x - xL);
+                assertEquals(expectedSlope, actualSlope, 1e-3);
+            }
+        }
     }
-
-
 }

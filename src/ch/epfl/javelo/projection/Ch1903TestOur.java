@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class Ch1903Test {
+class Ch1903TestOur {
     private static final double DELTA = 1e-7;
 
 

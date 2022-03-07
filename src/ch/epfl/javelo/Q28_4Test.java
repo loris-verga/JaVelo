@@ -2,79 +2,47 @@ package ch.epfl.javelo;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static ch.epfl.test.TestRandomizer.RANDOM_ITERATIONS;
+import static ch.epfl.test.TestRandomizer.newRandom;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class Q28_4Test {
-
-    private static final double DELTA = 1e-4;
-
-        @Test
-        void ofIntOnKnownValues(){
-            var actual1 = Q28_4.ofInt(0b0);
-            var expected1 = 0b0;
-            assertEquals(expected1,actual1);
-
-            var actual2 = Q28_4.ofInt(0b101001);
-            var expected2 = 0b1010010000;
-            assertEquals(expected2,actual2);
-
-            var actual3 = Q28_4.ofInt(0b0101010100101110101);
-            var expected3 = 0b01010101001011101010000;
-            assertEquals(expected3,actual3);
-
-            var actual4 = Q28_4.ofInt(0b11111111111111111111);
-            var expected4 = 0b111111111111111111110000;
-            assertEquals(expected4,actual4);
-
-            var actual5 = Q28_4.ofInt(0b1000_0000_0000_0000_0000_0000_0001);
-            var expected5 = 0b1000_0000_0000_0000_0000_0000_0001_0000;
-            assertEquals(expected5,actual5);
+    @Test
+    void q28_4OfIntWorksWithRandomValues() {
+        var rng = newRandom();
+        for (int i = 0; i < RANDOM_ITERATIONS; i += 1) {
+            var n = rng.nextInt(1 << 28);
+            assertEquals(n, Q28_4.ofInt(n) >>> 4);
         }
+    }
 
-        @Test
-        void asDoubleOnKnownValues(){
-            var actual1 = Q28_4.asDouble(0b0);
-            var expected1 = 0.0;
-            assertEquals(expected1,actual1);
+    @Test
+    void q28_4AsDoubleWorksOnKnownValues() {
+        assertEquals(1.0, Q28_4.asDouble(0b1_0000));
+        assertEquals(1.5, Q28_4.asDouble(0b1_1000));
+        assertEquals(1.25, Q28_4.asDouble(0b1_0100));
+        assertEquals(1.125, Q28_4.asDouble(0b1_0010));
+        assertEquals(1.0625, Q28_4.asDouble(0b1_0001));
+        assertEquals(1.9375, Q28_4.asDouble(0b1_1111));
+    }
 
-            var actual2 = Q28_4.asDouble(0b101001);
-            var expected2 = 2.5625;
-            assertEquals(expected2,actual2);
+    @Test
+    void q28_4AsFloatWorksOnKnownValues() {
+        assertEquals(1.0f, Q28_4.asFloat(0b1_0000));
+        assertEquals(1.5f, Q28_4.asFloat(0b1_1000));
+        assertEquals(1.25f, Q28_4.asFloat(0b1_0100));
+        assertEquals(1.125f, Q28_4.asFloat(0b1_0010));
+        assertEquals(1.0625f, Q28_4.asFloat(0b1_0001));
+        assertEquals(1.9375f, Q28_4.asFloat(0b1_1111));
+    }
 
-            var actual3 = Q28_4.asDouble(0b10100101110101);
-            var expected3 = 663.3125 ;
-            assertEquals(expected3,actual3);
-
-            var actual4 = Q28_4.asDouble(0b1111_1111_1111_1111_1111_1111_1111_1111);
-            var expected4 = -0.0625;
-            assertEquals(expected4,actual4);
-
-            var actual5 = Q28_4.asDouble(0b1000_0000_0000_0000_0000_0000_0000_0001);
-            var expected5 = -134217727.9375;
-            assertEquals(expected5,actual5);
+    @Test
+    void q28_4ofIntAndAsFloatDoubleAreInverse() {
+        var rng = newRandom();
+        for (int i = 0; i < RANDOM_ITERATIONS; i += 1) {
+            var n = rng.nextInt(1 << 24);
+            assertEquals(n, Q28_4.asFloat(Q28_4.ofInt(n)));
+            assertEquals(n, Q28_4.asDouble(Q28_4.ofInt(n)));
         }
-
-        @Test
-        void asFloatOnKnownValues(){
-            var actual1 = Q28_4.asFloat(0b0);
-            var expected1 = 0.0f;
-            assertEquals(expected1,actual1);
-
-            var actual2 = Q28_4.asFloat(0b101001);
-            var expected2 = 2.5625f;
-            assertEquals(expected2,actual2);
-
-            var actual3 = Q28_4.asFloat(0b10100101110101);
-            var expected3 = 663.3125f ;
-            assertEquals(expected3,actual3);
-
-            var actual4 = Q28_4.asFloat(0b1111_1111_1111_1111_1111_1111_1111_1111);
-            var expected4 = -0.0625f;
-            assertEquals(expected4,actual4);
-
-            var actual5 = Q28_4.asFloat(0b1000_0000_0000_0000_0000_0000_0000_0001);
-            var expected5 = -134217727.9375f;
-            assertEquals(expected5,actual5);
-        }
-
+    }
 }

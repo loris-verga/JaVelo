@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SwissBoundsTest {
+class SwissBoundsTestOur {
     @Test
     void swissBoundsAreCorrect() {
         assertEquals(2_485_000, SwissBounds.MIN_E);

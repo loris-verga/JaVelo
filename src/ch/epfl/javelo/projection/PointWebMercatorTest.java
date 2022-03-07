@@ -1,110 +1,146 @@
 package ch.epfl.javelo.projection;
 
-import ch.epfl.javelo.Preconditions;
+import ch.epfl.test.TestRandomizer;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
+import java.io.IOException;
 
+import static ch.epfl.test.TestRandomizer.RANDOM_ITERATIONS;
+import static ch.epfl.test.TestRandomizer.newRandom;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PointWebMercatorTest {
-
-    public static final double DELTA = 1e-7;
+    private static final double DELTA = 1e-7;
 
     @Test
-    void constructionClassique(){
-        PointWebMercator point = new PointWebMercator(0.2, 1);
+    void pointWebMercatorThrowsOnInvalidCoordinates() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new PointWebMercator(Math.nextDown(0), 0.5));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new PointWebMercator(Math.nextUp(1), 0.5));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new PointWebMercator(0.5, Math.nextDown(0)));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new PointWebMercator(0.5, Math.nextUp(1)));
     }
 
     @Test
-    void constructorThrowException(){
-        assertThrows(IllegalArgumentException.class, () -> {
-            PointWebMercator point = new PointWebMercator(1.2, 1);
-        });
+    void pointWebMercatorDoesNotThrowOnValidCoordinates() {
+        var rng = newRandom();
+        for (int i = 0; i < RANDOM_ITERATIONS; i += 1) {
+            var x = rng.nextDouble();
+            var y = rng.nextDouble();
+            assertDoesNotThrow(() -> new PointWebMercator(x, y));
+        }
+        assertDoesNotThrow(() -> new PointWebMercator(0, 0));
+        assertDoesNotThrow(() -> new PointWebMercator(1, 1));
     }
 
     @Test
-    void constructorThrowException2(){
-        assertThrows(IllegalArgumentException.class, () -> {
-            PointWebMercator point = new PointWebMercator(1, -1);
-        });
+    void pointWebMercatorOfAndXYAtZoomLevelAreInverse() {
+        var rng = newRandom();
+        for (int i = 0; i < RANDOM_ITERATIONS; i += 1) {
+            var z = rng.nextInt(20);
+            var maxXY = Math.scalb(1d, z + 8);
+            var x = rng.nextDouble(maxXY);
+            var y = rng.nextDouble(maxXY);
+            var p = PointWebMercator.of(z, x, y);
+            assertEquals(x, p.xAtZoomLevel(z), 1e-8);
+            assertEquals(y, p.yAtZoomLevel(z), 1e-8);
+        }
     }
 
     @Test
-    void ofWorksOnNonTrivialValue(){
-        double x_19 = 69561722;
-        double y_19 = 47468099;
-        int zoomlevel = 19;
-        PointWebMercator calculated = PointWebMercator.of(zoomlevel, x_19, y_19);
-        PointWebMercator expected = new PointWebMercator(0.518275214444, 0.353664894749);
-        assertEquals(calculated.x(), expected.x(), DELTA);
-        assertEquals(calculated.y(), expected.y(), DELTA);
-    }
-    //Peut-être faudrait-il tester avec des valeurs plus triviales
+    void pointWebMercatorOfPointChWorksOnKnownValues() {
+        var p1 = PointWebMercator
+                .ofPointCh(new PointCh(2_600_000, 1_200_000));
+        var actualX1 = p1.x();
+        var actualY1 = p1.y();
+        var expectedX1 = 0.5206628811728395;
+        var expectedY1 = 0.3519253787614047;
+        assertEquals(expectedX1, actualX1, DELTA);
+        assertEquals(expectedY1, actualY1, DELTA);
 
-    @Test
-    void ofPointChWorksOnNonTrivialValue(){
-        double lambda = Math.toRadians(6.5790772);
-        double phi = Math.toRadians(46.5218976);
-        double e = Ch1903.e(lambda, phi);
-        double n = Ch1903.n(lambda, phi);
-        PointCh point = new PointCh(e, n);
-        PointWebMercator calculated = PointWebMercator.ofPointCh(point);
-        PointWebMercator expected = new PointWebMercator(0.518275214444, 0.353664894749);
-        assertEquals(calculated.x(), expected.x(), DELTA);
-        System.out.println(calculated.x());
-        System.out.println(expected.x());
-        assertEquals(calculated.y(), expected.y(), DELTA);
+        var p2 = PointWebMercator
+                .ofPointCh(new PointCh(2_533_132, 1_152_206));
+        var actualX2 = p2.x();
+        var actualY2 = p2.y();
+        var expectedX2 = 0.5182423951719917;
+        var expectedY2 = 0.3536813812215855;
+        assertEquals(expectedX2, actualX2, DELTA);
+        assertEquals(expectedY2, actualY2, DELTA);
     }
 
     @Test
-    void xAtZoomLevelWorksOnNonTrivialValue(){
-        double x = 0.518275214444;
-        double y = 0.353664894749;
-        int zoom = 19;
-        double expected = 47468099;
-        PointWebMercator point = new PointWebMercator(x, y);
-        assertEquals(expected, point.yAtZoomLevel(zoom), 1/DELTA);
-    }
-    @Test
-    void yAtZoomLevelWorksOnNonTrivialValue(){
-        double x = 0.518275214444;
-        double y = 0.353664894749;
-        int zoom = 19;
-        double expected = 69561722;
-        PointWebMercator point = new PointWebMercator(x, y);
-        assertEquals(expected, point.xAtZoomLevel(zoom) , 1/DELTA);
+    void pointWebMercatorLonWorksOnKnownValues() {
+        var actual1 = new PointWebMercator(0, 0).lon();
+        var expected1 = -3.141592653589793;
+        assertEquals(expected1, actual1, DELTA);
+
+        var actual2 = new PointWebMercator(0.25, 0.25).lon();
+        var expected2 = -1.5707963267948966;
+        assertEquals(expected2, actual2, DELTA);
+
+        var actual3 = new PointWebMercator(0.5, 0.5).lon();
+        var expected3 = 0.0;
+        assertEquals(expected3, actual3, DELTA);
+
+        var actual4 = new PointWebMercator(0.75, 0.75).lon();
+        var expected4 = 1.5707963267948966;
+        assertEquals(expected4, actual4, DELTA);
+
+        var actual5 = new PointWebMercator(1, 1).lon();
+        var expected5 = 3.141592653589793;
+        assertEquals(expected5, actual5, DELTA);
     }
 
     @Test
-    void lonAndLatWorksOnNonTrivialValue(){
-        double lambda = Math.toRadians(6.5790772);
-        double phi = Math.toRadians(46.5218976);
-        double e = Ch1903.e(lambda, phi);
-        double n = Ch1903.n(lambda, phi);
-        PointCh point = new PointCh(e, n);
-        PointWebMercator calculated = PointWebMercator.ofPointCh(point);
-        assertEquals(lambda, calculated.lon(), DELTA*100);
-        assertEquals(phi, calculated.lat(), DELTA*100);
+    void pointWebMercatorLatWorksOnKnownValues() {
+        var actual1 = new PointWebMercator(0, 0).lat();
+        var expected1 = 1.4844222297453324;
+        assertEquals(expected1, actual1, DELTA);
+
+        var actual2 = new PointWebMercator(0.25, 0.25).lat();
+        var expected2 = 1.1608753909688045;
+        assertEquals(expected2, actual2, DELTA);
+
+        var actual3 = new PointWebMercator(0.5, 0.5).lat();
+        var expected3 = 0.0;
+        assertEquals(expected3, actual3, DELTA);
+
+        var actual4 = new PointWebMercator(0.75, 0.75).lat();
+        var expected4 = -1.1608753909688045;
+        assertEquals(expected4, actual4, DELTA);
+
+        var actual5 = new PointWebMercator(1, 1).lat();
+        var expected5 = -1.4844222297453324;
+        assertEquals(expected5, actual5, DELTA);
     }
 
     @Test
-    void toPointChWorksOnTrivialValue(){
-        PointWebMercator a = new PointWebMercator(0,0);
-        assertEquals(null, a.toPointCh());
-    }
+    void pointWebMercatorToPointChWorksOnKnownValues() {
+        var p1 = new PointWebMercator(0.5206628811728395, 0.3519253787614047)
+                .toPointCh();
+        var actualE1 = p1.e();
+        var actualN1 = p1.n();
+        var expectedE1 = 2600000.346333851;
+        var expectedN1 = 1199999.8308213386;
+        assertEquals(expectedE1, actualE1, DELTA);
+        assertEquals(expectedN1, actualN1, DELTA);
 
-    @Test
-    void toPointChWorksOnNonTrivialValue(){
-        double lambda = Math.toRadians(6.5790772);
-        double phi = Math.toRadians(46.5218976);
-        double e = Ch1903.e(lambda, phi);
-        double n = Ch1903.n(lambda, phi);
-        PointCh point = new PointCh(e, n);
-        PointWebMercator calc1 = new PointWebMercator(0.518275214444, 0.353664894749);
-        PointCh calc2 = calc1.toPointCh();
-        assertEquals(point.e(), calc2.e(), DELTA*1000);
-        assertEquals(point.n(), calc2.n(), DELTA*1000);
+        var p2 = new PointWebMercator(0.5182423951719917, 0.3536813812215855)
+                .toPointCh();
+        var actualE2 = p2.e();
+        var actualN2 = p2.n();
+        var expectedE2 = 2533131.6362025095;
+        var expectedN2 = 1152206.8789113415;
+        assertEquals(expectedE2, actualE2, DELTA);
+        assertEquals(expectedN2, actualN2, DELTA);
     }
 }
-
