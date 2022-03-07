@@ -12,10 +12,9 @@ import java.util.*;
  */
 public record GraphSectors(ByteBuffer buffer) {
 
-    private static final int OFFSET_ID_OF_FIRST_HALF_NODE = 0;
-    private static final int OFFSET_ID_OF_SECOND_HALF_NODE = OFFSET_ID_OF_FIRST_HALF_NODE + 1;
-    private static final int OFFSET_NB_OF_NODE = OFFSET_ID_OF_SECOND_HALF_NODE + 1;
-    private static final int SECTOR_INTS = OFFSET_NB_OF_NODE + 1;
+    private static final int OFFSET_ID_OF_FIRST_NODE = 0;
+    private static final int OFFSET_NB_OF_NODE = OFFSET_ID_OF_FIRST_NODE + Integer.BYTES;
+    private static final int SECTOR_INTS = OFFSET_NB_OF_NODE + Short.BYTES;
 
     record Sector(int startNodeId, int endNodeId){}
 
@@ -47,8 +46,8 @@ public record GraphSectors(ByteBuffer buffer) {
         for (int x = infX; x < maxX; x++){
             for (int y = infY; y < maxY; y++) {
                 int sectorId = x + y * 128;
-                int startNodeId = buffer.getShort(sectorId * SECTOR_INTS + OFFSET_ID_OF_SECOND_HALF_NODE) << 16  + buffer.getShort(sectorId * SECTOR_INTS + OFFSET_ID_OF_FIRST_HALF_NODE);
-                int nBOfNodes = buffer.getShort(sectorId * SECTOR_INTS + OFFSET_NB_OF_NODE);
+                int startNodeId = buffer.getInt(sectorId * SECTOR_INTS + OFFSET_ID_OF_FIRST_NODE);
+                int nBOfNodes = Short.toUnsignedInt(buffer.getShort(sectorId * SECTOR_INTS + OFFSET_NB_OF_NODE));
                 int endNodeId = startNodeId + nBOfNodes - 1;
                 listOfSectorsInArea.add( new Sector(startNodeId, endNodeId));
             }
