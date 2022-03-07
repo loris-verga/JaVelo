@@ -44,25 +44,34 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
     }
 
     float[] profilSamples(int edgeId){
+        //check si l'arrete a un profile
         if (hasProfile(edgeId) == false){return new float[]{};}
 
         float[] profilList = new float[1 + (int)Math.ceil(length(edgeId)/2.0)];
         int profileIdAndType = profileIds.get(edgeId);
         int profilType = Bits.extractUnsigned(profileIdAndType,30,2);
+
         int firstSampleId = Bits.extractUnsigned(profileIdAndType,0,30);
+        float firstSample = Q28_4.asFloat(elevations.get(firstSampleId));
+        profilList[0] = firstSample;
+
         float previousSample;
         float newSample;
 
         switch (profilType){
+            //cas ou les données ne sont pas compresser
             case 1:{
-                for (int i = 0; i < profilList.length; i++){
-                    newSample = Q28_4.asFloat(profileIds.get(firstSampleId + i));
+                for (int i = 1; i < profilList.length; i++){
+                    // cas ou le sens est inverser, les valeurs stocker dans le buffer sont inverser aussi
+                    if (isInverted(edgeId)){newSample = Q28_4.asFloat(elevations.get(firstSampleId - i));}
+                    // cas ou le sens est normal on trouve les valeurs normalement
+                    else{newSample = Q28_4.asFloat(elevations.get(firstSampleId + i));};
                     profilList[i] = newSample;
                 }
                 break;
             }
             case 2:{
-                newSample = Q28_4.asFloat(profileIds.get(0));
+                previousSample = firstSample;
                 for (int i = 1; i < profilList.length; i++) {
                 }
                 break;
