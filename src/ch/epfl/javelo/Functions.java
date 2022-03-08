@@ -61,14 +61,11 @@ public final class Functions {
         public Sampled(float[] sampled, double xMax){
             this.sampled = sampled.clone();
             this.xMax = xMax;
+            Preconditions.checkArgument(this.sampled.length>=2 && xMax > 0);
         }
 
         @Override
         public double applyAsDouble(double x){
-
-            // lève IllegalArgumentException si le tableau samples contient moins de deux éléments
-            // ou si xMax est inférieur ou égal à 0.
-            Preconditions.checkArgument(this.sampled.length>=2 || xMax > 0);
 
             if (x<= 0){
                 return sampled[0];

@@ -19,8 +19,11 @@ public record PointWebMercator(double x, double y) {
      * @param y double y, la coordonnée y du point
      */
     public PointWebMercator {
-        Preconditions.checkArgument(x >= 0 && x<= 1); //Vérification coordonnée x
-        Preconditions.checkArgument(y >= 0 && x<= 1); //Vérification coordonnée y
+
+        boolean condition = x >= 0.f && x<= 1.f;
+
+        Preconditions.checkArgument(x >= 0.f && x<= 1.f); //Vérification coordonnée x
+        Preconditions.checkArgument(y >= 0.f && y<= 1.f); //Vérification coordonnée y
     }
 
 
