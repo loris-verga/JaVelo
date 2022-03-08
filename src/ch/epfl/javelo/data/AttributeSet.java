@@ -19,7 +19,7 @@ public record AttributeSet(long bits)  {
      * @throw si bits est strictement inférieur à 0 ou si bits est supérieur à 2 à la puissance 62
      */
     public AttributeSet {
-        Preconditions.checkArgument( 0 < bits && bits < 0b100000000000000000000000000000000000000000000000000000000000000L);
+        Preconditions.checkArgument( 0 <= bits && bits < 0b100000000000000000000000000000000000000000000000000000000000000L);
     }
 
     /**
