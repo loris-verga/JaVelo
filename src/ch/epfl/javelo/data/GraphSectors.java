@@ -35,13 +35,14 @@ public record GraphSectors(ByteBuffer buffer) {
 
         double newCenterE = (center.e() - SwissBounds.MIN_E) / sectorLengthE;
         double newCenterN = (center.n() - SwissBounds.MIN_N) / sectorLengthN;
+
         double newSideLengthE = distance / sectorLengthE;
         double newSideLengthN = distance / sectorLengthN;
 
         int infX = (int) Math.floor(newCenterE - newSideLengthE) ;
         int infY = (int) Math.floor(newCenterN - newSideLengthN);
-        int maxX = (int) Math.ceil(newCenterE + newCenterE);
-        int maxY = (int) Math.ceil(newCenterE + newCenterN);
+        int maxX = (int) Math.ceil(newCenterE + newSideLengthE);
+        int maxY = (int) Math.ceil(newCenterN + newSideLengthN);
 
         for (int x = infX; x < maxX; x++){
             for (int y = infY; y < maxY; y++) {
