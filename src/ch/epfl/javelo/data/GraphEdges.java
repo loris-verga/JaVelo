@@ -28,7 +28,6 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
     }
 
     public double length(int edgeId){
-        //todo not sure if Q28_4 works here, but gotta try...
         return Q28_4.asDouble(edgesBuffer.getShort(EDGE_INTS * edgeId + OFFSET_LENGTH_OF_EDGE));
     }
 
@@ -43,8 +42,8 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
         else{return false;}
     }
 
-    float[] profilSamples(int edgeId){
-        //check si l'arrete a un profile
+    float[] profileSamples(int edgeId){
+        //todo really check this for small error and make it better if it works
         if (hasProfile(edgeId) == false){return new float[]{};}
 
         float[] profilList = new float[1 + (int)Math.ceil(length(edgeId)/2.0)];
@@ -57,30 +56,72 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
 
         float previousSample;
         float newSample;
+        float difference;
+        int encodedSample;
+        int nbOfCompressedValuesInBits;
+
 
         switch (profilType){
-            //cas ou les données ne sont pas compresser
             case 1:{
                 for (int i = 1; i < profilList.length; i++){
-                    // cas ou le sens est inverser, les valeurs stocker dans le buffer sont inverser aussi
-                    if (isInverted(edgeId)){newSample = Q28_4.asFloat(elevations.get(firstSampleId - i));}
-                    // cas ou le sens est normal on trouve les valeurs normalement
-                    else{newSample = Q28_4.asFloat(elevations.get(firstSampleId + i));};
+                    newSample = Q28_4.asFloat(elevations.get(firstSampleId + i));
                     profilList[i] = newSample;
                 }
                 break;
             }
             case 2:{
                 previousSample = firstSample;
-                for (int i = 1; i < profilList.length; i++) {
+                nbOfCompressedValuesInBits = Short.SIZE/8;
+                int indexOfprofilList = 1;
+                int totalElevationIndex= (int) Math.ceil((profilList.length - 1.0)/nbOfCompressedValuesInBits);
+                for(int elevationIndex = 1 ; elevationIndex <= totalElevationIndex ; elevationIndex++){
+                    encodedSample = elevations.get(firstSampleId + elevationIndex);
+
+                    for (int indexOfBits = nbOfCompressedValuesInBits - 1; indexOfBits >= 0 && indexOfprofilList < profilList.length; indexOfBits--){
+                        int startOfBits= indexOfBits * 8;
+                        difference = Q28_4.asFloat(Bits.extractSigned(encodedSample, startOfBits, 8 ));
+                        newSample = previousSample + difference;
+                        profilList[indexOfprofilList] = newSample;
+                        previousSample = newSample;
+                        indexOfprofilList++;
+                    }
                 }
                 break;
             }
             case 3:{
+                previousSample = firstSample;
+                nbOfCompressedValuesInBits = Short.SIZE/4;
+                int indexOfprofilList = 1;
+                int totalElevationIndex= (int) Math.ceil((profilList.length - 1.0)/nbOfCompressedValuesInBits);
+                for(int elevationIndex = 1 ; elevationIndex <= totalElevationIndex; elevationIndex++) {
+                    encodedSample = elevations.get(firstSampleId + elevationIndex);
 
+                    for (int indexOfBits = nbOfCompressedValuesInBits - 1; indexOfBits >= 0 && indexOfprofilList < profilList.length; indexOfBits--) {
+                        int startOfBits = indexOfBits * 4;
+                        difference = Q28_4.asFloat(Bits.extractSigned(encodedSample, startOfBits, 4));
+                        newSample = previousSample + difference;
+                        profilList[indexOfprofilList] = newSample;
+                        previousSample = newSample;
+                        indexOfprofilList++;
+                    }
+                }
                 break;
             }
         }
+        if (isInverted(edgeId)){profilList = invertList(profilList);}
         return profilList;
     }
+
+    private float[] invertList(float[] profilSample){
+        float[] newprofilSample = new float[profilSample.length];
+        for(int i = 0; i < profilSample.length; i++){
+            newprofilSample[i] = profilSample[profilSample.length - (i+1)];
+        }
+        return newprofilSample;
+    }
+
+    public int attributesIndex(int edgeId){
+        return edgesBuffer.getShort(EDGE_INTS * edgeId + OFFSET_ID_OF_SET_OF_OSM);}
+
+
 }

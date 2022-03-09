@@ -48,7 +48,8 @@ public record GraphSectors(ByteBuffer buffer) {
                 int sectorId = x + y * 128;
                 int startNodeId = buffer.getInt(sectorId * SECTOR_INTS + OFFSET_ID_OF_FIRST_NODE);
                 int nBOfNodes = Short.toUnsignedInt(buffer.getShort(sectorId * SECTOR_INTS + OFFSET_NB_OF_NODE));
-                int endNodeId = startNodeId + nBOfNodes - 1;
+                //todo verify that there is not a -1 here
+                int endNodeId = startNodeId + nBOfNodes;
                 listOfSectorsInArea.add( new Sector(startNodeId, endNodeId));
             }
         }
