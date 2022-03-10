@@ -8,7 +8,7 @@ import java.nio.IntBuffer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GraphNodesTest {
+class GraphNodesTestOur {
 
     @Test
     void graphNodesConstructorWorks(){

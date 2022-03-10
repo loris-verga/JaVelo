@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class GraphEdgesTestOur {
 
     @Test
-    void generallTestFromTeacher(){
+    void generalTestFromTeacher(){
         ByteBuffer edgesBuffer = ByteBuffer.allocate(10);
 // Sens : inversé. Nœud destination : 12.
         edgesBuffer.putInt(0, ~12);

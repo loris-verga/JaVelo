@@ -42,7 +42,7 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
         else{return false;}
     }
 
-    float[] profileSamples(int edgeId){
+    public float[] profileSamples(int edgeId){
         //todo really check this for small error and make it better if it works
         if (hasProfile(edgeId) == false){return new float[]{};}
 
