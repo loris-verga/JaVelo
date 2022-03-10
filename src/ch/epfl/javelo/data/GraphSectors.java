@@ -53,6 +53,7 @@ public record GraphSectors(ByteBuffer buffer) {
         for (int x = infX; x < maxX; x++){
             for (int y = infY; y < maxY; y++) {
                 int sectorId = x + y * 128;
+                //buffer.getInt(12);
                 int startNodeId = buffer.getInt(sectorId * SECTOR_INTS + OFFSET_ID_OF_FIRST_NODE);
                 int nBOfNodes = Short.toUnsignedInt(buffer.getShort(sectorId * SECTOR_INTS + OFFSET_NB_OF_NODE));
                 int endNodeId = startNodeId + nBOfNodes;

@@ -42,7 +42,7 @@ public final class Q28_4 {
      * @return valeur convertie en float
      */
     public static float asFloat(int q28_4){
-        
+
         float newFloat = Math.scalb( (float) q28_4, -4);
 
         return newFloat;

@@ -155,7 +155,23 @@ class GraphNodesTest {
         });
     }
 
-    //TODO https://piazza.com/class/kzifjghz6po4se?cid=276
+    @Test
+    void graphNodes11(){
+        IntBuffer b = IntBuffer.wrap(new int[]{});
+        GraphNodes ns = new GraphNodes(b);
+    }
+
+    @Test
+    void graphNodes12(){
+        IntBuffer b = IntBuffer.wrap(new int[]{});
+        GraphNodes ns = new GraphNodes(b);
+        assertEquals(ns.count(), 0);
+
+    }
+
+    //Tests validés
+
+
 
 
 
