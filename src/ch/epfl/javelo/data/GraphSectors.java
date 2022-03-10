@@ -28,7 +28,6 @@ public record GraphSectors(ByteBuffer buffer) {
      */
     public List<Sector> sectorsInArea(PointCh center, double distance){
         //todo lots of test on this one
-        //error negative id somewhere here
 
         List<Sector> listOfSectorsInArea = new ArrayList<>();
 
@@ -46,18 +45,16 @@ public record GraphSectors(ByteBuffer buffer) {
         int maxX = (int) Math.ceil(newCenterE + newSideLengthE);
         int maxY = (int) Math.ceil(newCenterN + newSideLengthN);
 
-        //todo check if 127 is correct or 128
-        Math2.clamp(0, infX ,127);
-        Math2.clamp(0, infY ,127);
-        Math2.clamp(0, maxX, 127);
-        Math2.clamp(0, maxY,127);
+        Math2.clamp(0, infX ,128);
+        Math2.clamp(0, infY ,128);
+        Math2.clamp(0, maxX , 128);
+        Math2.clamp(0, maxY ,128);
 
         for (int x = infX; x < maxX; x++){
             for (int y = infY; y < maxY; y++) {
                 int sectorId = x + y * 128;
                 int startNodeId = buffer.getInt(sectorId * SECTOR_INTS + OFFSET_ID_OF_FIRST_NODE);
                 int nBOfNodes = Short.toUnsignedInt(buffer.getShort(sectorId * SECTOR_INTS + OFFSET_NB_OF_NODE));
-                //todo verify that there is not a -1 here
                 int endNodeId = startNodeId + nBOfNodes;
                 listOfSectorsInArea.add( new Sector(startNodeId, endNodeId));
             }
