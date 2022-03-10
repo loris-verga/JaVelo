@@ -45,15 +45,14 @@ public record GraphSectors(ByteBuffer buffer) {
         int maxX = (int) Math.ceil(newCenterE + newSideLengthE);
         int maxY = (int) Math.ceil(newCenterN + newSideLengthN);
 
-        Math2.clamp(0, infX ,128);
-        Math2.clamp(0, infY ,128);
-        Math2.clamp(0, maxX , 128);
-        Math2.clamp(0, maxY ,128);
+        infX = Math2.clamp(0, infX ,128);
+        infY = Math2.clamp(0, infY ,128);
+        maxX = Math2.clamp(0, maxX , 128);
+        maxY = Math2.clamp(0, maxY ,128);
 
         for (int x = infX; x < maxX; x++){
             for (int y = infY; y < maxY; y++) {
                 int sectorId = x + y * 128;
-                //buffer.getInt(12);
                 int startNodeId = buffer.getInt(sectorId * SECTOR_INTS + OFFSET_ID_OF_FIRST_NODE);
                 int nBOfNodes = Short.toUnsignedInt(buffer.getShort(sectorId * SECTOR_INTS + OFFSET_NB_OF_NODE));
                 int endNodeId = startNodeId + nBOfNodes;
