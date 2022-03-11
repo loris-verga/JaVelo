@@ -78,7 +78,6 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
      * @return  une liste des échantillons du profil de l'arrête d'identité donnée
      */
     public float[] profileSamples(int edgeId){
-        //todo really check this for small error and make it better if it works
         if (hasProfile(edgeId) == false){return new float[]{};}
 
         float[] profilList = new float[1 + (int)Math.ceil(length(edgeId)/2.0)];
@@ -89,15 +88,9 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
         float firstSample = Q28_4.asFloat(elevations.get(firstSampleId));
         profilList[0] = firstSample;
 
-        float previousSample;
-        float newSample;
-        float difference;
-        int encodedSample;
-        int nbOfCompressedValuesInBits;
-
-
         switch (profilType){
             case 1:{
+                float newSample;
                 for (int i = 1; i < profilList.length; i++){
                     newSample = Q28_4.asFloat(elevations.get(firstSampleId + i));
                     profilList[i] = newSample;
@@ -105,41 +98,11 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
                 break;
             }
             case 2:{
-                previousSample = firstSample;
-                nbOfCompressedValuesInBits = Short.SIZE/8;
-                int indexOfprofilList = 1;
-                int totalElevationIndex= (int) Math.ceil((profilList.length - 1.0)/nbOfCompressedValuesInBits);
-                for(int elevationIndex = 1 ; elevationIndex <= totalElevationIndex ; elevationIndex++){
-                    encodedSample = elevations.get(firstSampleId + elevationIndex);
-
-                    for (int indexOfBits = nbOfCompressedValuesInBits - 1; indexOfBits >= 0 && indexOfprofilList < profilList.length; indexOfBits--){
-                        int startOfBits= indexOfBits * 8;
-                        difference = Q28_4.asFloat(Bits.extractSigned(encodedSample, startOfBits, 8 ));
-                        newSample = previousSample + difference;
-                        profilList[indexOfprofilList] = newSample;
-                        previousSample = newSample;
-                        indexOfprofilList++;
-                    }
-                }
+                profilList = sampleListForCompressedValues(profilList, firstSample, firstSampleId,8);
                 break;
             }
             case 3:{
-                previousSample = firstSample;
-                nbOfCompressedValuesInBits = Short.SIZE/4;
-                int indexOfprofilList = 1;
-                int totalElevationIndex= (int) Math.ceil((profilList.length - 1.0)/nbOfCompressedValuesInBits);
-                for(int elevationIndex = 1 ; elevationIndex <= totalElevationIndex; elevationIndex++) {
-                    encodedSample = elevations.get(firstSampleId + elevationIndex);
-
-                    for (int indexOfBits = nbOfCompressedValuesInBits - 1; indexOfBits >= 0 && indexOfprofilList < profilList.length; indexOfBits--) {
-                        int startOfBits = indexOfBits * 4;
-                        difference = Q28_4.asFloat(Bits.extractSigned(encodedSample, startOfBits, 4));
-                        newSample = previousSample + difference;
-                        profilList[indexOfprofilList] = newSample;
-                        previousSample = newSample;
-                        indexOfprofilList++;
-                    }
-                }
+                profilList = sampleListForCompressedValues(profilList, firstSample, firstSampleId,4);
                 break;
             }
         }
@@ -148,16 +111,51 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
     }
 
     /**
+     * sampleListForCompressedValues permet de renvoye la liste d'échantillons de l'arrête d'identité donnée,
+     * pour celles qui ont des profils avec des valeurs compresser
+     * @param profilList liste contenant tous les échantillons
+     * @param firstSample le premier échantillon
+     * @param firstSampleId l'index du premier échantillon
+     * @param sizeOfCompressedValues la taille en bit des valeurs compresser
+     * @return la liste d'échantillons de l'arrête d'identité donnée
+     */
+    private float[] sampleListForCompressedValues(float[] profilList, float firstSample, int firstSampleId, int sizeOfCompressedValues) {
+
+        float newSample;
+        float difference;
+        int encodedSample;
+
+        float previousSample = firstSample;
+        int nbOfCompressedValuesInBits = Short.SIZE / sizeOfCompressedValues;
+
+        int indexOfProfilList = 1;
+        int totalElevationIndex = (int) Math.ceil((profilList.length - 1.0) / nbOfCompressedValuesInBits);
+        for (int elevationIndex = 1; elevationIndex <= totalElevationIndex; elevationIndex++) {
+            encodedSample = elevations.get(firstSampleId + elevationIndex);
+
+            for (int indexOfBits = nbOfCompressedValuesInBits - 1; indexOfBits >= 0 && indexOfProfilList < profilList.length; indexOfBits--) {
+                int startOfBits = indexOfBits * sizeOfCompressedValues;
+                difference = Q28_4.asFloat(Bits.extractSigned(encodedSample, startOfBits, sizeOfCompressedValues));
+                newSample = previousSample + difference;
+                profilList[indexOfProfilList] = newSample;
+                previousSample = newSample;
+                indexOfProfilList++;
+            }
+        }
+    return profilList;
+    }
+
+    /**
      * invertList méthode qui inverse les éléments d'une liste donnée
      * @param profilSample la liste qu'on veut inverser
      * @return une liste inverser
      */
     private float[] invertList(float[] profilSample){
-        float[] newprofilSample = new float[profilSample.length];
+        float[] newProfilSample = new float[profilSample.length];
         for(int i = 0; i < profilSample.length; i++){
-            newprofilSample[i] = profilSample[profilSample.length - (i+1)];
+            newProfilSample[i] = profilSample[profilSample.length - (i+1)];
         }
-        return newprofilSample;
+        return newProfilSample;
     }
 
     /**
