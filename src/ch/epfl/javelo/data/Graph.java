@@ -39,6 +39,16 @@ public class Graph {
      */
     public static Graph loadFrom(Path basePath) throws IOException{
 
+        Path nodesPath = basePath.resolve("nodes.bin");
+        Path edgesPath = basePath.resolve("edges.bin");
+        Path profile_idsPath = basePath.resolve("profile_ids.bin");
+        Path elevationsPath = basePath.resolve("elevations.bin");
+        Path attributesPath = basePath.resolve("attributes.bin");
+        Path sectorsPath = basePath.resolve("sectors.bin");
+        Path nodes_osmidPath = basePath.resolve("nodes_osmid.bin");
+
+
+
 
     }
 
