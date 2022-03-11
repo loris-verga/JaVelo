@@ -8,13 +8,13 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.function.DoubleUnaryOperator;
 
+
 /**
  * Classe Graph: Cette classe représente le graphe Javelo. Elle est publique et immuable
  *
  * @author  Loris Verga (345661)
  */
 public class Graph {
-
 
     /**
      * Constructeur publique de la classe Graph
@@ -24,6 +24,7 @@ public class Graph {
      * @param attributeSets L'ensemble des attributs du graph
      */
     public Graph(GraphNodes nodes, GraphSectors sectors, GraphEdges edges, List<AttributeSet> attributeSets){
+
 
 
     }
@@ -47,6 +48,8 @@ public class Graph {
         Path sectorsPath = basePath.resolve("sectors.bin");
         Path nodes_osmidPath = basePath.resolve("nodes_osmid.bin");
 
+        return null;
+
 
 
 
@@ -58,6 +61,7 @@ public class Graph {
      * @return retourne le nombre total de noeuds dans le graph.
      */
     public int nodeCount(){
+        return 0;
 
     }
 
@@ -68,6 +72,7 @@ public class Graph {
      * @return retourne la position du nœud d'identité donnée
      */
     public PointCh nodePoint(int nodeId){
+        return null;
 
     }
 
@@ -77,6 +82,7 @@ public class Graph {
      * @return retourne le nombre d'arrêtés sortant du nœud d'identité donnée
      */
     public int nodeOutDegree(int nodeId){
+        return 0;
 
     }
 
@@ -87,6 +93,7 @@ public class Graph {
      * @return l'id du noeud
      */
     public int nodeOutEdgeId(int nodeId, int edgeIndex){
+        return 0;
 
     }
 
@@ -98,6 +105,7 @@ public class Graph {
      * @return l'identité du nœud le plus proche.
      */
     public int nodeClosestTo(PointCh point, double searchDistance){
+        return 0;
 
     }
 
@@ -107,6 +115,7 @@ public class Graph {
      * @return l'id du noeud de destination
      */
     public int edgeTargetNodeId(int edgeId){
+        return 0;
 
     }
 
@@ -116,6 +125,8 @@ public class Graph {
      * @return
      */
     public boolean edgeIsInverted(int edgeId){
+        return false;
+
 
     }
 
@@ -125,6 +136,7 @@ public class Graph {
      * @return l'ensemble des attributs OSM liés à l'arrête
      */
     public AttributeSet edgeAttributes(int edgeId){
+        return null;
 
     }
 
@@ -134,6 +146,7 @@ public class Graph {
      * @return longueur en mètre de l'arrête.
      */
     double edgeLength(int edgeId){
+        return 0;
 
     }
 
@@ -143,6 +156,7 @@ public class Graph {
      * @return le dénivelé total de l'arrête (double)
      */
     public double edgeElevationGain(int edgeId){
+        return 0;
 
     }
 
@@ -153,6 +167,7 @@ public class Graph {
      * @return
      */
     public DoubleUnaryOperator edgeProfile(int edgeId){
+        return null;
 
     }
 
