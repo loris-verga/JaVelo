@@ -1,6 +1,7 @@
 package ch.epfl.javelo.data;
 
 
+import ch.epfl.javelo.Functions;
 import ch.epfl.javelo.projection.PointCh;
 
 import java.io.File;
@@ -14,6 +15,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.DoubleUnaryOperator;
+import java.util.function.ToDoubleBiFunction;
 
 
 /**
@@ -23,17 +25,24 @@ import java.util.function.DoubleUnaryOperator;
  */
 public class Graph {
 
+    //Les attributs de la classe graphe.
+    private GraphNodes nodes;
+    private GraphSectors sectors;
+    private GraphEdges edges;
+    private List<AttributeSet> attributeSets;
+
     /**
-     * Constructeur publique de la classe Graph
-     * @param nodes Les noeuds du graphe
+     * Constructeur public de la classe Graph
+     * @param nodes Les nœuds du graphe
      * @param sectors Les secteurs du graphe.
      * @param edges Les arrêtes du graphe.
      * @param attributeSets L'ensemble des attributs du graph
      */
     public Graph(GraphNodes nodes, GraphSectors sectors, GraphEdges edges, List<AttributeSet> attributeSets){
-
-
-
+        this.nodes = nodes;
+        this.sectors = sectors;
+        this.edges = edges;
+        this.attributeSets = attributeSets;
     }
 
 
@@ -103,8 +112,7 @@ public class Graph {
      * @return retourne le nombre total de noeuds dans le graph.
      */
     public int nodeCount(){
-        return 0;
-
+        return nodes.count();
     }
 
 
@@ -114,8 +122,9 @@ public class Graph {
      * @return retourne la position du nœud d'identité donnée
      */
     public PointCh nodePoint(int nodeId){
-        return null;
-
+        double n = nodes.nodeN(nodeId);
+        double e = nodes.nodeE(nodeId);
+        return new PointCh(e, n);
     }
 
     /**
@@ -124,7 +133,7 @@ public class Graph {
      * @return retourne le nombre d'arrêtés sortant du nœud d'identité donnée
      */
     public int nodeOutDegree(int nodeId){
-        return 0;
+        return nodes.outDegree(nodeId);
 
     }
 
@@ -135,8 +144,7 @@ public class Graph {
      * @return l'id du noeud
      */
     public int nodeOutEdgeId(int nodeId, int edgeIndex){
-        return 0;
-
+        return nodes.edgeId(nodeId, edgeIndex);
     }
 
     /**
@@ -147,6 +155,29 @@ public class Graph {
      * @return l'identité du nœud le plus proche.
      */
     public int nodeClosestTo(PointCh point, double searchDistance){
+        List<GraphSectors.Sector> listOfSectors = sectors.sectorsInArea(point, searchDistance);
+        if (listOfSectors.size()==0){
+            return -1;
+        }
+
+
+        for (int i = 0; i<listOfSectors.size(); ++i){
+            GraphSectors.Sector sector = listOfSectors.get(i);
+            int startNodeId = sector.startNodeId();
+            int endNodeId = sector.endNodeId();
+
+            PointCh pointClosestTo = nodePoint(startNodeId);
+
+            for (int a = startNodeId; a<=endNodeId;++a){
+                PointCh otherPoint = nodePoint(a);
+
+                //TODO
+
+
+
+            }
+
+        }
         return 0;
 
     }
@@ -157,8 +188,7 @@ public class Graph {
      * @return l'id du noeud de destination
      */
     public int edgeTargetNodeId(int edgeId){
-        return 0;
-
+        return edges.targetNodeId(edgeId);
     }
 
     /**
@@ -167,7 +197,7 @@ public class Graph {
      * @return
      */
     public boolean edgeIsInverted(int edgeId){
-        return false;
+        return edges.isInverted(edgeId);
 
 
     }
@@ -178,7 +208,7 @@ public class Graph {
      * @return l'ensemble des attributs OSM liés à l'arrête
      */
     public AttributeSet edgeAttributes(int edgeId){
-        return null;
+        return attributeSets.get(edges.attributesIndex(edgeId));
 
     }
 
@@ -188,7 +218,7 @@ public class Graph {
      * @return longueur en mètre de l'arrête.
      */
     double edgeLength(int edgeId){
-        return 0;
+        return edges.length(edgeId);
 
     }
 
@@ -198,7 +228,7 @@ public class Graph {
      * @return le dénivelé total de l'arrête (double)
      */
     public double edgeElevationGain(int edgeId){
-        return 0;
+        return edges.elevationGain(edgeId);
 
     }
 
@@ -209,7 +239,12 @@ public class Graph {
      * @return
      */
     public DoubleUnaryOperator edgeProfile(int edgeId){
-        return null;
+        float [] profileSamples = edges.profileSamples(edgeId);
+        if (profileSamples.length == 0){
+            return Functions.constant(Double.NaN);
+        }
+        double xMax = edges.length(edgeId);
+        return Functions.sampled(profileSamples, xMax);
 
     }
 
