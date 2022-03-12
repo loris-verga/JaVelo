@@ -1,5 +1,6 @@
-package ch.epfl.javelo.data;
+package ch.epfl.test;
 
+import ch.epfl.javelo.data.GraphEdges;
 import org.junit.jupiter.api.Test;
 
 import java.nio.ByteBuffer;

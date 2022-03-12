@@ -1,5 +1,6 @@
-package ch.epfl.javelo;
+package ch.epfl.test;
 
+import ch.epfl.javelo.Bits;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,5 +1,7 @@
-package ch.epfl.javelo.projection;
+package ch.epfl.test;
 
+import ch.epfl.javelo.projection.SwissBounds;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -7,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SwissBoundsTestOur {
     @Test
     void swissBoundsAreCorrect() {
-        assertEquals(2_485_000, SwissBounds.MIN_E);
+        Assertions.assertEquals(2_485_000, SwissBounds.MIN_E);
         assertEquals(2_834_000, SwissBounds.MAX_E);
         assertEquals(1_075_000, SwissBounds.MIN_N);
         assertEquals(1_296_000, SwissBounds.MAX_N);

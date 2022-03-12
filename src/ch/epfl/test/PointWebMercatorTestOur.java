@@ -1,6 +1,9 @@
-package ch.epfl.javelo.projection;
+package ch.epfl.test;
 
 import ch.epfl.javelo.Preconditions;
+import ch.epfl.javelo.projection.Ch1903;
+import ch.epfl.javelo.projection.PointCh;
+import ch.epfl.javelo.projection.PointWebMercator;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;

@@ -1,5 +1,7 @@
-package ch.epfl.javelo.projection;
+package ch.epfl.test;
 
+import ch.epfl.javelo.projection.WebMercator;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,7 +19,7 @@ class WebMercatorTestOur {
     void xWorksOnTrivialValues(){
         double lambda = 0;
         double expected = 0.5;
-        assertEquals(expected, WebMercator.x(lambda), DELTA);
+        Assertions.assertEquals(expected, WebMercator.x(lambda), DELTA);
     }
     @Test
     void xWorksOnNonTrivialValues(){

@@ -1,5 +1,6 @@
-package ch.epfl.javelo;
+package ch.epfl.test;
 
+import ch.epfl.javelo.Functions;
 import org.junit.jupiter.api.Test;
 
 import static ch.epfl.test.TestRandomizer.RANDOM_ITERATIONS;

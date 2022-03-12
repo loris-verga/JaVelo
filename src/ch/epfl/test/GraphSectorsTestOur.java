@@ -1,6 +1,7 @@
-package ch.epfl.javelo.data;
+package ch.epfl.test;
 
 import ch.epfl.javelo.Q28_4;
+import ch.epfl.javelo.data.GraphSectors;
 import ch.epfl.javelo.projection.PointCh;
 import ch.epfl.javelo.projection.SwissBounds;
 import org.junit.jupiter.api.Test;

@@ -1,5 +1,7 @@
-package ch.epfl.javelo.projection;
+package ch.epfl.test;
 
+import ch.epfl.javelo.projection.PointCh;
+import ch.epfl.javelo.projection.PointWebMercator;
 import ch.epfl.test.TestRandomizer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;

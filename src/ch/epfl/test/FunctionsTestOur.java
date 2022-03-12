@@ -1,5 +1,8 @@
-package ch.epfl.javelo;
+package ch.epfl.test;
 
+import ch.epfl.javelo.Functions;
+import ch.epfl.javelo.Math2;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.DoubleUnaryOperator;
@@ -56,7 +59,7 @@ class FunctionsTestOur {
         float [] tableau = {0, 1, 2, 3, 4, 5, 6, 7, 8 ,9, 10};
         double xMax = 10;
         DoubleUnaryOperator function = Functions.sampled(tableau, xMax);
-        assertEquals(Math2.interpolate(8, 9, 0.5), 8.5);
+        Assertions.assertEquals(Math2.interpolate(8, 9, 0.5), 8.5);
     }
 
 

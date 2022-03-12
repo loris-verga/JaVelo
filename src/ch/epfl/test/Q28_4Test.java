@@ -1,5 +1,7 @@
-package ch.epfl.javelo;
+package ch.epfl.test;
 
+import ch.epfl.javelo.Q28_4;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static ch.epfl.test.TestRandomizer.RANDOM_ITERATIONS;
@@ -12,7 +14,7 @@ class Q28_4Test {
         var rng = newRandom();
         for (int i = 0; i < RANDOM_ITERATIONS; i += 1) {
             var n = rng.nextInt(1 << 28);
-            assertEquals(n, Q28_4.ofInt(n) >>> 4);
+            Assertions.assertEquals(n, Q28_4.ofInt(n) >>> 4);
         }
     }
 
