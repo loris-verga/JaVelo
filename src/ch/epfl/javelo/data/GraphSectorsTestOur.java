@@ -55,7 +55,7 @@ class GraphSectorsTestOur {
         listeOfSectors = graphSectors.sectorsInArea(point, SwissBounds.WIDTH);
 
         //ceci test le nombre de secteurs. (devrait renvoyer tous les secteurs)
-        assertEquals(listeOfSectors.size(), 128*128); //TODO TEST PAS OK
+        assertEquals(listeOfSectors.size(), 128*128);
 
 
 

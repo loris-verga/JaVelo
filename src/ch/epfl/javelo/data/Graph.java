@@ -3,8 +3,15 @@ package ch.epfl.javelo.data;
 
 import ch.epfl.javelo.projection.PointCh;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.nio.LongBuffer;
+import java.nio.ShortBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.DoubleUnaryOperator;
 
@@ -46,12 +53,47 @@ public class Graph {
         Path elevationsPath = basePath.resolve("elevations.bin");
         Path attributesPath = basePath.resolve("attributes.bin");
         Path sectorsPath = basePath.resolve("sectors.bin");
-        Path nodes_osmidPath = basePath.resolve("nodes_osmid.bin");
 
-        return null;
+        IntBuffer nodesBuffer;
+        try (FileChannel channelNodes = FileChannel.open(nodesPath)) {
+            nodesBuffer = channelNodes.map(FileChannel.MapMode.READ_ONLY, 0, channelNodes.size()).asIntBuffer();
+        }
 
+        ByteBuffer edgesBuffer;
+        try (FileChannel channelEdges = FileChannel.open(edgesPath)) {
+            edgesBuffer = channelEdges.map(FileChannel.MapMode.READ_ONLY, 0, channelEdges.size());
+        }
 
+        IntBuffer profile_idsBuffer;
+        try(FileChannel channelProfile_ids = FileChannel.open(profile_idsPath)) {
+            profile_idsBuffer = channelProfile_ids.map(FileChannel.MapMode.READ_ONLY, 0, channelProfile_ids.size()).asIntBuffer();
+        }
 
+        ShortBuffer elevationsBuffer;
+        try(FileChannel channelElevations = FileChannel.open(elevationsPath)) {
+            elevationsBuffer = channelElevations.map(FileChannel.MapMode.READ_ONLY, 0, channelElevations.size()).asShortBuffer();
+        }
+
+        LongBuffer attributeSetsBuffer;
+        try(FileChannel channelAttributeSets = FileChannel.open(attributesPath)){
+            attributeSetsBuffer = channelAttributeSets.map(FileChannel.MapMode.READ_ONLY, 0, channelAttributeSets.size()).asLongBuffer();
+        }
+        long [] channelArray = attributeSetsBuffer.array();
+        ArrayList<AttributeSet> listOfAttributeSets = new ArrayList<>();
+        for (int i = 0; i<channelArray.length; ++i){
+            listOfAttributeSets.add(new AttributeSet(channelArray[i]));
+        }
+
+        ByteBuffer sectorsBuffer;
+        try(FileChannel channelSectors = FileChannel.open(sectorsPath)) {
+            sectorsBuffer = channelSectors.map(FileChannel.MapMode.READ_ONLY, 0, channelSectors.size());
+        }
+
+        GraphNodes graphNodes = new GraphNodes(nodesBuffer);
+        GraphEdges graphEdges = new GraphEdges(edgesBuffer, profile_idsBuffer, elevationsBuffer);
+        GraphSectors graphSectors = new GraphSectors(sectorsBuffer);
+
+        return new Graph(graphNodes, graphSectors, graphEdges, listOfAttributeSets);
 
     }
 
