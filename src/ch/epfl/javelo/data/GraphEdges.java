@@ -47,7 +47,6 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
      * @return la longueur de l'arrête
      */
     public double length(int edgeId){
-        //todo added unsigned short
         return  Q28_4.asDouble(Short.toUnsignedInt(edgesBuffer.getShort(EDGE_INTS * edgeId + OFFSET_LENGTH_OF_EDGE)));
     }
 
