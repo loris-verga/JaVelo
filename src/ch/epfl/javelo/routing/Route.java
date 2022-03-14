@@ -33,7 +33,7 @@ public interface Route {
      * Cette méthode retourne la totalité des arrêtes de l'itinéraire.
      * @return une liste de Edge
      */
-    List<Edge> edges(); //TODO Faire et importer la classe Edge
+    //List<Edge> edges(); //TODO Faire et importer la classe Edge
 
     /**
      * Cette méthode retourne la totalité des points situés aux extrémités des arêtes de l'itinéraire,
