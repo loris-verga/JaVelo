@@ -8,7 +8,7 @@ import java.util.function.DoubleUnaryOperator;
 
 public record Edge(int fromNodeId, int toNodeId, PointCh fromPoint, PointCh toPoint, double length, DoubleUnaryOperator profile) {
 
-    static Edge of(Graph graph, int edgeId, int fromNodeId, int toNodeId ){
+    public static Edge of(Graph graph, int edgeId, int fromNodeId, int toNodeId ){
 
         //todo verify that everything here is correct
         PointCh fromPoint = graph.nodePoint(fromNodeId);
