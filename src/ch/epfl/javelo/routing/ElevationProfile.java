@@ -17,6 +17,11 @@ public class ElevationProfile {
     double length;
     float[] elevationSamples;
 
+    /**
+     * constructeur public de ElevationProfile
+     * @param length attribut longueur de l'itinéraire
+     * @param elevationSamples tableau contenant les échantillons d'altitude
+     */
     public ElevationProfile(double length, float[] elevationSamples){
         //todo check here if the condition of the elevationSample is correct
         Preconditions.checkArgument(length > 0 && elevationSamples.length >= 2);
@@ -24,8 +29,16 @@ public class ElevationProfile {
         this.elevationSamples = elevationSamples;
     }
 
+    /**
+     * methode length renvoie la longueur de l'itinéraire
+     * @return la longueur de l'itinéraire
+     */
     public double length() {return length;}
 
+    /**
+     * methode minElevation retourne l'altitude minimum du profil en mètres
+     * @return l'altitude minimum du profil
+     */
     public double minElevation(){
         DoubleSummaryStatistics s = new DoubleSummaryStatistics();
         for (int i = 0; i < elevationSamples.length ; i++){
@@ -34,6 +47,10 @@ public class ElevationProfile {
         return s.getMin();
     }
 
+    /**
+     * methode maxElevation retourne l'altitude maximum du profil en mètres
+     * @return l'altitude maximum du profil
+     */
     public double maxElevation(){
         DoubleSummaryStatistics s = new DoubleSummaryStatistics();
         for (int i = 0; i < elevationSamples.length ; i++){
@@ -42,6 +59,10 @@ public class ElevationProfile {
         return s.getMax();
     }
 
+    /**
+     * methode totalAscent retourne le dénivelé positif total du profil en mètres
+     * @return le dénivelé positif total du profil
+     */
     public double totalAscent(){
         double totalAscentValue = 0.0;
         for (int i = 1; i < elevationSamples.length ; i++){
@@ -53,6 +74,10 @@ public class ElevationProfile {
         return totalAscentValue;
     }
 
+    /**
+     * methode totalDescent renvoie le dénivelé négatif total du profil en mètres
+     * @return le dénivelé négatif total du profil
+     */
     public double totalDescent(){
         double totalDescentValue = 0.0;
         for (int i = 1; i < elevationSamples.length ; i++){
@@ -64,10 +89,14 @@ public class ElevationProfile {
         return totalDescentValue;
     }
 
+    /**
+     * methode elevationAt renvoie l'altitude du profil à la position donnée
+     * @param position la position à laquelle on veut connaitre l'altitude
+     * @return l'altitude du profil à la position donnée
+     */
     public double elevationAt(double position){
         //if(position < 0){return elevationSamples[0];}
         //if(position > length){return elevationSamples[elevationSamples.length - 1];}
-        //todo was going to do this by myself but then remembered hearing about this so I checked functions out and it has a very very similaire function to this so should I use it..??
         //todo ask Loris about this... have no idea if this is correct...
 
         DoubleUnaryOperator asSampled = Functions.sampled(elevationSamples, length);

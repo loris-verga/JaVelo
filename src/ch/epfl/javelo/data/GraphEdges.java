@@ -84,14 +84,16 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
         int profilType = Bits.extractUnsigned(profileIdAndType,30,2);
 
         int firstSampleId = Bits.extractUnsigned(profileIdAndType,0,30);
-        float firstSample = Q28_4.asFloat(elevations.get(firstSampleId));
+        //todo second change here
+        float firstSample = Q28_4.asFloat(Short.toUnsignedInt(elevations.get(firstSampleId)));
         profilList[0] = firstSample;
 
         switch (profilType){
             case 1:{
                 float newSample;
                 for (int i = 1; i < profilList.length; i++){
-                    newSample = Q28_4.asFloat(elevations.get(firstSampleId + i));
+                    //todo third change here
+                    newSample = Q28_4.asFloat(Short.toUnsignedInt(elevations.get(firstSampleId + i)));
                     profilList[i] = newSample;
                 }
                 break;
@@ -163,7 +165,8 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
      * @return l'identité de l'ensemble d'attributs attaché à l'arête d'identité donnée
      */
     public int attributesIndex(int edgeId){
-        return edgesBuffer.getShort(EDGE_INTS * edgeId + OFFSET_ID_OF_SET_OF_OSM);}
+        //todo first change here
+        return Short.toUnsignedInt(edgesBuffer.getShort(EDGE_INTS * edgeId + OFFSET_ID_OF_SET_OF_OSM));}
 
 
 }
