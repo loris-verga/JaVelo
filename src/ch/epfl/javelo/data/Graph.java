@@ -217,7 +217,8 @@ public class Graph {
      * @param edgeId id de l'arrête.
      * @return longueur en mètre de l'arrête.
      */
-    double edgeLength(int edgeId){
+     public double edgeLength(int edgeId){
+        //todo JUAN j'ai mis un public ici car j'en avais besoin et sur l'enoncer il y a pas marquer que c'est pas public
         return edges.length(edgeId);
 
     }
