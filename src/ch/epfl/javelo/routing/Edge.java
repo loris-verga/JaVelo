@@ -33,7 +33,7 @@ public record Edge(int fromNodeId, int toNodeId, PointCh fromPoint, PointCh toPo
 
     /**
      * methode positionClosestTo retourne les coordonnées du point qui se situe le plus proche du point donné, le long de l'arête
-     * @param point le point donnée
+     * @param point le point donné
      * @return les coordonnées du point se situe le plus proche du point donné, le long de l'arête
      */
     public double positionClosestTo(PointCh point){
@@ -52,7 +52,7 @@ public record Edge(int fromNodeId, int toNodeId, PointCh fromPoint, PointCh toPo
      * @return le point qui se situe a une distance position depuis le début de l'arête, sur l'arête
      */
     public PointCh pointAt(double position){
-        //todo check if works if values further away from fromPoint and toPoint
+        //todo this works iff delta is bigger than 7... check prescition..
         double eCoordinate = (toPoint.e() - fromPoint.e()) * position/length + fromPoint.e();
         double nCoordinate = (toPoint.n() - fromPoint.n()) * position/length + fromPoint.n();
         return new PointCh(eCoordinate, nCoordinate);
