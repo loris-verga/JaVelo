@@ -14,8 +14,8 @@ import java.util.function.DoubleUnaryOperator;
  */
 public class ElevationProfile {
 
-    double length;
-    float[] elevationSamples;
+    private double length;
+    private float[] elevationSamples;
 
     /**
      * constructeur public de ElevationProfile
@@ -23,7 +23,6 @@ public class ElevationProfile {
      * @param elevationSamples tableau contenant les échantillons d'altitude
      */
     public ElevationProfile(double length, float[] elevationSamples){
-        //todo check here if the condition of the elevationSample is correct
         Preconditions.checkArgument(length > 0 && elevationSamples.length >= 2);
         this.length = length;
         this.elevationSamples = elevationSamples;
@@ -66,7 +65,6 @@ public class ElevationProfile {
     public double totalAscent(){
         double totalAscentValue = 0.0;
         for (int i = 1; i < elevationSamples.length ; i++){
-            //todo not sure if this is correct for the "somme de toutes les diff pos entre un echantillon et son predecesseur"
             if (elevationSamples[i-1] < elevationSamples[i]) {
                 totalAscentValue += elevationSamples[i] - elevationSamples[i-1];
             }
@@ -81,7 +79,6 @@ public class ElevationProfile {
     public double totalDescent(){
         double totalDescentValue = 0.0;
         for (int i = 1; i < elevationSamples.length ; i++){
-            //todo not sure if this is correct for the "somme de toutes les diff negatives entre un echantillon et son predecesseur"
             if (elevationSamples[i-1] > elevationSamples[i]) {
                 totalDescentValue += elevationSamples[i-1] - elevationSamples[i];
             }
@@ -95,9 +92,6 @@ public class ElevationProfile {
      * @return l'altitude du profil à la position donnée
      */
     public double elevationAt(double position){
-        //if(position < 0){return elevationSamples[0];}
-        //if(position > length){return elevationSamples[elevationSamples.length - 1];}
-        //todo ask Loris about this... have no idea if this is correct...
 
         DoubleUnaryOperator asSampled = Functions.sampled(elevationSamples, length);
         return asSampled.applyAsDouble(position);

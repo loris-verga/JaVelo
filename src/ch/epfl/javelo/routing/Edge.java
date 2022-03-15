@@ -64,9 +64,7 @@ public record Edge(int fromNodeId, int toNodeId, PointCh fromPoint, PointCh toPo
      * @return  l'altitude à une position donnée sur l'arête
      */
     public double elevationAt(double position){
-        PointCh newPoint = pointAt(position);
-        //todo have no idea how to do ask help...
-        return profile.applyAsDouble(newPoint.e());
+        return profile.applyAsDouble(position);
     }
 
 }
