@@ -1,5 +1,6 @@
-package ch.epfl.javelo.data;
+package ch.epfl.test;
 
+import ch.epfl.javelo.data.GraphSectors;
 import ch.epfl.javelo.projection.PointCh;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
