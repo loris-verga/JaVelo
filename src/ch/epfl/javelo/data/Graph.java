@@ -26,10 +26,10 @@ import java.util.function.ToDoubleBiFunction;
 public class Graph {
 
     //Les attributs de la classe graphe.
-    private GraphNodes nodes;
-    private GraphSectors sectors;
-    private GraphEdges edges;
-    private List<AttributeSet> attributeSets;
+    private final GraphNodes nodes;
+    private final GraphSectors sectors;
+    private final GraphEdges edges;
+    private final List<AttributeSet> attributeSets;
 
     /**
      * Constructeur public de la classe Graph
@@ -87,10 +87,10 @@ public class Graph {
         try(FileChannel channelAttributeSets = FileChannel.open(attributesPath)){
             attributeSetsBuffer = channelAttributeSets.map(FileChannel.MapMode.READ_ONLY, 0, channelAttributeSets.size()).asLongBuffer();
         }
-        long [] channelArray = attributeSetsBuffer.array();
+
         ArrayList<AttributeSet> listOfAttributeSets = new ArrayList<>();
-        for (int i = 0; i<channelArray.length; ++i){
-            listOfAttributeSets.add(new AttributeSet(channelArray[i]));
+        for (int i = 0; i<attributeSetsBuffer.capacity(); ++i){
+            listOfAttributeSets.add(new AttributeSet(attributeSetsBuffer.get(i)));
         }
 
         ByteBuffer sectorsBuffer;
@@ -161,25 +161,23 @@ public class Graph {
         }
 
 
+        int indexOfPointClosestTo = listOfSectors.get(0).startNodeId();
+        double squaredDistance = point.squaredDistanceTo(nodePoint(indexOfPointClosestTo));
+
         for (int i = 0; i<listOfSectors.size(); ++i){
             GraphSectors.Sector sector = listOfSectors.get(i);
             int startNodeId = sector.startNodeId();
             int endNodeId = sector.endNodeId();
 
-            PointCh pointClosestTo = nodePoint(startNodeId);
-
             for (int a = startNodeId; a<=endNodeId;++a){
                 PointCh otherPoint = nodePoint(a);
-
-                //TODO
-
-
-
+                if (point.squaredDistanceTo(otherPoint)<squaredDistance){
+                    squaredDistance = point.squaredDistanceTo(otherPoint);
+                    indexOfPointClosestTo = a;
+                }
             }
-
         }
-        return 0;
-
+        return indexOfPointClosestTo;
     }
 
     /**
@@ -218,9 +216,7 @@ public class Graph {
      * @return longueur en mètre de l'arrête.
      */
      public double edgeLength(int edgeId){
-        //todo JUAN j'ai mis un public ici car j'en avais besoin et sur l'enoncer il y a pas marquer que c'est pas public
         return edges.length(edgeId);
-
     }
 
     /**

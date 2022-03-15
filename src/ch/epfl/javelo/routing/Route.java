@@ -66,6 +66,19 @@ public interface Route {
      */
     RoutePoint pointClosestTo(PointCh point);
 
+
+    /**
+     * Cette méthode retourne l'altitude à la position donnée le long de l'itinéraire.
+     * @param position
+     * @return l'élévation
+     */
+    double elevationAt(double position);
+
+
+
+
+
+
 }
 
 
