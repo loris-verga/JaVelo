@@ -52,9 +52,8 @@ public record Edge(int fromNodeId, int toNodeId, PointCh fromPoint, PointCh toPo
      * @return le point qui se situe a une distance position depuis le début de l'arête, sur l'arête
      */
     public PointCh pointAt(double position){
-        //todo this works iff delta is bigger than 7... check prescition..
-        double eCoordinate = (toPoint.e() - fromPoint.e()) * position/length + fromPoint.e();
-        double nCoordinate = (toPoint.n() - fromPoint.n()) * position/length + fromPoint.n();
+        double eCoordinate = Math.fma(toPoint.e() - fromPoint.e(), position/length,  fromPoint.e());
+        double nCoordinate = Math.fma(toPoint.n() - fromPoint.n(), position/length, fromPoint.n());
         return new PointCh(eCoordinate, nCoordinate);
     }
 

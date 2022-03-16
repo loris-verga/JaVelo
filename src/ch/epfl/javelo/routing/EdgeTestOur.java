@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EdgeTestOur {
     private static final double DELTA = 1e-7;
-    private static final double DELTA2 = 7;
+    private static final double DELTA2 = 0;
 
     Edge creatorOfEdge(int eStart, int nStart, int eEnd, int nEnd){
         PointCh point1 = new PointCh(SwissBounds.MIN_E + eStart, SwissBounds.MIN_N + nStart);
@@ -40,16 +40,16 @@ class EdgeTestOur {
         Edge edge1 = creatorOfEdge(6, 5, 18, 9);
         Edge edge2 = creatorOfEdge(10,13,6,25);
 
-        assertEquals(new PointCh(SwissBounds.MIN_E + 10,SwissBounds.MIN_N + 13).e(), edge1.pointAt(edge1.positionClosestTo(new PointCh(SwissBounds.MIN_E + 10,SwissBounds.MIN_N + 13))).e(), DELTA2 );
-        assertEquals(new PointCh(SwissBounds.MIN_E + 10,SwissBounds.MIN_N + 13).n(), edge1.pointAt(Math.hypot(12 - 6, 7 - 5)).n(), DELTA2 );
-        assertEquals(new PointCh(SwissBounds.MIN_E + 8.4,SwissBounds.MIN_N + 19.8).e(), edge2.pointAt(Math.hypot(7.8 - 10 ,19.6 - 13)).e() ,DELTA2 );
-        assertEquals(new PointCh(SwissBounds.MIN_E + 8.4,SwissBounds.MIN_N + 19.8).n(), edge2.pointAt(Math.hypot(7.8 - 10 ,19.6 - 13)).n() ,DELTA2 );
-        assertEquals(new PointCh(SwissBounds.MIN_E + 13,SwissBounds.MIN_N + 9).e(), edge2.pointAt((-1)*Math.hypot(10 - 11.5,13 - 8.5)).e() ,DELTA2 );
-        assertEquals(new PointCh(SwissBounds.MIN_E + 13,SwissBounds.MIN_N + 9).n(), edge2.pointAt((-1)*Math.hypot(10 - 11.5,13 - 8.5)).n() ,DELTA2 );
-        assertEquals(new PointCh(SwissBounds.MIN_E + 8.4,SwissBounds.MIN_N + 19.8).e(), edge2.pointAt(Math.hypot(10 - 7.8, 13 - 19.6)).e() , DELTA2 );
-        assertEquals(new PointCh(SwissBounds.MIN_E + 8.4,SwissBounds.MIN_N + 19.8).n(), edge2.pointAt(Math.hypot(10 - 7.8, 13 - 19.6)).n() , DELTA2 );
-        assertEquals(new PointCh(SwissBounds.MIN_E + 11,SwissBounds.MIN_N + 30).e(), edge2.pointAt(Math.hypot(10 - 5, 13 - 28)).e() , DELTA2 );
-        assertEquals(new PointCh(SwissBounds.MIN_E + 11,SwissBounds.MIN_N + 30).n(), edge2.pointAt(Math.hypot(10 - 5, 13 - 28)).n() , DELTA2 );
+        assertEquals(new PointCh(SwissBounds.MIN_E + 12,SwissBounds.MIN_N + 7).e(), edge1.pointAt(Math.hypot(12 - 6, 7 - 5)).e(), DELTA2 );
+        assertEquals(new PointCh(SwissBounds.MIN_E + 12,SwissBounds.MIN_N + 7).n(), edge1.pointAt(Math.hypot(12 - 6, 7 - 5)).n(), DELTA2 );
+        assertEquals(new PointCh(SwissBounds.MIN_E + 7.8,SwissBounds.MIN_N + 19.6).e(), edge2.pointAt(Math.hypot(7.8 - 10 ,19.6 - 13)).e() ,DELTA2 );
+        assertEquals(new PointCh(SwissBounds.MIN_E + 7.8,SwissBounds.MIN_N + 19.6).n(), edge2.pointAt(Math.hypot(7.8 - 10 ,19.6 - 13)).n() ,DELTA2 );
+        assertEquals(new PointCh(SwissBounds.MIN_E + 11.5,SwissBounds.MIN_N + 8.5).e(), edge2.pointAt((-1)*Math.hypot(10 - 11.5,13 - 8.5)).e() ,DELTA2 );
+        assertEquals(new PointCh(SwissBounds.MIN_E + 11.5,SwissBounds.MIN_N + 8.5).n(), edge2.pointAt((-1)*Math.hypot(10 - 11.5,13 - 8.5)).n() ,DELTA2 );
+        assertEquals(new PointCh(SwissBounds.MIN_E + 7.8,SwissBounds.MIN_N + 19.6).e(), edge2.pointAt(Math.hypot(10 - 7.8, 13 - 19.6)).e() , DELTA2 );
+        assertEquals(new PointCh(SwissBounds.MIN_E + 7.8,SwissBounds.MIN_N + 19.6).n(), edge2.pointAt(Math.hypot(10 - 7.8, 13 - 19.6)).n() , DELTA2 );
+        assertEquals(new PointCh(SwissBounds.MIN_E + 5,SwissBounds.MIN_N + 28).e(), edge2.pointAt(Math.hypot(10 - 5, 13 - 28)).e() , DELTA2 );
+        assertEquals(new PointCh(SwissBounds.MIN_E + 5,SwissBounds.MIN_N + 28).n(), edge2.pointAt(Math.hypot(10 - 5, 13 - 28)).n() , DELTA2 );
 
     }
 }

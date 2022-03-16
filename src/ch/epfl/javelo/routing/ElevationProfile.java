@@ -15,7 +15,6 @@ import java.util.function.DoubleUnaryOperator;
 public class ElevationProfile {
 
     private double length;
-    private float[] elevationSamples;
 
     private double minElevation;
     private double maxElevation;
@@ -31,7 +30,6 @@ public class ElevationProfile {
     public ElevationProfile(double length, float[] elevationSamples){
         Preconditions.checkArgument(length > 0 && elevationSamples.length >= 2);
         this.length = length;
-        this.elevationSamples = elevationSamples;
 
         DoubleSummaryStatistics s = new DoubleSummaryStatistics();
         double totalAscentValue = 0.0;
