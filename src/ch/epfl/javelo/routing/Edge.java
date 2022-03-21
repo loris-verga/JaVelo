@@ -34,7 +34,7 @@ public record Edge(int fromNodeId, int toNodeId, PointCh fromPoint, PointCh toPo
     /**
      * methode positionClosestTo retourne les coordonnées du point qui se situe le plus proche du point donné, le long de l'arête
      * @param point le point donné
-     * @return les coordonnées du point se situe le plus proche du point donné, le long de l'arête
+     * @return la coordonnée du point se situant le plus proche du point donné, le long de l'arête
      */
     public double positionClosestTo(PointCh point){
         double aX = fromPoint.e();
