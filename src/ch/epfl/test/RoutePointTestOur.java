@@ -1,12 +1,13 @@
-package ch.epfl.javelo.routing;
+package ch.epfl.test;
 
 import ch.epfl.javelo.projection.PointCh;
+import ch.epfl.javelo.routing.RoutePoint;
 import org.junit.jupiter.api.Test;
 
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RoutePointTest {
+class RoutePointTestOur {
 
     @Test
     void routePoint1(){

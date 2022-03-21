@@ -1,5 +1,7 @@
-package ch.epfl.javelo.data;
+package ch.epfl.test;
 
+import ch.epfl.javelo.data.AttributeSet;
+import ch.epfl.javelo.data.Graph;
 import ch.epfl.javelo.projection.PointCh;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +13,7 @@ import java.sql.SQLOutput;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GraphTest {
+class GraphTestOur {
 
     @Test
     void loadFromTest1() throws IOException {

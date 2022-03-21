@@ -1,8 +1,9 @@
-package ch.epfl.javelo.routing;
+package ch.epfl.test;
 
 import ch.epfl.javelo.Functions;
 import ch.epfl.javelo.projection.PointCh;
 import ch.epfl.javelo.projection.SwissBounds;
+import ch.epfl.javelo.routing.Edge;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
