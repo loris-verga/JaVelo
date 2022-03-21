@@ -42,7 +42,10 @@ public class Graph {
         this.nodes = nodes;
         this.sectors = sectors;
         this.edges = edges;
-        this.attributeSets = attributeSets;
+        this.attributeSets = new ArrayList<>();
+        for (int i = 0; i<attributeSets.size(); ++i){
+            this.attributeSets.add(attributeSets.get(i));
+        }
     }
 
 
@@ -177,7 +180,10 @@ public class Graph {
                 }
             }
         }
-        return indexOfPointClosestTo;
+        if (point.distanceTo(nodePoint(indexOfPointClosestTo))<= searchDistance){
+            return indexOfPointClosestTo;}
+        else{ return -1;}
+
     }
 
     /**

@@ -1,5 +1,6 @@
-package ch.epfl.javelo.routing;
+package ch.epfl.test;
 
+import ch.epfl.javelo.routing.ElevationProfile;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

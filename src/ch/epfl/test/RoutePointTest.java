@@ -1,6 +1,7 @@
-package ch.epfl.javelo.routing;
+package ch.epfl.test;
 
 import ch.epfl.javelo.projection.PointCh;
+import ch.epfl.javelo.routing.RoutePoint;
 import ch.epfl.test.TestRandomizer;
 import org.junit.jupiter.api.Test;
 
