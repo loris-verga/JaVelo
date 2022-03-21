@@ -172,8 +172,15 @@ public final class SingleRoute implements Route {
      */
     @Override
     public double elevationAt(double position) {
-        //TODO Comment on fait ?
-        return 0;
+        double distance = position;
+        int i = 0;
+        while (position > 0){
+            position = position - edges.get(i).length();
+            i = i+1;
+        }
+        int index = i-1;
+        position = Math.abs(position);
+        return edges.get(index).elevationAt(position);
     }
 
     /**
