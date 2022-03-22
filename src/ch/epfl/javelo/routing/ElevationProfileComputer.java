@@ -21,19 +21,19 @@ public final class ElevationProfileComputer {
      * @return le profil le long de l'itinéraire
      */
     public static ElevationProfile elevationProfile(Route route, double maxStepLength){
-        //todo really need to check this
         Preconditions.checkArgument(maxStepLength > 0);
 
-        int spacingBetweenEachProfil = (int)(Math.ceil(route.length()/maxStepLength));
+        int numberOfSamples = (int)(Math.ceil(route.length()/maxStepLength)) + 1;
+        double StepLength = route.length()/(numberOfSamples - 1);
         ArrayList<Float> profilArrayList = new ArrayList<>();
 
-        for(int i = 0; i * spacingBetweenEachProfil <= route.length()/spacingBetweenEachProfil; i++){
-            profilArrayList.add((float)(route.elevationAt(i * spacingBetweenEachProfil)));
+        for(int i = 0; i < numberOfSamples ; i++){
+            profilArrayList.add((float)(route.elevationAt(i * StepLength)));
         }
 
-        float[] elevationSamples = new float[]{profilArrayList.size()};
-        int indexOfFirstNotNan=-1;
-        int indexOfLastNotNan=-1;
+        float[] elevationSamples = new float[numberOfSamples];
+        int indexOfFirstNotNan = -1;
+        int indexOfLastNotNan = -1;
         int index = 0;
 
         for(int i = 0; i < elevationSamples.length; i++){
@@ -62,7 +62,7 @@ public final class ElevationProfileComputer {
             index -= 1;
         }
 
-        Arrays.fill(elevationSamples, indexOfLastNotNan , elevationSamples.length - 1, elevationSamples[indexOfLastNotNan]);
+        Arrays.fill(elevationSamples, indexOfLastNotNan , elevationSamples.length , elevationSamples[indexOfLastNotNan]);
 
         index = indexOfFirstNotNan;
         int indexOfLeftOfNaNs = 0;
@@ -81,13 +81,13 @@ public final class ElevationProfileComputer {
 
                 double y0 = elevationSamples[indexOfLeftOfNaNs];
                 double y1 = elevationSamples[indexOfRightOfNaNs];
-                double x = (index - indexOfLeftOfNaNs)/(indexOfRightOfNaNs - indexOfLeftOfNaNs);
+                double x = (double)(index - indexOfLeftOfNaNs)/(double)(indexOfRightOfNaNs - indexOfLeftOfNaNs);
                 elevationSamples[index] = (float) Math2.interpolate(y0,y1,x);
 
             }
         index += 1;
         }
-        return new ElevationProfile(route.length() , elevationSamples );
+        return new ElevationProfile(route.length() , elevationSamples);
     }
 
 }
