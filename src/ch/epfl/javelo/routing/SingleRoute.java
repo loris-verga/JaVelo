@@ -172,8 +172,15 @@ public final class SingleRoute implements Route {
      */
     @Override
     public double elevationAt(double position) {
-        //TODO Comment on fait ?
-        return 0;
+        double distance = position;
+        int i = 0;
+        while (position > 0){
+            position = position - edges.get(i).length();
+            i = i+1;
+        }
+        int index = i-1;
+        position = Math.abs(position);
+        return edges.get(index).elevationAt(position);
     }
 
     /**
@@ -184,8 +191,24 @@ public final class SingleRoute implements Route {
      */
     @Override
     public RoutePoint pointClosestTo(PointCh point) {
-        //TODO Comment on fait ?
-        return null;
+        double positionOfPointClosestTo = edges.get(0).positionClosestTo(point);
+        PointCh pointClosest = edges.get(0).pointAt(positionOfPointClosestTo);
+        double squaredDistanceToReference = pointClosest.squaredDistanceTo(point);
+        for (int i = 1; i<edges.size(); ++i){
+
+            Edge oneEdge = edges.get(i);
+            double position = oneEdge.positionClosestTo(point);
+            PointCh pointCandidate = oneEdge.pointAt(position);
+            double squaredDistCandidate = pointCandidate.squaredDistanceTo(point);
+
+            if (squaredDistCandidate<squaredDistanceToReference){
+                positionOfPointClosestTo = position;
+                pointClosest = pointCandidate;
+                squaredDistanceToReference = squaredDistCandidate;
+
+            }
+        }
+        return new RoutePoint(pointClosest, positionOfPointClosestTo, Math.sqrt(squaredDistanceToReference));
     }
 
 }
