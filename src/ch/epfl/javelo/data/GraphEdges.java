@@ -7,9 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
-/** Un re GraphEdges
- *
- * représente le tableau de toutes les arêtes du graphe JaVelo
+/** L'enregistrement GraphEdge représente l'ensemble des arrêtes représente le tableau de toutes les arêtes du graphe JaVelo
  *
  * @author Juan Bautista Iaconucci (342153)
  */
@@ -21,39 +19,38 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
     private static final int EDGE_INTS = OFFSET_ID_OF_SET_OF_OSM + Short.BYTES;
 
     /**
-     * isInverted renvoie true ssi l'arrête donner va dans le sens inverse de la voie OSM
-     * @param edgeId l'identité de l'arrête donner
-     * @return true ssi l'arrête donner va dans le sens inverse de la voie OSM
+     * La méthode isInverted renvoie true si l'arrête passée en argument va dans le sens inverse de la voie OSM.
+     * @param edgeId l'identité de l'arrête.
+     * @return true ou false selon le sens de l'arrête.
      */
     public boolean isInverted(int edgeId){
-        if (edgesBuffer.getInt(EDGE_INTS * edgeId + OFFSET_ID_OF_DESTINATION_NODE) < 0){return true;}
-        else{return false;}
+        return edgesBuffer.getInt(EDGE_INTS * edgeId + OFFSET_ID_OF_DESTINATION_NODE) < 0;
     }
 
     /**
-     * targetNodeId renvoie l'identité du noeud de destination qui se trouve sur l'arrête d'identité donnée
+     * La méthode targetNodeId renvoie l'identité du nœud de destination qui se trouve sur l'arrête d'identité donnée.
      * @param edgeId d'identité l'arrête donnée
-     * @return renvoie l'identité du noeud de destination
+     * @return renvoie l'identité du nœud de destination
      */
     public int targetNodeId(int edgeId){
         int destinationNodeId = edgesBuffer.getInt(EDGE_INTS * edgeId + OFFSET_ID_OF_DESTINATION_NODE);
-        if (isInverted(edgeId) == false) {return destinationNodeId;}
+        if (!isInverted(edgeId)) {return destinationNodeId;}
         else{return ~destinationNodeId;}
     }
 
     /**
-     * length renvoie la longueur de l'arrête d'identité donnée
+     * La méthode length renvoie la longueur de l'arrête d'identité donnée.
      * @param edgeId l'identité de l'arrête donnée
-     * @return la longueur de l'arrête
+     * @return la longueur de l'arrête.
      */
     public double length(int edgeId){
         return  Q28_4.asDouble(Short.toUnsignedInt(edgesBuffer.getShort(EDGE_INTS * edgeId + OFFSET_LENGTH_OF_EDGE)));
     }
 
     /**
-     * elevationGain renvoie la difference d'hauteur positive sur l'arrête d'identité donnée
+     * La méthode elevationGain retourne la difference de hauteur positive de l'arrête d'identité donnée.
      * @param edgeId l'identité de l'arrête donnée
-     * @return la difference d'hauteur positive
+     * @return la difference de hauteur positive
      */
     public double elevationGain(int edgeId){
         return  Q28_4.asDouble(Short.toUnsignedInt(edgesBuffer.getShort(EDGE_INTS * edgeId + OFFSET_ELEVATION_GAIN)));
@@ -67,24 +64,23 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
     public boolean hasProfile(int edgeId){
         int profileIdAndType = profileIds.get(edgeId);
         int profilType = Bits.extractUnsigned(profileIdAndType,30,2);
-        if(profilType != 0){return true;}
-        else{return false;}
+        return profilType != 0;
     }
 
     /**
-     * profilSamples renvoie une liste des échantillons du profil de l'arrête d'identité donnée
-     * @param edgeId l'identité de l'arrête donnée
+     * La méthode profilSamples retourne une liste d'échantillons du profil de l'arrête d'identité donnée.
+     * @param edgeId l'identité de l'arrête.
      * @return  une liste des échantillons du profil de l'arrête d'identité donnée
      */
     public float[] profileSamples(int edgeId){
-        if (hasProfile(edgeId) == false){return new float[]{};}
+        if (!hasProfile(edgeId)){return new float[]{};}
 
         float[] profilList = new float[1 + (int)Math.ceil(length(edgeId)/2.0)];
         int profileIdAndType = profileIds.get(edgeId);
         int profilType = Bits.extractUnsigned(profileIdAndType,30,2);
 
         int firstSampleId = Bits.extractUnsigned(profileIdAndType,0,30);
-        //todo second change here
+
         float firstSample = Q28_4.asFloat(Short.toUnsignedInt(elevations.get(firstSampleId)));
         profilList[0] = firstSample;
 
@@ -92,7 +88,6 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
             case 1:{
                 float newSample;
                 for (int i = 1; i < profilList.length; i++){
-                    //todo third change here
                     newSample = Q28_4.asFloat(Short.toUnsignedInt(elevations.get(firstSampleId + i)));
                     profilList[i] = newSample;
                 }
@@ -112,8 +107,8 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
     }
 
     /**
-     * sampleListForCompressedValues permet de renvoye la liste d'échantillons de l'arrête d'identité donnée,
-     * pour celles qui ont des profils avec des valeurs compresser
+     * La méthode sampleListForCompressedValues permet de renvoyer la liste d'échantillons de l'arrête d'identité donnée,
+     * pour celles qui ont des profils avec des valeurs compressées.
      * @param profilList liste contenant tous les échantillons
      * @param firstSample le premier échantillon
      * @param firstSampleId l'index du premier échantillon
@@ -147,9 +142,9 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
     }
 
     /**
-     * invertList méthode qui inverse les éléments d'une liste donnée
-     * @param profilSample la liste qu'on veut inverser
-     * @return une liste inverser
+     * La méthode invertList inverse les éléments d'une liste donnée.
+     * @param profilSample la liste que l'on veut inverser
+     * @return une liste inversée
      */
     private float[] invertList(float[] profilSample){
         float[] newProfilSample = new float[profilSample.length];
@@ -160,13 +155,11 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
     }
 
     /**
-     * atrributesIndex renvoie l'identité de l'ensemble d'attributs attaché à l'arête d'identité donnée
+     * La méthode attributesIndex renvoie l'identité de l'ensemble d'attributs attaché à l'arête d'identité donnée-
      * @param edgeId l'identité de l'arrête donnée
      * @return l'identité de l'ensemble d'attributs attaché à l'arête d'identité donnée
      */
     public int attributesIndex(int edgeId){
         //todo first change here
         return Short.toUnsignedInt(edgesBuffer.getShort(EDGE_INTS * edgeId + OFFSET_ID_OF_SET_OF_OSM));}
-
-
 }

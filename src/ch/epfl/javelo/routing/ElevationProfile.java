@@ -8,7 +8,7 @@ import java.util.DoubleSummaryStatistics;
 import java.util.function.DoubleUnaryOperator;
 
 /**
- * La classe ElevationProfil représente en long d'un itinéraire simple ou multiple
+ * La classe ElevationProfil représente le profil en long d'un itinéraire simple ou multiple.
  *
  *  @author Juan Bautista Iaconucci (342153)
  */

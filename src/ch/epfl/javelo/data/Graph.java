@@ -4,7 +4,6 @@ package ch.epfl.javelo.data;
 import ch.epfl.javelo.Functions;
 import ch.epfl.javelo.projection.PointCh;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -15,11 +14,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.DoubleUnaryOperator;
-import java.util.function.ToDoubleBiFunction;
 
 
 /**
- * Classe Graph: Cette classe représente le graphe Javelo. Elle est publique et immuable
+ * La classe Graph représente le graphe Javelo. Elle est publique et immuable.
  *
  * @author  Loris Verga (345661)
  */
@@ -43,16 +41,13 @@ public class Graph {
         this.sectors = sectors;
         this.edges = edges;
         this.attributeSets = new ArrayList<>();
-        for (int i = 0; i<attributeSets.size(); ++i){
-            this.attributeSets.add(attributeSets.get(i));
-        }
+        this.attributeSets.addAll(attributeSets);
     }
 
 
     /**
-     * Méthode loadFrom:
-     * Retourne le graphe JaVelo obtenu à partir des fichiers se trouvant dans le répertoire dont le chemin d'accès est basePath
-     * ou lève IOException en cas d'erreur d'entrée/sortie, p. ex. si l'un des fichiers attendu n'existe pas.
+     * La méthode loadFrom retourne le graphe JaVelo obtenu à partir des fichiers se trouvant dans le répertoire dont le chemin d'accès est basePath
+     * ou lève IOException en cas d'erreur d'entrée/sortie, p. ex. si l'un des fichiers attendus n'existe pas.
      * @param basePath: chemin d'accès au répertoire.
      * @return un Graph Javelo
      * @throws IOException si le fichier attendu n'existe pas
@@ -112,7 +107,7 @@ public class Graph {
 
     /**
      * Méthode nodeCount
-     * @return retourne le nombre total de noeuds dans le graph.
+     * @return retourne le nombre total de nœuds dans le graph.
      */
     public int nodeCount(){
         return nodes.count();
@@ -142,8 +137,8 @@ public class Graph {
 
     /**
      * La méthode nodeOutEdgeId retourne l'identité de la edgeIndex-ième arête sortant du nœud d'identité nodeId.
-     * @param nodeId identité du noeud
-     * @param edgeIndex index de l'arrête
+     * @param nodeId identité du nœud
+     * @param edgeIndex index de l'arrête.
      * @return l'id du noeud
      */
     public int nodeOutEdgeId(int nodeId, int edgeIndex){
@@ -167,14 +162,13 @@ public class Graph {
         int indexOfPointClosestTo = listOfSectors.get(0).startNodeId();
         double squaredDistance = point.squaredDistanceTo(nodePoint(indexOfPointClosestTo));
 
-        for (int i = 0; i<listOfSectors.size(); ++i){
-            GraphSectors.Sector sector = listOfSectors.get(i);
+        for (GraphSectors.Sector sector : listOfSectors) {
             int startNodeId = sector.startNodeId();
             int endNodeId = sector.endNodeId();
 
-            for (int a = startNodeId; a<=endNodeId;++a){
+            for (int a = startNodeId; a <= endNodeId; ++a) {
                 PointCh otherPoint = nodePoint(a);
-                if (point.squaredDistanceTo(otherPoint)<squaredDistance){
+                if (point.squaredDistanceTo(otherPoint) < squaredDistance) {
                     squaredDistance = point.squaredDistanceTo(otherPoint);
                     indexOfPointClosestTo = a;
                 }
@@ -189,7 +183,7 @@ public class Graph {
     /**
      * Cette méthode retourne l'identité du nœud destination de l'arête d'identité donnée,
      * @param edgeId id de l'arrête
-     * @return l'id du noeud de destination
+     * @return l'id du nœud de destination
      */
     public int edgeTargetNodeId(int edgeId){
         return edges.targetNodeId(edgeId);
@@ -197,8 +191,8 @@ public class Graph {
 
     /**
      * La méthode edgeIsInverted retourne vrai si l'arête d'identité donnée va dans le sens contraire de la voie OSM dont elle provient.
-     * @param edgeId
-     * @return
+     * @param edgeId Id de l'arrête.
+     * @return true ou false selon le sens de l'arrête.
      */
     public boolean edgeIsInverted(int edgeId){
         return edges.isInverted(edgeId);
@@ -208,8 +202,8 @@ public class Graph {
 
     /**
      * Cette méthode retourne l'ensemble des attributs OSM attachés à l'arête d'identité donnée
-     * @param edgeId identité de l'arrête
-     * @return l'ensemble des attributs OSM liés à l'arrête
+     * @param edgeId identité de l'arrête.
+     * @return l'ensemble des attributs OSM liés à l'arrête.
      */
     public AttributeSet edgeAttributes(int edgeId){
         return attributeSets.get(edges.attributesIndex(edgeId));
@@ -238,8 +232,8 @@ public class Graph {
     /**
      * La méthode edgeProfile retourne le profil en long de l'arête d'identité donnée, sous la forme d'une fonction ;
      * si l'arête ne possède pas de profil, alors cette fonction doit retourner Double.NaN pour n'importe quel argument.
-     * @param edgeId
-     * @return
+     * @param edgeId ID de l'arrête.
+     * @return la fonction.
      */
     public DoubleUnaryOperator edgeProfile(int edgeId){
         float [] profileSamples = edges.profileSamples(edgeId);
@@ -250,7 +244,4 @@ public class Graph {
         return Functions.sampled(profileSamples, xMax);
 
     }
-
-
-
 }

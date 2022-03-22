@@ -7,7 +7,7 @@ import ch.epfl.javelo.projection.SwissBounds;
 import java.nio.ByteBuffer;
 import java.util.*;
 
-/** GraphSectors représente le tableau contenant les 16384 secteurs de JaVelo
+/** GraphSectors représente le tableau contenant les 16384 secteurs de JaVelo.
  *
  * @author Juan B Iaconucci (342153)
  */
@@ -20,14 +20,14 @@ public record GraphSectors(ByteBuffer buffer) {
     public record Sector(int startNodeId, int endNodeId){}
 
     /**
-     * Methode qui retourne une liste contenant tous les sectors qui sont incluent dans le carré de cotée le double de distance
+     * Cette méthode retourne la liste de tous les secteurs ayant une intersection
+     * avec le carré centré au point donné et de côté égal au double (!) de la distance donnée.
      *
      * @param center les coordonnées du centre du carré
-     * @param distance la moitié du coté du carré
-     * @return une liste contenant tous les sectors qui sont incluent dans le carré de cotée le double de distance
+     * @param distance la moitié du côté du carré
+     * @return une liste contenant tous les sectors qui sont inclus dans le carré de cotée le double de distance
      */
     public List<Sector> sectorsInArea(PointCh center, double distance){
-        //todo lots of test on this one
 
         List<Sector> listOfSectorsInArea = new ArrayList<>();
 

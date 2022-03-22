@@ -30,7 +30,6 @@ public class Ch1903 {
                 -0.36 * lambda_un * Math.pow(phi_un, 2)
                 -44.54 * Math.pow(lambda_un, 3);
         return e;
-
     }
 
     /**
@@ -53,7 +52,6 @@ public class Ch1903 {
                 -194.56 * lambda_un * lambda_un * phi_un
                 + 119.79 * phi_un * phi_un * phi_un;
         return n;
-
     }
 
 

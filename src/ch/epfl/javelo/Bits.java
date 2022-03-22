@@ -12,7 +12,7 @@ public final class Bits {
 
     /**
      * Retourne depuis value, la plage de length bits commençant au bit d'index start,
-     * en l'interprétant comme valeur signée en complément a deux
+     * en l'interprétant comme valeur signée en complément a deux.
      *
      * @param value vecteur de 32 bits qu'on veut extraire une valeur
      * @param start le début de la plage de bit qu'on veut extraire

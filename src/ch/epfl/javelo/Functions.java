@@ -74,7 +74,6 @@ public final class Functions {
                 return sampled[sampled.length-1];
             }
 
-
             else{
 
                 double tailleIntervalle = xMax/(sampled.length-1);
@@ -85,13 +84,7 @@ public final class Functions {
 
                 return Math2.interpolate(sampled[valeurBasse], sampled[valeurHaute], indexX-Math.floor(indexX));
 
-
             }
-
-
         }
-
     }
-
-
 }

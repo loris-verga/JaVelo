@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**Classe ElevationProfileComputer représente un calculateur de profil en long
+/** La classe ElevationProfileComputer représente un calculateur de profil en long.
  *
  * @author Juan Bautista Iaconucci (342153)
  */
@@ -15,8 +15,8 @@ public final class ElevationProfileComputer {
     private ElevationProfileComputer(){}
 
     /**
-     * Methode elevationProfile qui retourne le profil le long de l'itinéraire
-     * @param route l'itinéraire que l'on veut avoir le profil
+     * La méthode elevationProfile retourne le profil le long de l'itinéraire.
+     * @param route l'itinéraire dont on veut obtenir le profil.
      * @param maxStepLength la distance maximale entre les échantillons du profil
      * @return le profil le long de l'itinéraire
      */

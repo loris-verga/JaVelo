@@ -2,7 +2,7 @@ package ch.epfl.javelo;
 
 
 /**
- * Classe Preconditions
+ * La classe Preconditions sert à vérifier les arguments passés aux méthodes. 
  *
  * @author Loris Verga (3455661)
  *

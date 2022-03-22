@@ -23,8 +23,8 @@ public final class MultiRoute implements Route{
     public MultiRoute(List<Route> segments){
         Preconditions.checkArgument(!(segments.size() == 0));
 
-        for (int i = 0; i<segments.size(); ++i){
-            this.segments.add(segments.get(i));
+        for (Route segment : segments){
+            this.segments.add(segment);
         }
     }
 

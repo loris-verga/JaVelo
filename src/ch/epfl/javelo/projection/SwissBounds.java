@@ -38,13 +38,6 @@ public final class SwissBounds {
      * @return true si le point se trouve en Suisse
      */
     public static boolean containsEN(double e, double n){
-
-        if (e >= MIN_E && e <= MAX_E && n >= MIN_N && n <= MAX_N) {
-            return true;
-        }
-        else {
-            return false;
-        }
-
+        return e >= MIN_E && e <= MAX_E && n >= MIN_N && n <= MAX_N;
     }
 }

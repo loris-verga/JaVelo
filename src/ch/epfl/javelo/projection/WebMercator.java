@@ -3,7 +3,7 @@ package ch.epfl.javelo.projection;
 import ch.epfl.javelo.Math2;
 
 /**
- * La classe WebMercator qui est une classe publique, finale et non instanciable offre des méthodes statiques qui permettent de
+ * La classe WebMercator qui est une classe publique, finale et non instantiable offre des méthodes statiques qui permettent de
  * convertir entre les coordonnées WGS84 et les coordonnées Web Mercator
  *
  * Les méthodes de la classe WebMercator ne valident pas leurs arguments. Ce travail est laissé aux classes représentant les points

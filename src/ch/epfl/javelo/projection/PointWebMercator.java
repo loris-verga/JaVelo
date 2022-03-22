@@ -3,7 +3,6 @@ package ch.epfl.javelo.projection;
 
 import ch.epfl.javelo.Preconditions;
 
-import java.awt.*;
 
 /**
  * Classe record PointWebMercator : Cette classe représente un point dans le système Web Mercator
@@ -19,9 +18,6 @@ public record PointWebMercator(double x, double y) {
      * @param y double y, la coordonnée y du point
      */
     public PointWebMercator {
-
-        boolean condition = x >= 0.f && x<= 1.f;
-
         Preconditions.checkArgument(x >= 0.f && x<= 1.f); //Vérification coordonnée x
         Preconditions.checkArgument(y >= 0.f && y<= 1.f); //Vérification coordonnée y
     }
@@ -75,9 +71,6 @@ public record PointWebMercator(double x, double y) {
         return Math.scalb(x, 8+zoomLevel);
     }
 
-
-
-
     /**
      * Cette méthode retourne la coordonnée y au niveau de zoom donné
      * @param zoomLevel niveau de zoom
@@ -87,7 +80,6 @@ public record PointWebMercator(double x, double y) {
         double y = this.y();
         return Math.scalb(y, 8+zoomLevel);
     }
-
 
     /**
      * Cette méthode retourne la longitude d'un point en radiant (système WGS84)
@@ -121,7 +113,6 @@ public record PointWebMercator(double x, double y) {
         }
         else {
             return new PointCh(e,n);
-
         }
     }
 }

@@ -13,15 +13,15 @@ public final class Math2 {
     private Math2() {}
 
     /**
-     * Retourne la partie entière de la division de x par y
+     * Retourne la partie entière de la division de x par y.
      *
      * @param x
-     *            la coordonnée x (ne doit pas être negative)
+     *            La coordonnée x (ne doit pas être negative)
      * @param y
-     *            la coordonnée y (ne doit pas être negative et non nul)
+     *            La coordonnée y (ne doit pas être negative et non nul)
      * @throws IllegalArgumentException
      *             si x est négatif ou y est nul ou négatif
-     * @return la partie entière de la division de x par y
+     * @return La partie entière de la division de x par y
      *
      */
     public static int ceilDiv(int x, int y){
@@ -31,15 +31,15 @@ public final class Math2 {
     }
 
     /**
-     * Retourne la valeur du point sur l'axe y passant par la droite (0,y0) et (1,y1) du point x
+     * Retourne la valeur du point sur l'axe y passant par la droite (0,y0) et (1,y1) du point x.
      *
      * @param y0
-     *              premier point passant par la droite
+     *              Le premier point passant par la droite
      * @param y1
-     *              deuxième point passant par la droite
+     *              Le deuxième point passant par la droite
      * @param x
-     *              valeur du point qu'on veut trouver l'ordonner
-     * @return l'ordonné du point x passant par la droite formé par y0 et y1
+     *              La valeur du point dont on veut trouver l'ordonnée.
+     * @return L'ordonnée du point x passant par la droite formé par y0 et y1
      */
     public static double interpolate(double y0,double y1, double x){
         double b = y0;
@@ -48,17 +48,17 @@ public final class Math2 {
     }
 
     /**
-     * Retourne la valeur (int) la plus proche de v dans l'intervalle entre min et max
+     * Retourne la valeur (int) la plus proche de v dans l'intervalle entre min et max.
      *
      * @param min
-     *            le minimum de l'intervalle (ne peut pas être supérieur a max)
+     *            Le minimum de l'intervalle (ne peut pas être supérieur a max)
      * @param max
-     *            le maximum de l'intervalle (ne peut pas être inférieur a min)
+     *            Le maximum de l'intervalle (ne peut pas être inférieur a min)
      * @param v
-     *            la valeur (int)
+     *            La valeur (int)
      * @throws IllegalArgumentException
      *            si min est inférieur a max
-     * @return la valeur (int) la plus proche de v compris entre min et max
+     * @return La valeur (int) la plus proche de v compris entre min et max
      *
      */
     public static int clamp(int min, int v, int max){
@@ -74,11 +74,11 @@ public final class Math2 {
      * Retourne la valeur (double) la plus proche de v dans l'intervalle entre min et max
      *
      * @param min
-     *            le minimum de l'intervalle (ne peut pas être supérieur a max)
+     *            Le minimum de l'intervalle (ne peut pas être supérieur a max)
      * @param max
-     *            le maximum de l'intervalle (ne peut pas être inférieur a min)
+     *            Le maximum de l'intervalle (ne peut pas être inférieur a min)
      * @param v
-     *            la valeur (double)
+     *            La valeur (double)
      * @throws IllegalArgumentException
      *            si min est inférieur a max
      * @return la valeur (double) la plus proche de v compris entre min et max
@@ -95,7 +95,7 @@ public final class Math2 {
     }
 
     /**
-     * Retourne le sinus hyperbolique inverse de x
+     * Retourne le sinus hyperbolique inverse de x.
      *
      * @param x
      *            la coordonnée x
@@ -107,14 +107,14 @@ public final class Math2 {
      * Retourne le produit scalar entre un vecteur u et v
      *
      * @param uX
-     *              la coordonnée x du vecteur u
+     *              La coordonnée x du vecteur u
      * @param uY
-     *              la coordonnée y du vecteur u
+     *              La coordonnée y du vecteur u
      * @param vX
-     *              la coordonnée x du vecteur v
+     *              La coordonnée x du vecteur v
      * @param vY
-     *              la coordonnée y du vecteur v
-     * @return le produit scalar entre u et v
+     *              La coordonnée y du vecteur v
+     * @return le produit scalaire entre u et v
      */
     public static double dotProduct(double uX, double uY, double vX, double vY){
         return Math.fma(uX,vX,uY*vY);
@@ -124,10 +124,10 @@ public final class Math2 {
      * Retourne le carré de la norme du vecteur u
      *
      * @param uX
-     *              la coordonnée x du vecteur u
+     *              La coordonnée x du vecteur u
      * @param uY
-     *              la coordonnée y du vecteur u
-     * @return le carré de la norme du vecteur u
+     *              La coordonnée y du vecteur u
+     * @return Le carré de la norme du vecteur u
      */
     public static double squaredNorm(double uX, double uY){
         return uX*uX + uY*uY;
@@ -137,10 +137,10 @@ public final class Math2 {
      * Retourne la norme du vecteur u
      *
      * @param uX
-     *              la coordonnée x du vecteur u
+     *              La coordonnée x du vecteur u
      * @param uY
-     *              la coordonnée y du vecteur u
-     * @return la norme du vecteur u
+     *              La coordonnée y du vecteur u
+     * @return La norme du vecteur u
      */
     public static double norm(double uX, double uY){
         return Math.hypot(uX, uY);
@@ -150,17 +150,17 @@ public final class Math2 {
      * Retourne la longueur de la projection du vecteur AP sur la droite AB
      *
      * @param aX
-     *              la coordonnée x du point a
+     *              La coordonnée x du point a
      * @param aY
-     *              la coordonnée y du point a
+     *              La coordonnée y du point a
      * @param bX
-     *              la coordonnée x du point b
+     *              La coordonnée x du point b
      * @param bY
-     *              la coordonnée y du point b
+     *              La coordonnée y du point b
      * @param pX
-     *              la coordonnée x du point p
+     *              La coordonnée x du point p
      * @param pY
-     *              la coordonnée y du point p
+     *              La coordonnée y du point p
      * @return la longueur de la projection du vecteur AP sur la droite AB
      */
     public static double projectionLength(double aX, double aY, double bX, double bY, double pX, double pY){

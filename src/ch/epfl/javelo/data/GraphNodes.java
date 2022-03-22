@@ -5,7 +5,6 @@ import ch.epfl.javelo.Preconditions;
 import ch.epfl.javelo.Q28_4;
 
 import java.nio.IntBuffer;
-import java.util.concurrent.locks.Condition;
 
 /**
  * Cette Classe représente le tableau de tous les nœuds du graphe JaVelo.
@@ -20,7 +19,7 @@ public record GraphNodes(IntBuffer buffer) {
     private static final int NODE_INTS = OFFSET_OUT_EDGES + 1;
 
     /**
-     * Methode qui donne le nombre total de nœud
+     * Methode qui retourne le nombre total de nœud.
      *
      * @return le nombre total de nœuds
      */
@@ -29,7 +28,7 @@ public record GraphNodes(IntBuffer buffer) {
     }
 
     /**
-     * Methode qui donne la coordonnée Est du nœud
+     * Methode qui retourne la coordonnée Est du nœud.
      *
      * @param nodeId identité du nœud
      * @return la coordonnée Est du nœud
@@ -61,7 +60,7 @@ public record GraphNodes(IntBuffer buffer) {
     }
 
     /**
-     * Methode qui donne l'identité de la edgeIndex-ième arête sortant du nœud
+     * Methode qui retourne l'identité de la edgeIndex-ième arête sortant du nœud.
      *
      * @param nodeId identité du nœud
      * @return l'identité de la edgeIndex-ième arête sortant du nœud
@@ -73,6 +72,4 @@ public record GraphNodes(IntBuffer buffer) {
 
         return firstEdgeId + edgeIndex;
     }
-
-
 }

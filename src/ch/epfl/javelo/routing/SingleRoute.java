@@ -16,9 +16,8 @@ import java.util.List;
  */
 public final class SingleRoute implements Route {
 
-    private List<Edge> edges;
-    private double[] positionArray; //TODO CHECK IF IT IS SORTED!
-
+    private final List<Edge> edges;
+    private final double[] positionArray;
 
     /**
      * L'unique constructeur de la classe Single retourne l'itinéraire simple composé des arêtes données
@@ -27,10 +26,11 @@ public final class SingleRoute implements Route {
      * @param edges liste d'arrêtes
      */
     public SingleRoute(List<Edge> edges) {
+
         Preconditions.checkArgument(!(edges.isEmpty()));
         this.edges = edges;
 
-
+        //Pas possible d'utiliser un itérateur ici
         positionArray = new double[edges.size() + 1];
         positionArray[0] = 0.0;
         double length = 0.0;
@@ -63,8 +63,8 @@ public final class SingleRoute implements Route {
     @Override
     public double length() {
         double length = 0;
-        for (int i = 0; i < edges.size(); ++i) {
-            length = length + edges.get(i).length();
+        for (Edge g : edges) {
+            length = length + g.length();
         }
         return length;
     }
@@ -77,8 +77,8 @@ public final class SingleRoute implements Route {
     @Override
     public List<Edge> edges() {
         List<Edge> liste = new ArrayList<>();
-        for (int i = 0; i < edges.size(); ++i) {
-            liste.add(edges.get(i));
+        for (Edge g : edges) {
+            liste.add(g);
         }
         return liste;
     }
@@ -92,8 +92,8 @@ public final class SingleRoute implements Route {
     public List<PointCh> points() {
         List<PointCh> points = new ArrayList();
         points.add(edges.get(0).fromPoint());
-        for (int i = 0; i < edges.size(); ++i) {
-            points.add(edges.get(i).toPoint());
+        for (Edge g : edges) {
+            points.add(g.toPoint());
         }
         return points;
     }
@@ -191,12 +191,13 @@ public final class SingleRoute implements Route {
      */
     @Override
     public RoutePoint pointClosestTo(PointCh point) {
+
         double positionOfPointClosestTo = edges.get(0).positionClosestTo(point);
         PointCh pointClosest = edges.get(0).pointAt(positionOfPointClosestTo);
         double squaredDistanceToReference = pointClosest.squaredDistanceTo(point);
-        for (int i = 1; i<edges.size(); ++i){
 
-            Edge oneEdge = edges.get(i);
+        for (Edge oneEdge : edges){
+
             double position = oneEdge.positionClosestTo(point);
             PointCh pointCandidate = oneEdge.pointAt(position);
             double squaredDistCandidate = pointCandidate.squaredDistanceTo(point);
@@ -205,10 +206,8 @@ public final class SingleRoute implements Route {
                 positionOfPointClosestTo = position;
                 pointClosest = pointCandidate;
                 squaredDistanceToReference = squaredDistCandidate;
-
             }
         }
         return new RoutePoint(pointClosest, positionOfPointClosestTo, Math.sqrt(squaredDistanceToReference));
     }
-
 }

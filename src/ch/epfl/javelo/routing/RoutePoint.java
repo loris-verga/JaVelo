@@ -56,12 +56,4 @@ public record RoutePoint(PointCh point, double position, double distanceToRefere
         }
         return new RoutePoint(thatPoint, thatPosition, thatDistanceToReference);
     }
-
-
-
-
-
-
-
-
 }

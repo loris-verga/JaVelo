@@ -8,14 +8,14 @@ import java.util.function.DoubleUnaryOperator;
 
 
 /**
- * L'enregistrement Edge représente une arête le long d'un itinéraire
+ * L'enregistrement Edge représente une arête le long d'un itinéraire.
  *
  *  @author Juan Bautista Iaconucci (342153)
  */
 public record Edge(int fromNodeId, int toNodeId, PointCh fromPoint, PointCh toPoint, double length, DoubleUnaryOperator profile) {
 
     /**
-     * constructeur d'une instance
+     * Le constructeur d'une instance de Edge
      * @param graph le graphe ou se situe l'arête
      * @param edgeId l'identité de l'arête
      * @param fromNodeId l'identité du noeud depuis lequel l'arête commence
@@ -32,7 +32,7 @@ public record Edge(int fromNodeId, int toNodeId, PointCh fromPoint, PointCh toPo
     }
 
     /**
-     * methode positionClosestTo retourne les coordonnées du point qui se situe le plus proche du point donné, le long de l'arête
+     * La méthode positionClosestTo retourne les coordonnées du point qui se situe le plus proche du point donné, le long de l'arête.
      * @param point le point donné
      * @return la coordonnée du point se situant le plus proche du point donné, le long de l'arête
      */

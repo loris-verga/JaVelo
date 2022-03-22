@@ -1,12 +1,11 @@
 package ch.epfl.javelo.data;
 
 import ch.epfl.javelo.Preconditions;
-import org.w3c.dom.Attr;
 
 import java.util.StringJoiner;
 
 /**
- * L'enregistrement AttributeSet représente un ensemble d'attributs OpenStreetMap
+ * L'enregistrement AttributeSet représente un ensemble d'attributs OpenStreetMap.
  *
  * @author Juan B Iaconucci (342153)
  */
@@ -23,10 +22,10 @@ public record AttributeSet(long bits)  {
     }
 
     /**
-     * méthode de construction d'AttributeSet
+     * Méthode de construction d'AttributeSet
      *
      * @param attributes les attributs que l'on veut dans l'ensemble
-     * @return l'ensemble qui contient tout les attributs en argument
+     * @return l'ensemble qui contient tous les attributs en argument
      */
     public static AttributeSet of(Attribute... attributes) {
         long value = 0L;
@@ -38,7 +37,7 @@ public record AttributeSet(long bits)  {
     }
 
     /**
-     * Méthode qui retourne si l'attribut en argument est dans l'ensemble
+     * La méthode contains retourne true si l'attribut en argument est dans l'ensemble.
      *
      * @param attribute l'attribut donné
      * @return true si l'attribut en argument est dans l'ensemble
@@ -51,7 +50,7 @@ public record AttributeSet(long bits)  {
     }
 
     /**
-     * Méthode qui retourne qui retourne vrai si l'intersection entre l'ensemble récepteur (this) avec celui passé en argument (that) n'est pas vide
+     * La méthode intersects retourne true si l'intersection entre l'ensemble récepteur (this) avec celui passé en argument (that) n'est pas vide.
      *
      * @param that l'ensemble qu'on veut comparer
      * @return true si l'intersection n'est pas vide
@@ -64,7 +63,7 @@ public record AttributeSet(long bits)  {
     }
 
     /**
-     * Méthode qui retourne une chaîne composée de la représentation textuelle de tous les attributs dans l'ensemble
+     * Méthode qui retourne une chaîne composée de la représentation textuelle de tous les attributs de l'ensemble.
      *
      * @return une chaîne composée de la représentation textuelle de tous les attributs dans l'ensemble
      */
@@ -78,7 +77,5 @@ public record AttributeSet(long bits)  {
             }
         }
         return joiner.toString();
-
     }
-
 }

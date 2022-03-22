@@ -4,7 +4,7 @@ package ch.epfl.javelo;
 
 /**
  * La classe Q28_4 contient des méthodes statiques qui permettent de convertir des nombres entre la représentation Q28.4
- * et d'autres représentations
+ * et d'autres représentations.
  *
  * @author Juan B Iaconucci (342153)
  */
