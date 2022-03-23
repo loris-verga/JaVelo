@@ -19,9 +19,7 @@ public final class Q28_4 {
      */
     public static int ofInt(int i){
 
-        int newInt = i << 4;
-
-        return newInt;
+        return i << 4;
     }
 
     /**
@@ -31,9 +29,7 @@ public final class Q28_4 {
      */
     public static double asDouble(int q28_4){
 
-        double newDouble = Math.scalb( (double) q28_4 , -4);
-
-        return newDouble;
+        return Math.scalb( (double) q28_4 , -4);
     }
 
     /**
@@ -43,8 +39,6 @@ public final class Q28_4 {
      */
     public static float asFloat(int q28_4){
 
-        float newFloat = Math.scalb( (float) q28_4, -4);
-
-        return newFloat;
+        return Math.scalb( (float) q28_4, -4);
     }
 }

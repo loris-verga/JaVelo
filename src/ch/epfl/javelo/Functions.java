@@ -1,6 +1,5 @@
 package ch.epfl.javelo;
 
-import java.util.ArrayList;
 import java.util.function.DoubleUnaryOperator;
 
 /**
@@ -27,7 +26,7 @@ public final class Functions {
      */
     private static final class Constant implements DoubleUnaryOperator {
 
-        private double constante;
+        private final double constante;
 
         public Constant(double constante){
             this.constante = constante;
@@ -46,9 +45,9 @@ public final class Functions {
      * Cette méthode retourne une fonction obtenue par interpolation linéaire entre les échantillons samples,
      * espacés régulièrement et couvrant la plage allant de 0 à xMax.
      * @throws IllegalArgumentException si le tableau samples contient moins de deux éléments, ou si xMax est inférieur ou égal à 0.
-     * @param samples
-     * @param xMax
-     * @return
+     * @param samples tableau de sample
+     * @param  xMax valeur maximale
+     * @return La fonction
      */
     public static DoubleUnaryOperator sampled(float[] samples, double xMax){
         return new Sampled(samples, xMax);
@@ -56,8 +55,8 @@ public final class Functions {
 
 
     private static final class Sampled implements DoubleUnaryOperator{
-        private float[] sampled;
-        private double xMax;
+        private final float[] sampled;
+        private final double xMax;
         public Sampled(float[] sampled, double xMax){
             this.sampled = sampled.clone();
             this.xMax = xMax;

@@ -11,7 +11,7 @@ public final class Preconditions {
     private Preconditions() {}
 
     /**
-     * Méthode checkArgument: permet de vérifier la validité des arguments d'une méthode.
+     * Méthode checkArgument : permet de vérifier la validité des arguments d'une méthode.
      *
      * @param shouldBeTrue correspond à la condition pour que le paramètre d'une méthode soit accepté,
      *                     si cette condition n'est pas respectée, la méthode checkArgument enverra une IllegalArgumentException

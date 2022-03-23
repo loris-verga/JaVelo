@@ -42,9 +42,7 @@ public final class Math2 {
      * @return L'ordonnée du point x passant par la droite formé par y0 et y1
      */
     public static double interpolate(double y0,double y1, double x){
-        double b = y0;
-        double a = y1 - y0;
-        return Math.fma( a, x, b);
+        return Math.fma( y1 - y0, x, y0);
     }
 
     /**
