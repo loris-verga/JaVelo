@@ -88,7 +88,7 @@ public final class SingleRoute implements Route {
      */
     @Override
     public List<PointCh> points() {
-        List<PointCh> points = new ArrayList();
+        List<PointCh> points = new ArrayList<>();
         points.add(edges.get(0).fromPoint());
         for (Edge g : edges) {
             points.add(g.toPoint());
