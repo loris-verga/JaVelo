@@ -28,7 +28,7 @@ public final class Functions {
 
         private final double constante;
 
-        public Constant(double constante){
+        private Constant(double constante){
             this.constante = constante;
 
         }
