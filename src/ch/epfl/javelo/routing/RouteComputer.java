@@ -1,14 +1,13 @@
 package ch.epfl.javelo.routing;
 
-import ch.epfl.javelo.Math2;
 import ch.epfl.javelo.Preconditions;
 import ch.epfl.javelo.data.Graph;
-import org.w3c.dom.Node;
 
 import java.util.*;
 
 /** RouteComputer représente un planificateur d'itinéraire
  *
+ * @author Juan Bautista Iaconucci (342153)
  */
 public class RouteComputer {
 
@@ -20,7 +19,7 @@ public class RouteComputer {
      * @param graph le graph sur lequel on veut construire l'itinéraire
      * @param costFunction la fonction cout qui est utilisé pour construire l'itinéraire
      */
-    RouteComputer(Graph graph, CostFunction costFunction){
+    public RouteComputer(Graph graph, CostFunction costFunction){
         this.graph = graph;
         this.costFunction = costFunction;
     }
@@ -31,11 +30,14 @@ public class RouteComputer {
      * @param endNodeId l'identité du dernier noeud sur l'itinéraire
      * @return l'itinéraire de coût total minimal allant du nœud d'identité startNodeId au nœud d'identité endNodeId dans le graphe passé au constructeur
      */
-    public Route bestRouteBetween(int startNodeId ,int endNodeId){
-        /** le record WeightedNode
-         *
+    public Route bestRouteBetween(int startNodeId , int endNodeId){
+
+        /**
+         * Le record WeightedNode imbriquer à l'intérieur de bestRouteBetween, permet de contenir l'identité d'un noeud et sa distance
+         * @param nodeId l'identité du noeud
+         * @param distance la distance la plus courte entre ce noeud et le noeud de départ
          */
-        record WeightedNode(int nodeId, float distance)
+         record WeightedNode(int nodeId, float distance)
                 implements Comparable<WeightedNode> {
             @Override
             public int compareTo(WeightedNode that) {
@@ -46,40 +48,39 @@ public class RouteComputer {
         Preconditions.checkArgument(startNodeId !=endNodeId);
 
         float[] distance = new float[graph.nodeCount()];
-        int[] prédécesseur = new int[graph.nodeCount()];
+        int[] predecessor = new int[graph.nodeCount()];
 
         for(int nodeId = 0; nodeId < graph.nodeCount(); nodeId += 1) {
             distance[nodeId] = Float.POSITIVE_INFINITY;
-            prédécesseur[nodeId] = 0;
+            predecessor[nodeId] = 0;
         }
 
         distance[startNodeId] = 0.f;
-        PriorityQueue<WeightedNode> en_exploration = new PriorityQueue<>();
-        en_exploration.add(new WeightedNode(startNodeId, 0));
+        PriorityQueue<WeightedNode> nodesInExploration = new PriorityQueue<>();
+        nodesInExploration.add(new WeightedNode(startNodeId, 0.f));
 
-        while( ! en_exploration.isEmpty()){
-            WeightedNode nodeWithMinDistance = en_exploration.remove();
-            //todo not sure about this
+        while( ! nodesInExploration.isEmpty()){
+            WeightedNode nodeWithMinDistance = nodesInExploration.remove();
             distance[nodeWithMinDistance.nodeId()] = Float.NEGATIVE_INFINITY;
 
             if(nodeWithMinDistance.nodeId() == endNodeId){
-                en_exploration.clear();
+                nodesInExploration.clear();
             }
             else {
 
                 for(int edgeIndex = 0; edgeIndex < graph.nodeOutDegree(nodeWithMinDistance.nodeId()) ; edgeIndex += 1) {
-                    int nodeIdOutEdge = graph.nodeOutEdgeId(nodeWithMinDistance.nodeId(), edgeIndex);
-                    //todo not sure
-                    if (distance[nodeIdOutEdge] != Double.NEGATIVE_INFINITY) {
-                        int edgeId = graph.nodeOutEdgeId(nodeIdOutEdge, edgeIndex);
-                        float newDistance = (float) (nodeWithMinDistance.distance +
-                                                        costFunction.costFactor(nodeWithMinDistance.nodeId, edgeId)
+                    int edgeId = graph.nodeOutEdgeId(nodeWithMinDistance.nodeId, edgeIndex);
+                    int nodeIdOutEdge = graph.edgeTargetNodeId(edgeId);
+
+                    if (distance[nodeIdOutEdge]!= Double.NEGATIVE_INFINITY) {
+                        float newDistance = nodeWithMinDistance.distance +
+                                                (float)(costFunction.costFactor(nodeWithMinDistance.nodeId, edgeId)
                                                                 * graph.edgeLength(edgeId));
 
                         if (newDistance < distance[nodeIdOutEdge]) {
                             distance[nodeIdOutEdge] = newDistance;
-                            prédécesseur[nodeIdOutEdge] = nodeWithMinDistance.nodeId();
-                            en_exploration.add(new WeightedNode(nodeIdOutEdge, newDistance));
+                            predecessor[nodeIdOutEdge] = nodeWithMinDistance.nodeId();
+                            nodesInExploration.add(new WeightedNode(nodeIdOutEdge, newDistance));
 
                         }
                     }
@@ -88,29 +89,29 @@ public class RouteComputer {
         }
 
         int toNodeId = endNodeId;
-        int fromNodeId = prédécesseur[endNodeId];
+        int fromNodeId = predecessor[endNodeId];
         int edgeIndex;
         int edgeId;
-        List<Edge> edgesList = new ArrayList<>();
+
         Stack<Edge> edgesStack = new Stack<>();
 
         while (toNodeId != startNodeId){
-            //todo if constructor then missing profil, if of then missing edge id
-            //todo see if this fix problem
             edgeIndex = 0;
             while (edgeIndex < graph.nodeOutDegree(fromNodeId)) {
                 edgeId = graph.nodeOutEdgeId(fromNodeId , edgeIndex);
                 if(graph.edgeTargetNodeId(edgeId) == toNodeId) {
                     edgesStack.push(Edge.of(graph, edgeId, fromNodeId, toNodeId));
                     toNodeId = fromNodeId;
-                    fromNodeId = prédécesseur[toNodeId];
+                    fromNodeId = predecessor[toNodeId];
                     edgeIndex = graph.nodeOutDegree(fromNodeId);
                 }
             edgeIndex += 1;
             }
         }
 
-        for (Edge edge : edgesStack) {
+        List<Edge> edgesList = new ArrayList<>();
+
+        while(!(edgesStack.empty())) {
             edgesList.add(edgesStack.pop());
         }
 
