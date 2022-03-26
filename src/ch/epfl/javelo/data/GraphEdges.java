@@ -7,7 +7,8 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
-/** L'enregistrement GraphEdge représente l'ensemble des arrêtes représente le tableau de toutes les arêtes du graphe JaVelo
+/**
+ * L'enregistrement GraphEdge représente l'ensemble des arrêtes représente le tableau de toutes les arêtes du graphe JaVelo
  *
  * @author Juan Bautista Iaconucci (342153)
  */
@@ -20,98 +21,112 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
 
     /**
      * La méthode isInverted renvoie true si l'arrête passée en argument va dans le sens inverse de la voie OSM.
+     *
      * @param edgeId l'identité de l'arrête.
      * @return true ou false selon le sens de l'arrête.
      */
-    public boolean isInverted(int edgeId){
+    public boolean isInverted(int edgeId) {
         return edgesBuffer.getInt(EDGE_INTS * edgeId + OFFSET_ID_OF_DESTINATION_NODE) < 0;
     }
 
     /**
      * La méthode targetNodeId renvoie l'identité du nœud de destination qui se trouve sur l'arrête d'identité donnée.
+     *
      * @param edgeId d'identité l'arrête donnée
      * @return renvoie l'identité du nœud de destination
      */
-    public int targetNodeId(int edgeId){
+    public int targetNodeId(int edgeId) {
         int destinationNodeId = edgesBuffer.getInt(EDGE_INTS * edgeId + OFFSET_ID_OF_DESTINATION_NODE);
-        if (!isInverted(edgeId)) {return destinationNodeId;}
-        else{return ~destinationNodeId;}
+        if (!isInverted(edgeId)) {
+            return destinationNodeId;
+        } else {
+            return ~destinationNodeId;
+        }
     }
 
     /**
      * La méthode length renvoie la longueur de l'arrête d'identité donnée.
+     *
      * @param edgeId l'identité de l'arrête donnée
      * @return la longueur de l'arrête.
      */
-    public double length(int edgeId){
-        return  Q28_4.asDouble(Short.toUnsignedInt(edgesBuffer.getShort(EDGE_INTS * edgeId + OFFSET_LENGTH_OF_EDGE)));
+    public double length(int edgeId) {
+        return Q28_4.asDouble(Short.toUnsignedInt(edgesBuffer.getShort(EDGE_INTS * edgeId + OFFSET_LENGTH_OF_EDGE)));
     }
 
     /**
      * La méthode elevationGain retourne la difference de hauteur positive de l'arrête d'identité donnée.
+     *
      * @param edgeId l'identité de l'arrête donnée
      * @return la difference de hauteur positive
      */
-    public double elevationGain(int edgeId){
-        return  Q28_4.asDouble(Short.toUnsignedInt(edgesBuffer.getShort(EDGE_INTS * edgeId + OFFSET_ELEVATION_GAIN)));
+    public double elevationGain(int edgeId) {
+        return Q28_4.asDouble(Short.toUnsignedInt(edgesBuffer.getShort(EDGE_INTS * edgeId + OFFSET_ELEVATION_GAIN)));
     }
 
     /**
      * hasProfile renvoie true si l'arrête d'identité donnée a un profil
+     *
      * @param edgeId l'identité de l'arrête donnée
      * @return true si l'arrête d'identité donnée a un profil
      */
-    public boolean hasProfile(int edgeId){
+    public boolean hasProfile(int edgeId) {
         int profileIdAndType = profileIds.get(edgeId);
-        int profilType = Bits.extractUnsigned(profileIdAndType,30,2);
+        int profilType = Bits.extractUnsigned(profileIdAndType, 30, 2);
         return profilType != 0;
     }
 
     /**
      * La méthode profilSamples retourne une liste d'échantillons du profil de l'arrête d'identité donnée.
+     *
      * @param edgeId l'identité de l'arrête.
-     * @return  une liste des échantillons du profil de l'arrête d'identité donnée
+     * @return une liste des échantillons du profil de l'arrête d'identité donnée
      */
-    public float[] profileSamples(int edgeId){
-        if (!hasProfile(edgeId)){return new float[]{};}
+    public float[] profileSamples(int edgeId) {
+        if (!hasProfile(edgeId)) {
+            return new float[]{};
+        }
 
-        float[] profilList = new float[1 + (int)Math.ceil(length(edgeId)/2.0)];
+        float[] profilList = new float[1 + (int) Math.ceil(length(edgeId) / 2.0)];
         int profileIdAndType = profileIds.get(edgeId);
-        int profilType = Bits.extractUnsigned(profileIdAndType,30,2);
+        int profilType = Bits.extractUnsigned(profileIdAndType, 30, 2);
 
-        int firstSampleId = Bits.extractUnsigned(profileIdAndType,0,30);
+        int firstSampleId = Bits.extractUnsigned(profileIdAndType, 0, 30);
 
         float firstSample = Q28_4.asFloat(Short.toUnsignedInt(elevations.get(firstSampleId)));
         profilList[0] = firstSample;
 
-        switch (profilType){
-            case 1:{
+        switch (profilType) {
+            case 1: {
                 float newSample;
-                for (int i = 1; i < profilList.length; i++){
+                for (int i = 1; i < profilList.length; i++) {
                     newSample = Q28_4.asFloat(Short.toUnsignedInt(elevations.get(firstSampleId + i)));
                     profilList[i] = newSample;
                 }
                 break;
             }
-            case 2:{
-                profilList = sampleListForCompressedValues(profilList, firstSample, firstSampleId,8);
+            case 2: {
+                profilList = sampleListForCompressedValues(profilList, firstSample, firstSampleId, 8);
                 break;
             }
-            case 3:{
-                profilList = sampleListForCompressedValues(profilList, firstSample, firstSampleId,4);
+            case 3: {
+                profilList = sampleListForCompressedValues(profilList, firstSample, firstSampleId, 4);
                 break;
             }
         }
-        if (isInverted(edgeId)){profilList = invertList(profilList);}
+        if (isInverted(edgeId)) {
+            profilList = invertList(profilList);
+        }
         return profilList;
     }
 
     /**
      * La méthode sampleListForCompressedValues permet de renvoyer la liste d'échantillons de l'arrête d'identité donnée,
      * pour celles qui ont des profils avec des valeurs compressées.
-     * @param profilList liste contenant tous les échantillons
-     * @param firstSample le premier échantillon
-     * @param firstSampleId l'index du premier échantillon
+     *
+     * @param profilList             liste contenant tous les échantillons
+     * @param firstSample            le premier échantillon
+     * @param firstSampleId          l'index du premier échantillon
      * @param sizeOfCompressedValues la taille en bit des valeurs compresser
      * @return la liste d'échantillons de l'arrête d'identité donnée
      */
@@ -138,28 +153,31 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
                 indexOfProfilList++;
             }
         }
-    return profilList;
+        return profilList;
     }
 
     /**
      * La méthode invertList inverse les éléments d'une liste donnée.
+     *
      * @param profilSample la liste que l'on veut inverser
      * @return une liste inversée
      */
-    private float[] invertList(float[] profilSample){
+    private float[] invertList(float[] profilSample) {
         float[] newProfilSample = new float[profilSample.length];
-        for(int i = 0; i < profilSample.length; i++){
-            newProfilSample[i] = profilSample[profilSample.length - (i+1)];
+        for (int i = 0; i < profilSample.length; i++) {
+            newProfilSample[i] = profilSample[profilSample.length - (i + 1)];
         }
         return newProfilSample;
     }
 
     /**
      * La méthode attributesIndex renvoie l'identité de l'ensemble d'attributs attaché à l'arête d'identité donnée-
+     *
      * @param edgeId l'identité de l'arrête donnée
      * @return l'identité de l'ensemble d'attributs attaché à l'arête d'identité donnée
      */
-    public int attributesIndex(int edgeId){
+    public int attributesIndex(int edgeId) {
         //todo first change here
-        return Short.toUnsignedInt(edgesBuffer.getShort(EDGE_INTS * edgeId + OFFSET_ID_OF_SET_OF_OSM));}
+        return Short.toUnsignedInt(edgesBuffer.getShort(EDGE_INTS * edgeId + OFFSET_ID_OF_SET_OF_OSM));
+    }
 }

@@ -23,7 +23,7 @@ public record GraphNodes(IntBuffer buffer) {
      *
      * @return le nombre total de nœuds
      */
-    public int count(){
+    public int count() {
         return buffer.capacity() / NODE_INTS;
     }
 
@@ -33,8 +33,8 @@ public record GraphNodes(IntBuffer buffer) {
      * @param nodeId identité du nœud
      * @return la coordonnée Est du nœud
      */
-    public double nodeE(int nodeId){
-        int intE = buffer.get( (nodeId) * NODE_INTS + OFFSET_E);
+    public double nodeE(int nodeId) {
+        int intE = buffer.get((nodeId) * NODE_INTS + OFFSET_E);
         return Q28_4.asDouble(intE);
     }
 
@@ -44,8 +44,8 @@ public record GraphNodes(IntBuffer buffer) {
      * @param nodeId identité du nœud
      * @return la coordonnée Nord du nœud
      */
-    public double nodeN(int nodeId){
-        int intN=buffer.get( (nodeId) * NODE_INTS + OFFSET_N);
+    public double nodeN(int nodeId) {
+        int intN = buffer.get((nodeId) * NODE_INTS + OFFSET_N);
         return Q28_4.asDouble(intN);
     }
 
@@ -55,8 +55,8 @@ public record GraphNodes(IntBuffer buffer) {
      * @param nodeId identité du nœud
      * @return le nombre d'arêtes sortant du nœud
      */
-    public int outDegree(int nodeId){
-        return Bits.extractUnsigned(buffer.get( (nodeId) * NODE_INTS + OFFSET_OUT_EDGES),28,4);
+    public int outDegree(int nodeId) {
+        return Bits.extractUnsigned(buffer.get((nodeId) * NODE_INTS + OFFSET_OUT_EDGES), 28, 4);
     }
 
     /**
@@ -65,10 +65,10 @@ public record GraphNodes(IntBuffer buffer) {
      * @param nodeId identité du nœud
      * @return l'identité de la edgeIndex-ième arête sortant du nœud
      */
-    public int edgeId(int nodeId, int edgeIndex){
+    public int edgeId(int nodeId, int edgeIndex) {
         Preconditions.checkArgument(0 <= edgeIndex && edgeIndex < outDegree(nodeId));
 
-        int firstEdgeId = Bits.extractUnsigned(buffer.get( (nodeId) * NODE_INTS + OFFSET_OUT_EDGES),0,28);
+        int firstEdgeId = Bits.extractUnsigned(buffer.get((nodeId) * NODE_INTS + OFFSET_OUT_EDGES), 0, 28);
 
         return firstEdgeId + edgeIndex;
     }

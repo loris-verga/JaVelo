@@ -4,28 +4,28 @@ package ch.epfl.javelo.routing;
 import ch.epfl.javelo.Preconditions;
 import ch.epfl.javelo.projection.PointCh;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * La classe MultiRoute publique et immuable, représente un itinéraire multiple,
- * c.-à-d. que l'itinéraire est composé d'une séquence d'itinéraires contigus nommés segment.
+ * c'est-à-dire que l'itinéraire est composé d'une séquence d'itinéraires contigus nommés segment.
  *
  * @author Loris Verga (345661)
  */
 public final class MultiRoute implements Route{
 
-    private List<Route> segments;
+    private final List<Route> segments;
 
     /**
      * Unique constructeur de la classe MultiRoute.
-     * @param segments
+     * @param segments une liste de Routes qui vont constituer cette route multiple.
      */
     public MultiRoute(List<Route> segments){
         Preconditions.checkArgument(!(segments.size() == 0));
 
-        for (Route segment : segments){
-            this.segments.add(segment);
-        }
+        this.segments = new ArrayList<>(segments);
     }
 
 
@@ -36,8 +36,20 @@ public final class MultiRoute implements Route{
      * @return index du segment
      */
     public int indexOfSegmentAt(double position){
+        if (position<0){
+            return 0;
+        }
+        if (position>this.length()){
+            return segments.size()-1;
+        }
 
-        return 0;
+        double pos = position;
+        int index = 0;
+        while (pos > 0) {
+            pos = pos - segments.get(index).length();
+            index ++;
+        }
+        return index;
     }
 
 
@@ -46,8 +58,12 @@ public final class MultiRoute implements Route{
      * @return la longueur de l'itinéraire
      */
     public double length(){
+        double length = 0;
+        for (Route route : segments){
+            length += route.length();
+        }
+        return length;
 
-        return 0.0;
     }
 
     /**
@@ -55,8 +71,11 @@ public final class MultiRoute implements Route{
      * @return une liste de Edge
      */
     public List<Edge> edges() {
-
-        return null;
+        List<Edge> listOfEdges = new ArrayList<>();
+        for (Route route : segments){
+            listOfEdges.addAll(route.edges());
+        }
+        return listOfEdges;
     }
 
     /**
@@ -65,7 +84,17 @@ public final class MultiRoute implements Route{
      */
     public List<PointCh> points(){
 
-        return null;
+        List<PointCh> listOfPoints = new ArrayList<>(segments.get(0).points());
+
+        //On fait en sorte de ne pas mettre le premier point, car il est déjà présent dans le segment précédent.
+        ListIterator<Route> iterator = segments.listIterator(1);
+        while (iterator.hasNext()) {
+            ListIterator<PointCh> iteratorOfOneSegment = iterator.next().points().listIterator(1);
+            while (iteratorOfOneSegment.hasNext()){
+                listOfPoints.add(iteratorOfOneSegment.next());
+            }
+        }
+        return listOfPoints;
     }
 
 
@@ -75,42 +104,72 @@ public final class MultiRoute implements Route{
      * @return le PointCh se trouvant à cette position.
      */
     public PointCh pointAt(double position){
-
-        return null;
+        int indexOfSegment = this.indexOfSegmentAt(position);
+        double pos = this.positionOnTheSegment(position, indexOfSegment);
+        return segments.get(indexOfSegment).pointAt(pos);
     }
 
 
     /**
-     * Cette méthode retourne l'identité appartenant à l'itinéraire et se trouvant le plus
+     * Cette méthode retourne l'identité du nœud appartenant à l'itinéraire et se trouvant le plus
      * proche de la position donnée
-     * @param position
-     * @return le noeud le plus proche de la position donnée se trouvant sur l'itinéraire
+     * @param position la position le long de l'itinéraire complet.
+     * @return le nœud le plus proche de la position donnée se trouvant sur l'itinéraire
      */
     public int nodeClosestTo(double position){
-
-        return 0;
+        int indexOfSegment = this.indexOfSegmentAt(position);
+        double pos = positionOnTheSegment(position, indexOfSegment);
+        return segments.get(indexOfSegment).nodeClosestTo(pos);
     }
 
     /**
      * Cette méthode retourne le point de l'itinéraire se trouvant le plus proche du point
      * de référence donnée
-     * @param point
-     * @return
+     * @param point le pointCh de référence.
+     * @return le RoutePoint le plus proche du point de référence
      */
     public RoutePoint pointClosestTo(PointCh point){
+        RoutePoint pointClosestTo = segments.get(0).pointClosestTo(point);
+        double distanceToRefPointClosest = pointClosestTo.distanceToReference();
 
-        return null;
+        ListIterator<Route> iterator = segments.listIterator(1);
+        while (iterator.hasNext()){
+            RoutePoint pointCandidate = iterator.next().pointClosestTo(point);
+            double distanceToRefCandidate = pointCandidate.distanceToReference();
+            if (distanceToRefCandidate<distanceToRefPointClosest){
+                pointClosestTo = pointCandidate;
+                distanceToRefPointClosest = distanceToRefCandidate;
+            }
+        }
+        return pointClosestTo;
     }
 
 
     /**
      * Cette méthode retourne l'altitude à la position donnée le long de l'itinéraire.
-     * @param position
-     * @return l'élévation
+     * @param position position le long de l'itinéraire entier.
+     * @return l'élévation à cette position.
      */
     public double elevationAt(double position){
+        int indexOfSegment = this.indexOfSegmentAt(position);
+        double pos = this.positionOnTheSegment(position, indexOfSegment);
+        return segments.get(indexOfSegment).elevationAt(pos);
+    }
 
-        return 0.0;
+
+    /**
+     * Cette méthode retourne la position relative sur un segment.
+     * @param position position sur l'ensemble de l'itinéraire
+     * @param indexOfSegment index du segment
+     * @return position sur le segment
+     */
+    private double positionOnTheSegment(double position, int indexOfSegment){
+        double pos = position;
+        ListIterator<Route> iterator = segments.listIterator();
+        while (iterator.nextIndex()<indexOfSegment){
+            pos -= iterator.next().length();
+        }
+        return pos;
     }
 
 

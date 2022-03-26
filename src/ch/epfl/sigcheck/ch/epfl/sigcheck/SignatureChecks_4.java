@@ -6,7 +6,8 @@ package ch.epfl.sigcheck;
 // pour cette étape du projet sont corrects.
 
 final class SignatureChecks_4 {
-    private SignatureChecks_4() {}
+    private SignatureChecks_4() {
+    }
 
     void checkGraph() throws Exception {
         v01 = new ch.epfl.javelo.data.Graph(v02, v03, v04, v05);

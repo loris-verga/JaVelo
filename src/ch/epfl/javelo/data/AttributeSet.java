@@ -9,7 +9,7 @@ import java.util.StringJoiner;
  *
  * @author Juan B Iaconucci (342153)
  */
-public record AttributeSet(long bits)  {
+public record AttributeSet(long bits) {
 
     /**
      * Constructeur d'AttributeSet
@@ -18,7 +18,7 @@ public record AttributeSet(long bits)  {
      * @throw si bits est strictement inférieur à 0 ou si bits est supérieur à 2 à la puissance 62
      */
     public AttributeSet {
-        Preconditions.checkArgument( 0 <= bits && bits < 0b100000000000000000000000000000000000000000000000000000000000000L);
+        Preconditions.checkArgument(0 <= bits && bits < 0b100000000000000000000000000000000000000000000000000000000000000L);
     }
 
     /**
@@ -42,7 +42,7 @@ public record AttributeSet(long bits)  {
      * @param attribute l'attribut donné
      * @return true si l'attribut en argument est dans l'ensemble
      */
-    public boolean contains(Attribute attribute){
+    public boolean contains(Attribute attribute) {
 
         long value = (this.bits() >>> attribute.ordinal()) & 1L;
 
@@ -55,7 +55,7 @@ public record AttributeSet(long bits)  {
      * @param that l'ensemble qu'on veut comparer
      * @return true si l'intersection n'est pas vide
      */
-    public boolean intersects(AttributeSet that){
+    public boolean intersects(AttributeSet that) {
 
         long value = this.bits() & that.bits();
 
@@ -68,7 +68,7 @@ public record AttributeSet(long bits)  {
      * @return une chaîne composée de la représentation textuelle de tous les attributs dans l'ensemble
      */
     @Override
-    public String toString(){
+    public String toString() {
         StringJoiner joiner = new StringJoiner(",", "{", "}");
         long bitsValue = this.bits();
         for (int i = 0; i <= 63; i += 1) {

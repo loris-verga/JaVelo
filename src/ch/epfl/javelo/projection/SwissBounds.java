@@ -2,7 +2,7 @@ package ch.epfl.javelo.projection;
 
 /**
  * Classe SwissBounds
- *
+ * <p>
  * Cette méthode non instantiable contient des constantes et des méthodes liées aux limites de la Suisse.
  *
  * @author Loris Verga (345661)
@@ -24,20 +24,21 @@ public final class SwissBounds {
     public final static double MAX_N = 1296000;
 
     //la largeur de la Suisse en mètres, définie comme la différence entre MAX_E et MIN_E
-    public final static double WIDTH = MAX_E-MIN_E;
+    public final static double WIDTH = MAX_E - MIN_E;
 
     //la hauteur de la Suisse en mètres, définie comme la différence entre MAX_N et MIN_N.
-    public final static double HEIGHT = MAX_N-MIN_N;
+    public final static double HEIGHT = MAX_N - MIN_N;
 
 
     /**
      * Méthode containsEN : Cette méthode publique et statique permet de tester si un point (des coordonnées) se trouve
      * dans les limites de la Suisse.
+     *
      * @param e coordonnée Est du point dont on veut déterminer s'il se trouve en Suisse
      * @param n coordonnée Nord du point dont on veut déterminer s'il se trouve en Suisse
      * @return true si le point se trouve en Suisse
      */
-    public static boolean containsEN(double e, double n){
+    public static boolean containsEN(double e, double n) {
         return e >= MIN_E && e <= MAX_E && n >= MIN_N && n <= MAX_N;
     }
 }

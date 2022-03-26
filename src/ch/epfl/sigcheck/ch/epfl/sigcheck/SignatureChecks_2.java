@@ -6,7 +6,8 @@ package ch.epfl.sigcheck;
 // pour cette étape du projet sont corrects.
 
 final class SignatureChecks_2 {
-    private SignatureChecks_2() {}
+    private SignatureChecks_2() {
+    }
 
     void checkPreconditions() throws Exception {
         ch.epfl.javelo.Preconditions.checkArgument(v01);

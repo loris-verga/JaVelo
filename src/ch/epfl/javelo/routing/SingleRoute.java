@@ -45,10 +45,10 @@ public final class SingleRoute implements Route {
 
     /**
      * Cette méthode retourne l'index du segment de l'itinéraire contenant la position donnée
-     * qui vaut toujours 0 dans le cas d'un itinéraire simple.
+     * qui vaut toujours zéro dans le cas d'un itinéraire simple.
      *
      * @param position donnée en mètre
-     * @return toujours 0 dans le cas d'un itinéraire simple.
+     * @return toujours zéro dans le cas d'un itinéraire simple.
      */
     @Override
     public int indexOfSegmentAt(double position) {
@@ -58,7 +58,7 @@ public final class SingleRoute implements Route {
     /**
      * Cette méthode retourne la longueur de l'itinéraire en mètres.
      *
-     * @return
+     * @return la longueur de l'itinéraire en double
      */
     @Override
     public double length() {
@@ -76,9 +76,7 @@ public final class SingleRoute implements Route {
      */
     @Override
     public List<Edge> edges() {
-        List<Edge> liste = new ArrayList<>();
-        liste.addAll(edges);
-        return liste;
+        return new ArrayList<>(edges);
     }
 
     /**
@@ -100,7 +98,7 @@ public final class SingleRoute implements Route {
      * Cette méthode retourne le point se trouvant à la position donnée le long de l'itinéraire.
      *
      * @param position position du point
-     * @return
+     * @return un PointCh se trouvant sur l'itinéraire.
      */
     @Override
     public PointCh pointAt(double position) {
@@ -109,7 +107,7 @@ public final class SingleRoute implements Route {
         if (resultBinarySearch >= 0) {
             return this.points().get(resultBinarySearch);
         } else {
-            int indexLessThanTheValue = Math.abs(resultBinarySearch)-2;
+            int indexLessThanTheValue = Math.abs(resultBinarySearch) - 2;
             double positionOnTheEdge = pos - positionArray[indexLessThanTheValue];
             return edges.get(indexLessThanTheValue).pointAt(positionOnTheEdge);
         }
@@ -118,8 +116,8 @@ public final class SingleRoute implements Route {
     /**
      * Cette méthode retourne l'identité du nœud appartenant à l'itinéraire et se trouvant le plus proche de la position donnée.
      *
-     * @param position
-     * @return
+     * @param position position sur l'itinéraire
+     * @return ID du nœud
      */
     @Override
     public int nodeClosestTo(double position) {
@@ -148,22 +146,23 @@ public final class SingleRoute implements Route {
      * qui peut valoir NaN si l'arête contenant cette position n'a pas de profil.
      *
      * @param position position du point
-     * @return
+     * @return l'élévation (un double)
      */
     @Override
     public double elevationAt(double position) {
         double pos = this.modifiedPosition(position);
         int resultBinarySearch = this.binarySearch(position);
-        if (resultBinarySearch>=0){
-            if (resultBinarySearch==0){
-                return edges.get(resultBinarySearch).elevationAt(0);}
-            return edges.get(resultBinarySearch-1).elevationAt(edges.get(resultBinarySearch-1).length());
+        if (resultBinarySearch >= 0) {
+            if (resultBinarySearch == 0) {
+                return edges.get(resultBinarySearch).elevationAt(0);
+            }
+            return edges.get(resultBinarySearch - 1).elevationAt(edges.get(resultBinarySearch - 1).length());
         }
-        int indexOfEdge = resultBinarySearch*(-1)-2;
-        ListIterator iterator = edges.listIterator();
+        int indexOfEdge = resultBinarySearch * (-1) - 2;
+        ListIterator<Edge> iterator = edges.listIterator();
         double distanceOnEdge = pos;
-        while (iterator.nextIndex() < indexOfEdge){
-            Edge edge = (Edge)iterator.next();
+        while (iterator.nextIndex() < indexOfEdge) {
+            Edge edge = iterator.next();
             distanceOnEdge = distanceOnEdge - edge.length();
         }
         return edges.get(indexOfEdge).elevationAt(distanceOnEdge);
@@ -172,22 +171,20 @@ public final class SingleRoute implements Route {
     /**
      * Cette méthode retourne le point de l'itinéraire se trouvant le plus proche du point de référence donné.
      *
-     * @param point
-     * @return
+     * @param point le PointCh de référence
+     * @return le RoutePoint se trouvant sur l'itinéraire
      */
     @Override
     public RoutePoint pointClosestTo(PointCh point) {
         PointCh pointClosest;
-        int indexOfEdge= 0;
+        int indexOfEdge = 0;
 
         double positionOfPointClosestTo = edges.get(0).positionClosestTo(point);
-        if (positionOfPointClosestTo<0){
+        if (positionOfPointClosestTo < 0) {
             pointClosest = edges.get(0).fromPoint();
-        }
-        else if (positionOfPointClosestTo>edges.get(0).length()){
+        } else if (positionOfPointClosestTo > edges.get(0).length()) {
             pointClosest = edges.get(0).toPoint();
-        }
-        else {
+        } else {
             pointClosest = edges.get(0).pointAt(positionOfPointClosestTo);
         }
 
@@ -196,23 +193,22 @@ public final class SingleRoute implements Route {
         int index = 0;
 
 
-        for (Edge oneEdge : edges){
+        for (Edge oneEdge : edges) {
 
 
             double position = oneEdge.positionClosestTo(point);
             PointCh pointCandidate;
-            if (position <0){
+            if (position < 0) {
                 pointCandidate = oneEdge.fromPoint();
-            }
-            if (position> oneEdge.length()){
+            } else if (position > oneEdge.length()) {
                 pointCandidate = oneEdge.toPoint();
+            } else {
+                pointCandidate = oneEdge.pointAt(position);
             }
-            else{
-                pointCandidate = oneEdge.pointAt(position);}
 
             double squaredDistCandidate = pointCandidate.squaredDistanceTo(point);
 
-            if (squaredDistCandidate<squaredDistanceToReference){
+            if (squaredDistCandidate < squaredDistanceToReference) {
                 indexOfEdge = index;
                 positionOfPointClosestTo = position;
                 pointClosest = pointCandidate;
@@ -220,10 +216,9 @@ public final class SingleRoute implements Route {
             }
             index++;
         }
-        ListIterator iterator = edges.listIterator();
-        while (iterator.nextIndex()<indexOfEdge){
-            positionOfPointClosestTo  = (double)positionOfPointClosestTo + ((Edge)(iterator.next())).length();
-        }
+        ListIterator<Edge> iterator = edges.listIterator();
+        while (iterator.nextIndex() < indexOfEdge)
+            positionOfPointClosestTo = positionOfPointClosestTo + iterator.next().length();
 
         return new RoutePoint(pointClosest, positionOfPointClosestTo, Math.sqrt(squaredDistanceToReference));
     }
@@ -231,19 +226,21 @@ public final class SingleRoute implements Route {
 
     /**
      * Cette méthode effectue une binarySearch avec le tableau de position.
-     * @param position
-     * @return
+     *
+     * @param position position le long de l'itinéraire
+     * @return le résultat de la binary search
      */
-    private int binarySearch(double position){
+    private int binarySearch(double position) {
         return Arrays.binarySearch(positionArray, modifiedPosition(position));
     }
 
     /**
-     * Cette méthode
-     * @param position
-     * @return
+     * Cette méthode modifie la position pour qu'elle soit valide pour l'utilisation de nos méthodes spécifiques.
+     *
+     * @param position position le long de l'itinéraire
+     * @return la position modifiée
      */
-    private double modifiedPosition(double position){
+    private double modifiedPosition(double position) {
         if (position < 0) {
             return 0.0;
         }

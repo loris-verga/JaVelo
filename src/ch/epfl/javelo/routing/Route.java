@@ -51,7 +51,7 @@ public interface Route {
 
 
     /**
-     * Cette méthode retourne l'identité appartenant à l'itinéraire et se trouvant le plus
+     * Cette méthode retourne l'identité du nœud appartenant à l'itinéraire et se trouvant le plus
      * proche de la position donnée
      * @param position
      * @return le noeud le plus proche de la position donnée se trouvant sur l'itinéraire

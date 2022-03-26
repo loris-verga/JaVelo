@@ -2,10 +2,10 @@ package ch.epfl.javelo.projection;
 
 /**
  * Classe Ch1903 (publique, finale, non instantiable)
- *
+ * <p>
  * Cette classe contient des méthodes statiques permettant de convertir entre les coordonnées WGS 84 et les coordonnées suisses.
- *
- *Attention les méthodes de CH1903 ne valident pas leurs arguments, la validité des coordonnées sera vérifiée
+ * <p>
+ * Attention les méthodes de CH1903 ne valident pas leurs arguments, la validité des coordonnées sera vérifiée
  * par les classes représentant les points.
  *
  * @author Loris Verga (345661)
@@ -15,74 +15,76 @@ public class Ch1903 {
     /**
      * Cette méthode retourne la coordonnée E (est) dans le système suisse
      * du point de longitude lon et latitude lat dans le système WGS84
+     *
      * @param lon longitude dans le système WGS84
      * @param lat latitude dans le système WGS84
-     * @return double e, coordonnée E (est) du point dans le système suisse. 
+     * @return double e, coordonnée E (est) du point dans le système suisse.
      */
-    public static double e (double lon, double lat) {
+    public static double e(double lon, double lat) {
         double longitude = Math.toDegrees(lon);
         double latitude = Math.toDegrees(lat);
         double lambda_un = Math.pow(10, -4) * (3600 * longitude - 26782.5);
         double phi_un = Math.pow(10, -4) * (3600 * latitude - 169028.66);
-        double e = 2600072.37
-                +211455.93 * lambda_un
-                -10938.51 * lambda_un * phi_un
-                -0.36 * lambda_un * Math.pow(phi_un, 2)
-                -44.54 * Math.pow(lambda_un, 3);
-        return e;
+        return 2600072.37
+                + 211455.93 * lambda_un
+                - 10938.51 * lambda_un * phi_un
+                - 0.36 * lambda_un * Math.pow(phi_un, 2)
+                - 44.54 * Math.pow(lambda_un, 3);
     }
 
     /**
      * Cette méthode retourne la coordonnée N (nord) dans le système suisse
      * du point de longitude lon et latitude lat dans le système WGS84
+     *
      * @param lon longitude dans le système WGS84
      * @param lat latitude dans le système WGS84
      * @return double e, coordonnée N (nord) du point dans le système suisse.
      */
-    public static double n(double lon, double lat){
+    public static double n(double lon, double lat) {
         double longitude = Math.toDegrees(lon);
         double latitude = Math.toDegrees(lat);
 
         double lambda_un = Math.pow(10, -4) * (3600 * longitude - 26782.5);
         double phi_un = Math.pow(10, -4) * (3600 * latitude - 169028.66);
-        double n = 1200147.07
-                +308807.95 * phi_un
-                +3745.25 * lambda_un * lambda_un
-                +76.63 * phi_un * phi_un
-                -194.56 * lambda_un * lambda_un * phi_un
+        return 1200147.07
+                + 308807.95 * phi_un
+                + 3745.25 * lambda_un * lambda_un
+                + 76.63 * phi_un * phi_un
+                - 194.56 * lambda_un * lambda_un * phi_un
                 + 119.79 * phi_un * phi_un * phi_un;
-        return n;
     }
 
 
     /**
      * Cette méthode retourne la longitude dans le système WGS84
+     *
      * @param e coordonnée E (est) dans le système suisse
      * @param n coordonnée N (nord) dans le système suisse
      * @return coordonnée longitude dans le système WGS84
      */
-    public static double lon(double e, double n){
-            double x = Math.pow(10, -6) * (e - 2600000);
-            double y = Math.pow(10, -6) * (n - 1200000);
+    public static double lon(double e, double n) {
+        double x = Math.pow(10, -6) * (e - 2600000);
+        double y = Math.pow(10, -6) * (n - 1200000);
 
-            double lambda_zero = 2.6779094
-                    +4.728982 * x
-                    + 0.791484 * x * y
-                    + 0.1306 * x * y * y
-                    - 0.0436 * x * x * x;
+        double lambda_zero = 2.6779094
+                + 4.728982 * x
+                + 0.791484 * x * y
+                + 0.1306 * x * y * y
+                - 0.0436 * x * x * x;
 
-            double lambda = lambda_zero * 100/36;
-            return Math.toRadians(lambda);
-        }
+        double lambda = lambda_zero * 100 / 36;
+        return Math.toRadians(lambda);
+    }
 
 
     /**
      * Cette méthode retourne la latitude dans le système WGS84
+     *
      * @param e coordonnée E (est) dans le système suisse
      * @param n coordonnée N (nord) dans le système suisse
      * @return coordonnée latitude dans le système WGS84
      */
-    public static double lat(double e, double n){
+    public static double lat(double e, double n) {
         double x = Math.pow(10, -6) * (e - 2600000);
         double y = Math.pow(10, -6) * (n - 1200000);
 
@@ -91,9 +93,9 @@ public class Ch1903 {
                 - 0.270978 * x * x
                 - 0.002528 * y * y
                 - 0.0447 * x * x * y
-                - 0.0140 * y * y *y;
+                - 0.0140 * y * y * y;
 
-        double phi = phi_zero * 100/36;
+        double phi = phi_zero * 100 / 36;
         return Math.toRadians(phi);
     }
 
