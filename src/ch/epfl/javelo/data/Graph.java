@@ -134,7 +134,7 @@ public class Graph {
         return nodes.outDegree(nodeId);
 
     }
-
+    //todo check comment here shouldn't it be "id de l'arete" instead of "l'id du noeud" for the return
     /**
      * La méthode nodeOutEdgeId retourne l'identité de la edgeIndex-ième arête sortant du nœud d'identité nodeId.
      * @param nodeId identité du nœud
