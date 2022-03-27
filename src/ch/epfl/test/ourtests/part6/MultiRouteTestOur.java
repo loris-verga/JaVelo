@@ -1,7 +1,9 @@
-package ch.epfl.javelo.routing;
+package ch.epfl.test.ourtests.part6;
 
 import ch.epfl.javelo.Functions;
 import ch.epfl.javelo.projection.PointCh;
+import ch.epfl.javelo.routing.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -122,19 +124,24 @@ class MultiRouteTestOur {
 
 
 
-        assertEquals(new RoutePoint(p1, 0, 0), route.pointClosestTo(p1));
+        Assertions.assertEquals(new RoutePoint(p1, 0, 0), route.pointClosestTo(p1));
         assertEquals(new RoutePoint(p1, 0, 3), route.pointClosestTo(new PointCh(2600000-3, 1200000)));
         assertEquals(new RoutePoint(p1, 0, 70), route.pointClosestTo(new PointCh(2600000-70, 1200000)));
-        //TODO pointClosestTo
-        //TODO elevationAt
+        assertEquals(new RoutePoint(p2, 100, 0), route.pointClosestTo(p2));
+        assertEquals(new RoutePoint(new PointCh(2600_665, 1200000), 665, 100), route.pointClosestTo(new PointCh(2600_665, 1200100)));
+        assertEquals(new RoutePoint(p8, 700, 1000), route.pointClosestTo(new PointCh(2601700, 1200000)));
 
 
 
 
-
+        assertEquals(Double.NaN, route.elevationAt(-100));
+        assertEquals(Double.NaN, route.elevationAt(0));
+        assertEquals(Double.NaN, route.elevationAt(99));
+        assertEquals(Double.NaN, route.elevationAt(100));
+        assertEquals(Double.NaN, route.elevationAt(399));
+        assertEquals(5, route.elevationAt(400));
+        assertEquals(5, route.elevationAt(401));
+        assertEquals(5, route.elevationAt(10000));
 
     }
-
-
-
 }

@@ -132,16 +132,23 @@ public final class MultiRoute implements Route{
         RoutePoint pointClosestTo = segments.get(0).pointClosestTo(point);
         double distanceToRefPointClosest = pointClosestTo.distanceToReference();
 
+        int indexOfSegment = 0;
         ListIterator<Route> iterator = segments.listIterator(1);
         while (iterator.hasNext()){
             RoutePoint pointCandidate = iterator.next().pointClosestTo(point);
             double distanceToRefCandidate = pointCandidate.distanceToReference();
             if (distanceToRefCandidate<distanceToRefPointClosest){
+                indexOfSegment++;
                 pointClosestTo = pointCandidate;
                 distanceToRefPointClosest = distanceToRefCandidate;
             }
         }
-        return pointClosestTo;
+        double positionToShift = 0;
+        for (int i = 0; i<indexOfSegment; ++i){
+            positionToShift += segments.get(i).length();
+
+        }
+        return pointClosestTo.withPositionShiftedBy(positionToShift);
     }
 
 
