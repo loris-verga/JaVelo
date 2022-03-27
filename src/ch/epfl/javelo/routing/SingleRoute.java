@@ -29,7 +29,7 @@ public final class SingleRoute implements Route {
     public SingleRoute(List<Edge> edges) {
 
         Preconditions.checkArgument(!(edges.isEmpty()));
-        this.edges = edges;
+        this.edges = new ArrayList<>(edges);
 
         //Pas possible d'utiliser un itérateur ici
         positionArray = new double[edges.size() + 1];
@@ -176,51 +176,63 @@ public final class SingleRoute implements Route {
      */
     @Override
     public RoutePoint pointClosestTo(PointCh point) {
+
         PointCh pointClosest;
-        int indexOfEdge = 0;
+        double positionPointClosest = edges.get(0).positionClosestTo(point);
+        double squaredDistPointClosest;
 
-        double positionOfPointClosestTo = edges.get(0).positionClosestTo(point);
-        if (positionOfPointClosestTo < 0) {
+        if (positionPointClosest<0){
+            positionPointClosest = 0;
             pointClosest = edges.get(0).fromPoint();
-        } else if (positionOfPointClosestTo > edges.get(0).length()) {
+        }
+        else if (positionPointClosest > edges.get(0).length()){
+            positionPointClosest = edges.get(0).length();
             pointClosest = edges.get(0).toPoint();
-        } else {
-            pointClosest = edges.get(0).pointAt(positionOfPointClosestTo);
+        }
+        else {
+            positionPointClosest = edges.get(0).positionClosestTo(point);
+            pointClosest = edges.get(0).pointAt(positionPointClosest);
         }
 
-        double squaredDistanceToReference = pointClosest.squaredDistanceTo(point);
+        squaredDistPointClosest = pointClosest.squaredDistanceTo(point);
 
-        int index = 0;
-
-
-        for (Edge oneEdge : edges) {
-
-
-            double position = oneEdge.positionClosestTo(point);
-            PointCh pointCandidate;
-            if (position < 0) {
+        int indexOfEdge = 0;
+        int indexCounter = 0;
+        PointCh pointCandidate;
+        double positionCandidate;
+        double squaredDistCandidate;
+        for (Edge oneEdge : edges){
+            positionCandidate = oneEdge.positionClosestTo(point);
+            if (positionCandidate < 0){
+                positionCandidate = 0;
                 pointCandidate = oneEdge.fromPoint();
-            } else if (position > oneEdge.length()) {
+            }
+            else if (positionCandidate > oneEdge.length()){
+                positionCandidate = oneEdge.length();
                 pointCandidate = oneEdge.toPoint();
-            } else {
-                pointCandidate = oneEdge.pointAt(position);
             }
+            else {
+                positionCandidate = oneEdge.positionClosestTo(point);
+                pointCandidate = oneEdge.pointAt(positionCandidate);
+            }
+            squaredDistCandidate = pointCandidate.squaredDistanceTo(point);
 
-            double squaredDistCandidate = pointCandidate.squaredDistanceTo(point);
 
-            if (squaredDistCandidate < squaredDistanceToReference) {
-                indexOfEdge = index;
-                positionOfPointClosestTo = position;
+            if (squaredDistCandidate < squaredDistPointClosest){
+                indexOfEdge = indexCounter;
                 pointClosest = pointCandidate;
-                squaredDistanceToReference = squaredDistCandidate;
+                positionPointClosest = positionCandidate;
+                squaredDistPointClosest = squaredDistCandidate;
             }
-            index++;
-        }
-        ListIterator<Edge> iterator = edges.listIterator();
-        while (iterator.nextIndex() < indexOfEdge)
-            positionOfPointClosestTo = positionOfPointClosestTo + iterator.next().length();
 
-        return new RoutePoint(pointClosest, positionOfPointClosestTo, Math.sqrt(squaredDistanceToReference));
+            indexCounter++;
+        }
+
+        ListIterator<Edge> iterator = edges.listIterator();
+        while (iterator.nextIndex() < indexOfEdge){
+            positionPointClosest += iterator.next().length();
+        }
+        return new RoutePoint(pointClosest, positionPointClosest, Math.sqrt(squaredDistPointClosest));
     }
 
 

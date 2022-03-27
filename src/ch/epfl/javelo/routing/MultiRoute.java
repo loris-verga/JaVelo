@@ -45,11 +45,11 @@ public final class MultiRoute implements Route{
 
         double pos = position;
         int index = 0;
-        while (pos > 0) {
+        while (pos >= 0) {
             pos = pos - segments.get(index).length();
             index ++;
         }
-        return index;
+        return index-1;
     }
 
 
