@@ -25,6 +25,7 @@ public record Edge(int fromNodeId, int toNodeId, PointCh fromPoint, PointCh toPo
      * @return une instance d'un objet de type Edge
      */
     public static Edge of(Graph graph, int edgeId, int fromNodeId, int toNodeId) {
+
         PointCh fromPoint = graph.nodePoint(fromNodeId);
         PointCh toPoint = graph.nodePoint(toNodeId);
         double length = graph.edgeLength(edgeId);
@@ -40,29 +41,33 @@ public record Edge(int fromNodeId, int toNodeId, PointCh fromPoint, PointCh toPo
      * @return la coordonnée du point se situant le plus proche du point donné, le long de l'arête
      */
     public double positionClosestTo(PointCh point) {
+
         double aX = fromPoint.e();
         double aY = fromPoint.n();
         double bX = toPoint.e();
         double bY = toPoint.n();
         double pX = point.e();
         double pY = point.n();
+
         return Math2.projectionLength(aX, aY, bX, bY, pX, pY);
     }
 
     /**
-     * methode pointAt retourne le point qui se situe a une distance position depuis le début de l'arête, sur l'arête
+     * La méthode pointAt retourne le point qui se situe a une distance position depuis le début de l'arête, sur l'arête
      *
      * @param position la distance
      * @return le point qui se situe a une distance position depuis le début de l'arête, sur l'arête
      */
     public PointCh pointAt(double position) {
+
         double eCoordinate = Math.fma(toPoint.e() - fromPoint.e(), position / length, fromPoint.e());
         double nCoordinate = Math.fma(toPoint.n() - fromPoint.n(), position / length, fromPoint.n());
+
         return new PointCh(eCoordinate, nCoordinate);
     }
 
     /**
-     * methode elevationAt retourne l'altitude à une position donnée sur l'arête
+     * La méthode elevationAt retourne l'altitude à une position donnée sur l'arête
      *
      * @param position la position à laquelle on veut connaître l'altitude
      * @return l'altitude à une position donnée sur l'arête

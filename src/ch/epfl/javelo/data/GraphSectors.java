@@ -18,12 +18,11 @@ public record GraphSectors(ByteBuffer buffer) {
     private static final int OFFSET_NB_OF_NODE = OFFSET_ID_OF_FIRST_NODE + Integer.BYTES;
     private static final int SECTOR_INTS = OFFSET_NB_OF_NODE + Short.BYTES;
 
-    public record Sector(int startNodeId, int endNodeId) {
-    }
+    public record Sector(int startNodeId, int endNodeId) {}
 
     /**
      * Cette méthode retourne la liste de tous les secteurs ayant une intersection
-     * avec le carré centré au point donné et de côté égal au double (!) de la distance donnée.
+     * avec le carré centré au point donné et de côté égal au double de la distance donnée.
      *
      * @param center   les coordonnées du centre du carré
      * @param distance la moitié du côté du carré
