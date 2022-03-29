@@ -1,6 +1,9 @@
-package ch.epfl.javelo.routing;
+package ch.epfl.test.professorTest.part5;
 
 import ch.epfl.javelo.projection.PointCh;
+import ch.epfl.javelo.routing.Edge;
+import ch.epfl.javelo.routing.Route;
+import ch.epfl.javelo.routing.RoutePoint;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

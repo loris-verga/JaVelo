@@ -18,6 +18,7 @@ import java.util.ListIterator;
 public final class SingleRoute implements Route {
 
     private final List<Edge> edges;
+    //Tableau qui contient la position le long de l'itinéraire des nœuds se situant entre les arrêtes.
     private final double[] positionArray;
 
     /**
@@ -31,13 +32,14 @@ public final class SingleRoute implements Route {
         Preconditions.checkArgument(!(edges.isEmpty()));
         this.edges = new ArrayList<>(edges);
 
-        //Pas possible d'utiliser un itérateur ici
+        //Initialisation du tableau positionArray :
         positionArray = new double[edges.size() + 1];
         positionArray[0] = 0.0;
         double length = 0.0;
-        for (int i = 0; i < positionArray.length - 1; ++i) {
-            length = length + edges.get(i).length();
-            positionArray[i+1] = length;
+        ListIterator<Edge> iterator = edges.listIterator();
+        while (iterator.nextIndex()<positionArray.length-1){
+            length += iterator.next().length();
+            positionArray[iterator.nextIndex()] = length;
         }
     }
 

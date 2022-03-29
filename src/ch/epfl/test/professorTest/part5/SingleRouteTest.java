@@ -1,6 +1,9 @@
-package ch.epfl.javelo.routing;
+package ch.epfl.test.professorTest.part5;
 
 import ch.epfl.javelo.projection.PointCh;
+import ch.epfl.javelo.routing.Edge;
+import ch.epfl.javelo.routing.SingleRoute;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -77,9 +80,9 @@ class SingleRouteTest {
             var route = new SingleRoute(edges);
             var points = route.points();
             assertEquals(edgesCount + 1, points.size());
-            assertEquals(edges.get(0).fromPoint(), points.get(0));
+            Assertions.assertEquals(edges.get(0).fromPoint(), points.get(0));
             for (int i = 1; i < points.size(); i += 1)
-                assertEquals(edges.get(i - 1).toPoint(), points.get(i));
+                Assertions.assertEquals(edges.get(i - 1).toPoint(), points.get(i));
         }
     }
 

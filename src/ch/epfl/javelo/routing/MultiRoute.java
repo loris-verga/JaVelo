@@ -24,7 +24,6 @@ public final class MultiRoute implements Route{
      */
     public MultiRoute(List<Route> segments){
         Preconditions.checkArgument(!(segments.size() == 0));
-
         this.segments = new ArrayList<>(segments);
     }
 
@@ -163,7 +162,7 @@ public final class MultiRoute implements Route{
 
 
     /**
-     * Cette méthode retourne la position relative sur un segment.
+     * Cette méthode privée retourne la position relative sur un segment.
      * @param position position sur l'ensemble de l'itinéraire
      * @param indexOfSegment index du segment
      * @return position sur le segment
@@ -178,7 +177,7 @@ public final class MultiRoute implements Route{
     }
 
     /**
-     * Cette méthode retourne l'index du sous-segment à la position donnée (en mètres)
+     * Cette méthode privée retourne l'index du sous-segment à la position donnée (en mètres)
      *
      * @param position donnée en mètre
      * @return index du segment
@@ -199,7 +198,4 @@ public final class MultiRoute implements Route{
         }
         return index-1;
     }
-
-
-
 }
