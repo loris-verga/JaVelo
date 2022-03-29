@@ -35,23 +35,22 @@ public final class MultiRoute implements Route{
      * @param position donnée en mètre
      * @return index du segment
      */
-    public int indexOfSegmentAt(double position){
-        if (position<0){
+    public int indexOfSegmentAt(double position) {
+        if (position < 0) {
             return 0;
         }
-        if (position>this.length()){
-            return segments.size()-1;
-        }
-
         double pos = position;
-        int index = 0;
-        while (pos >= 0) {
-            pos = pos - segments.get(index).length();
-            index ++;
-        }
-        return index-1;
-    }
+        int counter = 0;
 
+        for (Route route : segments){
+            pos -= route.length();
+            if (pos < 0){
+                return route.indexOfSegmentAt(route.length()+pos) + counter;
+            }
+            counter += route.indexOfSegmentAt(route.length())+1;
+        }
+        return counter-1;
+    }
 
     /**
      * Cette méthode retourne la longueur de l'itinéraire, en mètre
@@ -63,7 +62,6 @@ public final class MultiRoute implements Route{
             length += route.length();
         }
         return length;
-
     }
 
     /**
@@ -104,7 +102,7 @@ public final class MultiRoute implements Route{
      * @return le PointCh se trouvant à cette position.
      */
     public PointCh pointAt(double position){
-        int indexOfSegment = this.indexOfSegmentAt(position);
+        int indexOfSegment = this.indexOfSubRouteAt(position);
         double pos = this.positionOnTheSegment(position, indexOfSegment);
         return segments.get(indexOfSegment).pointAt(pos);
     }
@@ -117,7 +115,7 @@ public final class MultiRoute implements Route{
      * @return le nœud le plus proche de la position donnée se trouvant sur l'itinéraire
      */
     public int nodeClosestTo(double position){
-        int indexOfSegment = this.indexOfSegmentAt(position);
+        int indexOfSegment = this.indexOfSubRouteAt(position);
         double pos = positionOnTheSegment(position, indexOfSegment);
         return segments.get(indexOfSegment).nodeClosestTo(pos);
     }
@@ -158,7 +156,7 @@ public final class MultiRoute implements Route{
      * @return l'élévation à cette position.
      */
     public double elevationAt(double position){
-        int indexOfSegment = this.indexOfSegmentAt(position);
+        int indexOfSegment = this.indexOfSubRouteAt(position);
         double pos = this.positionOnTheSegment(position, indexOfSegment);
         return segments.get(indexOfSegment).elevationAt(pos);
     }
@@ -179,8 +177,28 @@ public final class MultiRoute implements Route{
         return pos;
     }
 
+    /**
+     * Cette méthode retourne l'index du sous-segment à la position donnée (en mètres)
+     *
+     * @param position donnée en mètre
+     * @return index du segment
+     */
+    private int indexOfSubRouteAt(double position){
+        if (position<0){
+            return 0;
+        }
+        if (position>this.length()){
+            return segments.size()-1;
+        }
 
-
+        double pos = position;
+        int index = 0;
+        while (pos >= 0) {
+            pos = pos - segments.get(index).length();
+            index ++;
+        }
+        return index-1;
+    }
 
 
 

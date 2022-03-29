@@ -36,9 +36,8 @@ public final class SingleRoute implements Route {
         positionArray[0] = 0.0;
         double length = 0.0;
         for (int i = 0; i < positionArray.length - 1; ++i) {
-            int index = i + 1;
             length = length + edges.get(i).length();
-            positionArray[index] = length;
+            positionArray[i+1] = length;
         }
     }
 
@@ -212,7 +211,6 @@ public final class SingleRoute implements Route {
                 pointCandidate = oneEdge.toPoint();
             }
             else {
-                positionCandidate = oneEdge.positionClosestTo(point);
                 pointCandidate = oneEdge.pointAt(positionCandidate);
             }
             squaredDistCandidate = pointCandidate.squaredDistanceTo(point);
@@ -227,7 +225,6 @@ public final class SingleRoute implements Route {
 
             indexCounter++;
         }
-
         ListIterator<Edge> iterator = edges.listIterator();
         while (iterator.nextIndex() < indexOfEdge){
             positionPointClosest += iterator.next().length();

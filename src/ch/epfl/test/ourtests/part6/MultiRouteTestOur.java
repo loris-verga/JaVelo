@@ -144,4 +144,80 @@ class MultiRouteTestOur {
         assertEquals(5, route.elevationAt(10000));
 
     }
+
+    @Test
+    void indexOfSegmentAtTest(){
+        var p1 = new PointCh(2600_000, 1200_000);
+        var p2 = new PointCh(2600_100, 1200_000);
+        var p3 = new PointCh(2600_200, 1200_000);
+        var p4 = new PointCh(2600_300, 1200_000);
+
+        var p5 = new PointCh(2600_400, 1200_000);
+        var p6 = new PointCh(2600_500, 1200_000);
+        var p7 = new PointCh(2600_600, 1200_000);
+        var p8 = new PointCh(2600_700, 1200_000);
+        var p9 = new PointCh(2600_800, 1200_000);
+
+
+
+        var edge1 = new Edge(1, 2, p1, p2, p1.distanceTo(p2), x->Double.NaN);
+        var edge2 = new Edge(2, 3, p2, p3, p2.distanceTo(p3), x -> Double.NaN);
+
+        var edge3 = new Edge(3, 4, p3, p4, p3.distanceTo(p4), x -> Double.NaN);
+        var edge4 = new Edge(4, 5, p4, p5, p2.distanceTo(p3), x -> Double.NaN);
+
+        var edge5 = new Edge(5, 6, p5, p6, p5.distanceTo(p6), Functions.constant(5));
+        var edge6 = new Edge(6, 7, p6, p7, p6.distanceTo(p7), Functions.constant(5));
+        var edge7 = new Edge(7, 8, p7, p8, p7.distanceTo(p8), Functions.constant(5));
+        var edge8 = new Edge(8, 9, p8, p9, p8.distanceTo(p9), x-> Double.NaN);
+        List<Edge> list1 = new ArrayList<>();
+        List<Edge> list2 = new ArrayList<>();
+        List<Edge> list3 = new ArrayList<>();
+        List<Edge> list4 = new ArrayList<>();
+        list1.add(edge1);
+        list1.add(edge2);
+        list2.add(edge3);
+        list2.add(edge4);
+        list3.add(edge5);
+        list3.add(edge6);
+        list4.add(edge7);
+        list4.add(edge8);
+
+        Route singleRoute1 = new SingleRoute(list1);
+        Route singleRoute2 = new SingleRoute(list2);
+        Route singleRoute3 = new SingleRoute(list3);
+        Route singleRoute4 = new SingleRoute(list4);
+
+        List<Route> listOfRoute1= new ArrayList<>();
+        List<Route> listOfRoute2 = new ArrayList<>();
+        List<Route> listOfRoute3= new ArrayList<>();
+
+        listOfRoute1.add(singleRoute1);
+        listOfRoute1.add(singleRoute2);
+        listOfRoute2.add(singleRoute3);
+        listOfRoute2.add(singleRoute4);
+        Route multiRoute1 = new MultiRoute(listOfRoute1);
+        Route multiRoute2 = new MultiRoute(listOfRoute2);
+
+        listOfRoute3.add(multiRoute1);
+        listOfRoute3.add(multiRoute2);
+
+        Route megaRoute = new MultiRoute(listOfRoute3);
+
+        assertEquals(0, megaRoute.indexOfSegmentAt(0));
+        assertEquals(3, megaRoute.indexOfSegmentAt(10000));
+        assertEquals(1, megaRoute.indexOfSegmentAt(250));
+        assertEquals(0, megaRoute.indexOfSegmentAt(-10));
+        assertEquals(2, megaRoute.indexOfSegmentAt(450));
+
+
+
+
+
+
+
+
+
+
+    }
 }
