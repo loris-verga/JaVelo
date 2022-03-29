@@ -9,8 +9,7 @@ package ch.epfl.javelo;
  */
 public final class Q28_4 {
 
-    private Q28_4() {
-    }
+    private Q28_4() {}
 
     /**
      * Cette méthode retourne la valeur Q28.4 correspondant à l'entier donné

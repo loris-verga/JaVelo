@@ -2,7 +2,6 @@ package ch.epfl.javelo;
 
 /**
  * Classe Math2
- * <p>
  * La classe Math2 offre des méthodes statiques permettant d'effectuer certains calculs mathématiques.
  *
  * @author Juan Bautista Iaconucci (342153)
@@ -43,11 +42,11 @@ public final class Math2 {
     /**
      * Retourne la valeur (int) la plus proche de v dans l'intervalle entre min et max.
      *
-     * @param min Le minimum de l'intervalle (ne peut pas être supérieur a max)
-     * @param max Le maximum de l'intervalle (ne peut pas être inférieur a min)
+     * @param min Le minimum de l'intervalle (ne peut pas être supérieur à max)
+     * @param max Le maximum de l'intervalle (ne peut pas être inférieur à min)
      * @param v   La valeur (int)
      * @return La valeur (int) la plus proche de v compris entre min et max
-     * @throws IllegalArgumentException si min est inférieur a max
+     * @throws IllegalArgumentException si min est inférieur à max
      */
     public static int clamp(int min, int v, int max) {
         Preconditions.checkArgument(min < max);
@@ -64,11 +63,11 @@ public final class Math2 {
     /**
      * Retourne la valeur (double) la plus proche de v dans l'intervalle entre min et max
      *
-     * @param min Le minimum de l'intervalle (ne peut pas être supérieur a max)
-     * @param max Le maximum de l'intervalle (ne peut pas être inférieur a min)
+     * @param min Le minimum de l'intervalle (ne peut pas être supérieur à max)
+     * @param max Le maximum de l'intervalle (ne peut pas être inférieur à min)
      * @param v   La valeur (double)
      * @return la valeur (double) la plus proche de v compris entre min et max
-     * @throws IllegalArgumentException si min est inférieur a max
+     * @throws IllegalArgumentException si min est inférieur à max
      */
     public static double clamp(double min, double v, double max) {
         Preconditions.checkArgument(min < max);

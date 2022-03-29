@@ -18,7 +18,9 @@ public record AttributeSet(long bits) {
      * @throw si bits est strictement inférieur à 0 ou si bits est supérieur à 2 à la puissance 62
      */
     public AttributeSet {
-        Preconditions.checkArgument(0 <= bits && bits < 0b100000000000000000000000000000000000000000000000000000000000000L);
+
+        Preconditions.checkArgument(0 <= bits
+                && bits < 0b100000000000000000000000000000000000000000000000000000000000000L);
     }
 
     /**
@@ -28,11 +30,14 @@ public record AttributeSet(long bits) {
      * @return l'ensemble qui contient tous les attributs en argument
      */
     public static AttributeSet of(Attribute... attributes) {
+
         long value = 0L;
+
         for (Attribute a : attributes) {
             long mask = 1L << a.ordinal();
             value = value + mask;
         }
+
         return (new AttributeSet(value));
     }
 
@@ -69,13 +74,16 @@ public record AttributeSet(long bits) {
      */
     @Override
     public String toString() {
+
         StringJoiner joiner = new StringJoiner(",", "{", "}");
         long bitsValue = this.bits();
+
         for (int i = 0; i <= 63; i += 1) {
             if ((bitsValue >>> i) % 2 == 1) {
                 joiner.add(Attribute.ALL.get(i).keyValue());
             }
         }
+
         return joiner.toString();
     }
 }

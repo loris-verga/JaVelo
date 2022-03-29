@@ -12,8 +12,7 @@ import java.util.Arrays;
  * @author Juan Bautista Iaconucci (342153)
  */
 public final class ElevationProfileComputer {
-    private ElevationProfileComputer() {
-    }
+    private ElevationProfileComputer() {}
 
     /**
      * La méthode elevationProfile retourne le profil le long de l'itinéraire.
@@ -27,23 +26,24 @@ public final class ElevationProfileComputer {
 
         int numberOfSamples = (int) (Math.ceil(route.length() / maxStepLength)) + 1;
         double StepLength = route.length() / (numberOfSamples - 1);
-        ArrayList<Float> profilArrayList = new ArrayList<>();
+        float[] elevationSamples = new float[numberOfSamples];
 
         for (int i = 0; i < numberOfSamples; i++) {
-            profilArrayList.add((float) (route.elevationAt(i * StepLength)));
+            elevationSamples[i] = (float) (route.elevationAt(i * StepLength));
         }
 
-        float[] elevationSamples = new float[numberOfSamples];
+        ArrayList<Float> elevationSamplesArrayList = new ArrayList<>();
+
+        for (float sample : elevationSamples) {
+            elevationSamplesArrayList.add(sample);
+        }
+
         int indexOfFirstNotNan = -1;
         int indexOfLastNotNan = -1;
         int index = 0;
 
-        for (int i = 0; i < elevationSamples.length; i++) {
-            elevationSamples[i] = profilArrayList.get(i);
-        }
-
-        while (index < profilArrayList.size() && indexOfFirstNotNan == -1) {
-            if (!profilArrayList.get(index).isNaN()) {
+        while (index < numberOfSamples && indexOfFirstNotNan == -1) {
+            if (!elevationSamplesArrayList.get(index).isNaN()) {
                 indexOfFirstNotNan = index;
             }
             index += 1;
@@ -56,26 +56,27 @@ public final class ElevationProfileComputer {
 
         Arrays.fill(elevationSamples, 0, indexOfFirstNotNan, elevationSamples[indexOfFirstNotNan]);
 
-        index = profilArrayList.size() - 1;
+        index = numberOfSamples - 1;
         while (index >= 0 && indexOfLastNotNan == -1) {
-            if (!profilArrayList.get(index).isNaN()) {
+            if (!elevationSamplesArrayList.get(index).isNaN()) {
                 indexOfLastNotNan = index;
             }
             index -= 1;
         }
 
-        Arrays.fill(elevationSamples, indexOfLastNotNan, elevationSamples.length, elevationSamples[indexOfLastNotNan]);
+        Arrays.fill(elevationSamples, indexOfLastNotNan, numberOfSamples, elevationSamples[indexOfLastNotNan]);
 
         index = indexOfFirstNotNan;
         int indexOfLeftOfNaNs = 0;
         int indexOfRightOfNaNs;
 
         while (index <= indexOfLastNotNan) {
-            if (!profilArrayList.get(index).isNaN()) {
+            if (!elevationSamplesArrayList.get(index).isNaN()) {
                 indexOfLeftOfNaNs = index;
-            } else {
+            }
+            else {
                 int indexToFindNextNumber = index;
-                while (profilArrayList.get(indexToFindNextNumber).isNaN()) {
+                while (elevationSamplesArrayList.get(indexToFindNextNumber).isNaN()) {
                     indexToFindNextNumber += 1;
                 }
                 indexOfRightOfNaNs = indexToFindNextNumber;
@@ -83,6 +84,7 @@ public final class ElevationProfileComputer {
                 double y0 = elevationSamples[indexOfLeftOfNaNs];
                 double y1 = elevationSamples[indexOfRightOfNaNs];
                 double x = (double) (index - indexOfLeftOfNaNs) / (double) (indexOfRightOfNaNs - indexOfLeftOfNaNs);
+
                 elevationSamples[index] = (float) Math2.interpolate(y0, y1, x);
 
             }
