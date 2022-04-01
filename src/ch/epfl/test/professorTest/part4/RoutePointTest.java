@@ -2,12 +2,12 @@ package ch.epfl.test.professorTest.part4;
 
 import ch.epfl.javelo.projection.PointCh;
 import ch.epfl.javelo.routing.RoutePoint;
-import ch.epfl.test.professorTest.part1.TestRandomizer;
+import ch.epfl.test.TestRandomizer;
 import org.junit.jupiter.api.Test;
 
 import java.util.random.RandomGenerator;
 
-import static ch.epfl.test.professorTest.part1.TestRandomizer.RANDOM_ITERATIONS;
+import static ch.epfl.test.TestRandomizer.RANDOM_ITERATIONS;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RoutePointTest {

@@ -2,9 +2,9 @@ package ch.epfl.javelo.projection;
 
 /**
  * Classe Ch1903 (publique, finale, non instantiable)
- * <p>
+ *
  * Cette classe contient des méthodes statiques permettant de convertir entre les coordonnées WGS 84 et les coordonnées suisses.
- * <p>
+ *
  * Attention les méthodes de CH1903 ne valident pas leurs arguments, la validité des coordonnées sera vérifiée
  * par les classes représentant les points.
  *
@@ -56,7 +56,7 @@ public class Ch1903 {
 
 
     /**
-     * Cette méthode retourne la longitude dans le système WGS84
+     * Cette méthode retourne la longitude dans le système WGS84.
      *
      * @param e coordonnée E (est) dans le système suisse
      * @param n coordonnée N (nord) dans le système suisse
@@ -98,5 +98,4 @@ public class Ch1903 {
         double phi = phi_zero * 100 / 36;
         return Math.toRadians(phi);
     }
-
 }

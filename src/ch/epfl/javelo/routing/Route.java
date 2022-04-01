@@ -53,23 +53,23 @@ public interface Route {
     /**
      * Cette méthode retourne l'identité du nœud appartenant à l'itinéraire et se trouvant le plus
      * proche de la position donnée
-     * @param position
-     * @return le noeud le plus proche de la position donnée se trouvant sur l'itinéraire
+     * @param position position le long de l'itinéraire r
+     * @return le nœud le plus proche de la position donnée se trouvant sur l'itinéraire
      */
     int nodeClosestTo(double position);
 
     /**
      * Cette méthode retourne le point de l'itinéraire se trouvant le plus proche du point
      * de référence donnée
-     * @param point
-     * @return
+     * @param point le point dont on cherche le point le plus proche sur l'itinéraire.
+     * @return le point le plus proche sur l'itinéraire.
      */
     RoutePoint pointClosestTo(PointCh point);
 
 
     /**
      * Cette méthode retourne l'altitude à la position donnée le long de l'itinéraire.
-     * @param position
+     * @param position position le long de l'itinéraire.
      * @return l'élévation
      */
     double elevationAt(double position);

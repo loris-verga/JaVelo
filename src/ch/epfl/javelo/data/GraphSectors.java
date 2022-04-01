@@ -18,6 +18,9 @@ public record GraphSectors(ByteBuffer buffer) {
     private static final int OFFSET_NB_OF_NODE = OFFSET_ID_OF_FIRST_NODE + Integer.BYTES;
     private static final int SECTOR_INTS = OFFSET_NB_OF_NODE + Short.BYTES;
 
+    /**
+     * Classe record qui permet de représenter un secteur JaVelo.
+     */
     public record Sector(int startNodeId, int endNodeId) {}
 
     /**

@@ -21,7 +21,7 @@ import java.util.function.DoubleUnaryOperator;
  *
  * @author Loris Verga (345661)
  */
-public class Graph {
+public final class Graph {
 
     //Les attributs de la classe graphe.
     private final GraphNodes nodes;
@@ -41,8 +41,7 @@ public class Graph {
         this.nodes = nodes;
         this.sectors = sectors;
         this.edges = edges;
-        this.attributeSets = new ArrayList<>();
-        this.attributeSets.addAll(attributeSets);
+        this.attributeSets = new ArrayList<>(attributeSets);
     }
 
 
@@ -56,6 +55,7 @@ public class Graph {
      */
     public static Graph loadFrom(Path basePath) throws IOException {
 
+        //Création des path des différents fichiers.
         Path nodesPath = basePath.resolve("nodes.bin");
         Path edgesPath = basePath.resolve("edges.bin");
         Path profile_idsPath = basePath.resolve("profile_ids.bin");
@@ -63,6 +63,7 @@ public class Graph {
         Path attributesPath = basePath.resolve("attributes.bin");
         Path sectorsPath = basePath.resolve("sectors.bin");
 
+        //Création des buffers des différents attributs de la classe Graph.
         IntBuffer nodesBuffer;
         try (FileChannel channelNodes = FileChannel.open(nodesPath)) {
             nodesBuffer = channelNodes.map(FileChannel.MapMode.READ_ONLY, 0, channelNodes.size()).asIntBuffer();
@@ -102,8 +103,8 @@ public class Graph {
         GraphEdges graphEdges = new GraphEdges(edgesBuffer, profile_idsBuffer, elevationsBuffer);
         GraphSectors graphSectors = new GraphSectors(sectorsBuffer);
 
+        //Création du graphe.
         return new Graph(graphNodes, graphSectors, graphEdges, listOfAttributeSets);
-
     }
 
 
@@ -121,7 +122,7 @@ public class Graph {
      * Méthode nodePoint
      *
      * @param nodeId identité du point
-     * @return retourne la position du nœud d'identité donnée
+     * @return retourne la position du nœud d'identité donnée.
      */
     public PointCh nodePoint(int nodeId) {
         double n = nodes.nodeN(nodeId);
@@ -133,11 +134,10 @@ public class Graph {
      * Méthode nodeOutDegree
      *
      * @param nodeId ID du nœud
-     * @return retourne le nombre d'arrêtés sortant du nœud d'identité donnée
+     * @return retourne le nombre d'arrêtés sortant du nœud d'identité donnée.
      */
     public int nodeOutDegree(int nodeId) {
         return nodes.outDegree(nodeId);
-
     }
 
     /**
@@ -164,11 +164,10 @@ public class Graph {
         if (listOfSectors.size() == 0) {
             return -1;
         }
-
-
+        //On récupère le premier point du premier secteur pour ensuite le comparer avec les autres points.
         int indexOfPointClosestTo = listOfSectors.get(0).startNodeId();
         double squaredDistance = point.squaredDistanceTo(nodePoint(indexOfPointClosestTo));
-
+        //On compare tous les points et on garde le point le plus proche.
         for (GraphSectors.Sector sector : listOfSectors) {
             int startNodeId = sector.startNodeId();
             int endNodeId = sector.endNodeId();
@@ -186,7 +185,6 @@ public class Graph {
         } else {
             return -1;
         }
-
     }
 
     /**
@@ -207,8 +205,6 @@ public class Graph {
      */
     public boolean edgeIsInverted(int edgeId) {
         return edges.isInverted(edgeId);
-
-
     }
 
     /**
@@ -219,7 +215,6 @@ public class Graph {
      */
     public AttributeSet edgeAttributes(int edgeId) {
         return attributeSets.get(edges.attributesIndex(edgeId));
-
     }
 
     /**
@@ -233,14 +228,13 @@ public class Graph {
     }
 
     /**
-     * Cette méthode retourne le dénivelé positif total de l'arête d'identité donnée,
+     * Cette méthode retourne le dénivelé positif total de l'arête d'identité donnée.
      *
      * @param edgeId id de l'arrête
      * @return le dénivelé total de l'arrête (double)
      */
     public double edgeElevationGain(int edgeId) {
         return edges.elevationGain(edgeId);
-
     }
 
     /**
@@ -257,6 +251,5 @@ public class Graph {
         }
         double xMax = edges.length(edgeId);
         return Functions.sampled(profileSamples, xMax);
-
     }
 }

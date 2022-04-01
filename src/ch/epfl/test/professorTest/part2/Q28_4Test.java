@@ -4,8 +4,8 @@ import ch.epfl.javelo.Q28_4;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static ch.epfl.test.professorTest.part1.TestRandomizer.RANDOM_ITERATIONS;
-import static ch.epfl.test.professorTest.part1.TestRandomizer.newRandom;
+import static ch.epfl.test.TestRandomizer.RANDOM_ITERATIONS;
+import static ch.epfl.test.TestRandomizer.newRandom;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class Q28_4Test {

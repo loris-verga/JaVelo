@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static ch.epfl.test.professorTest.part1.TestRandomizer.RANDOM_ITERATIONS;
-import static ch.epfl.test.professorTest.part1.TestRandomizer.newRandom;
+import static ch.epfl.test.TestRandomizer.RANDOM_ITERATIONS;
+import static ch.epfl.test.TestRandomizer.newRandom;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
