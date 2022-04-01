@@ -1,17 +1,15 @@
-package ch.epfl.test.ourtests.part5;
+package ch.epfl.test.ourtests.part6;
 
+import ch.epfl.javelo.Preconditions;
 import ch.epfl.javelo.data.Graph;
 import ch.epfl.javelo.projection.PointCh;
-import ch.epfl.javelo.routing.CityBikeCF;
-import ch.epfl.javelo.routing.CostFunction;
-import ch.epfl.javelo.routing.Route;
-import ch.epfl.javelo.routing.RouteComputer;
+import ch.epfl.javelo.routing.*;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
-import java.util.Locale;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -59,5 +57,4 @@ public class RouteComputerTestOur {
             }
         }
     }
-
 }

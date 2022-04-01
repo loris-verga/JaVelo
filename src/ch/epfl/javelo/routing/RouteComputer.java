@@ -2,6 +2,7 @@ package ch.epfl.javelo.routing;
 
 import ch.epfl.javelo.Preconditions;
 import ch.epfl.javelo.data.Graph;
+import ch.epfl.javelo.projection.PointCh;
 
 import java.util.*;
 
@@ -64,59 +65,64 @@ public class RouteComputer {
 
         while (!nodesInExploration.isEmpty()) {
             WeightedNode nodeWithMinDistance = nodesInExploration.remove();
-            distance[nodeWithMinDistance.nodeId()] = Float.NEGATIVE_INFINITY;
 
-            if (nodeWithMinDistance.nodeId() == endNodeId) {
+            if (nodeWithMinDistance.nodeId == endNodeId) {
                 nodesInExploration.clear();
-            } else {
 
-                for (int edgeIndex = 0; edgeIndex < graph.nodeOutDegree(nodeWithMinDistance.nodeId()); edgeIndex += 1) {
-                    int edgeId = graph.nodeOutEdgeId(nodeWithMinDistance.nodeId, edgeIndex);
-                    int nodeIdOutEdge = graph.edgeTargetNodeId(edgeId);
+                int toNodeId = endNodeId;
+                int fromNodeId = predecessor[endNodeId];
+                int edgeIndex;
+                int edgeId;
 
-                    if (distance[nodeIdOutEdge] != Double.NEGATIVE_INFINITY) {
-                        float newDistance = nodeWithMinDistance.distance +
-                                (float) (costFunction.costFactor(nodeWithMinDistance.nodeId, edgeId)
-                                        * graph.edgeLength(edgeId));
+                Stack<Edge> edgesStack = new Stack<>();
 
-                        if (newDistance < distance[nodeIdOutEdge]) {
-                            distance[nodeIdOutEdge] = newDistance;
-                            predecessor[nodeIdOutEdge] = nodeWithMinDistance.nodeId();
-                            nodesInExploration.add(new WeightedNode(nodeIdOutEdge, newDistance));
-
+                while (toNodeId != startNodeId) {
+                    edgeIndex = 0;
+                    while (edgeIndex < graph.nodeOutDegree(fromNodeId)) {
+                        edgeId = graph.nodeOutEdgeId(fromNodeId, edgeIndex);
+                        if (graph.edgeTargetNodeId(edgeId) == toNodeId) {
+                            edgesStack.push(Edge.of(graph, edgeId, fromNodeId, toNodeId));
+                            toNodeId = fromNodeId;
+                            fromNodeId = predecessor[toNodeId];
+                            edgeIndex = graph.nodeOutDegree(fromNodeId);
                         }
+                        edgeIndex += 1;
+                    }
+                }
+
+                List<Edge> edgesList = new ArrayList<>();
+
+                while (!(edgesStack.empty())) {
+                    edgesList.add(edgesStack.pop());
+                }
+
+                return new SingleRoute(edgesList);
+            }
+
+            if(distance[nodeWithMinDistance.nodeId] == Float.NEGATIVE_INFINITY){
+                continue;
+            }
+
+            for (int edgeIndex = 0; edgeIndex < graph.nodeOutDegree(nodeWithMinDistance.nodeId()); edgeIndex += 1) {
+                int edgeId = graph.nodeOutEdgeId(nodeWithMinDistance.nodeId, edgeIndex);
+                int nodeIdOutEdge = graph.edgeTargetNodeId(edgeId);
+                if (distance[nodeIdOutEdge] != Double.NEGATIVE_INFINITY) {
+                    float newDistanceToNodeOutEdge = distance[nodeWithMinDistance.nodeId] +
+                            (float) (costFunction.costFactor(nodeWithMinDistance.nodeId, edgeId)
+                                    * graph.edgeLength(edgeId));
+
+                    if (newDistanceToNodeOutEdge < distance[nodeIdOutEdge]) {
+                        float eagleEyeDistance = (float) graph.nodePoint(endNodeId).distanceTo(graph.nodePoint(nodeIdOutEdge));
+                        distance[nodeIdOutEdge] = newDistanceToNodeOutEdge;
+                        predecessor[nodeIdOutEdge] = nodeWithMinDistance.nodeId;
+                        nodesInExploration.add(new WeightedNode(nodeIdOutEdge, newDistanceToNodeOutEdge + eagleEyeDistance));
+
                     }
                 }
             }
+            distance[nodeWithMinDistance.nodeId] = Float.NEGATIVE_INFINITY;
         }
+        return null;
 
-        int toNodeId = endNodeId;
-        int fromNodeId = predecessor[endNodeId];
-        int edgeIndex;
-        int edgeId;
-
-        Stack<Edge> edgesStack = new Stack<>();
-
-        while (toNodeId != startNodeId) {
-            edgeIndex = 0;
-            while (edgeIndex < graph.nodeOutDegree(fromNodeId)) {
-                edgeId = graph.nodeOutEdgeId(fromNodeId, edgeIndex);
-                if (graph.edgeTargetNodeId(edgeId) == toNodeId) {
-                    edgesStack.push(Edge.of(graph, edgeId, fromNodeId, toNodeId));
-                    toNodeId = fromNodeId;
-                    fromNodeId = predecessor[toNodeId];
-                    edgeIndex = graph.nodeOutDegree(fromNodeId);
-                }
-                edgeIndex += 1;
-            }
-        }
-
-        List<Edge> edgesList = new ArrayList<>();
-
-        while (!(edgesStack.empty())) {
-            edgesList.add(edgesStack.pop());
-        }
-
-        return new SingleRoute(edgesList);
     }
 }
