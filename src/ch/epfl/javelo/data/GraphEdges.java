@@ -150,7 +150,8 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
 
             encodedSample = elevations.get(firstSampleId + elevationIndex);
 
-            for (int indexOfBits = nbOfCompressedValuesInBits - 1; indexOfBits >= 0 && indexOfProfilList < profilList.length; indexOfBits--) {
+            for (int indexOfBits = nbOfCompressedValuesInBits - 1; indexOfBits >= 0
+                    && indexOfProfilList < profilList.length; indexOfBits--) {
 
                 startOfBits = indexOfBits * sizeOfCompressedValues;
                 difference = Q28_4.asFloat(Bits.extractSigned(encodedSample, startOfBits, sizeOfCompressedValues));
