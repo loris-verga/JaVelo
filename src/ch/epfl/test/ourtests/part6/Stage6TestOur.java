@@ -15,27 +15,22 @@ public class Stage6TestOur {
             RouteComputer rc = new RouteComputer(g, cf);
             RouteComputerTester rcTest = new RouteComputerTester(g,cf);
             long t0 = System.nanoTime();
-            Route r = rc.bestRouteBetween(140000,1050);
+            Route r = rc.bestRouteBetween(0,1050);
             System.out.printf("Itinéraire calculé en %d ms\n",
                     (System.nanoTime() - t0) / 1_000_000);
             RouteComputerTestOur.KmlPrinter.write("javelo.kml", r);
             System.out.println(r.length());
-
-            for(int startNode = 0; startNode + 1000 < g.nodeCount(); startNode += 100){
-                    Route actualRoute = rc.bestRouteBetween(startNode, startNode + 1000);
-                    Route expectedRoute = rcTest.bestRouteBetween(startNode, startNode + 1000);
-                    if(actualRoute != null){
-                        if(actualRoute.length() != expectedRoute.length()){
-                            System.out.println("actual =" + actualRoute.length());
-                            System.out.println("expected =" + expectedRoute.length());
-                        }
-                    //    for(int edgeIndex = 0; edgeIndex < actualRoute.edges().size() ; edgeIndex+=10) {
-                    //        if (actualRoute.edges().get(edgeIndex).equals(expectedRoute.edges().get(edgeIndex))) {
-                    //            System.out.println("true");
-                    //        }
-
-                    }
-                }
+        //
+        //    for(int startNode = 0; startNode + 10000 < g.nodeCount(); startNode += 100000){
+        //            Route actualRoute = rc.bestRouteBetween(startNode, g.nodeCount() -1);
+        //            Route expectedRoute = rcTest.bestRouteBetween(startNode, g.nodeCount() -1);
+        //            if(actualRoute != null){
+        //                if(actualRoute.length() != expectedRoute.length()){
+        //                    System.out.println("actual =" + actualRoute.length());
+        //                    System.out.println("expected =" + expectedRoute.length());
+        //                }
+        //            }
+        //        }
             }
         }
 
