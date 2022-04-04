@@ -55,7 +55,8 @@ public record AttributeSet(long bits) {
     }
 
     /**
-     * La méthode intersects retourne true si l'intersection entre l'ensemble récepteur (this) avec celui passé en argument (that) n'est pas vide.
+     * La méthode intersects retourne true si l'intersection entre l'ensemble récepteur (this)
+     * avec celui passé en argument (that) n'est pas vide.
      *
      * @param that l'ensemble qu'on veut comparer
      * @return true si l'intersection n'est pas vide
@@ -68,7 +69,8 @@ public record AttributeSet(long bits) {
     }
 
     /**
-     * Méthode qui retourne une chaîne composée de la représentation textuelle de tous les attributs de l'ensemble.
+     * Méthode qui retourne une chaîne composée de la représentation textuelle
+     * de tous les attributs de l'ensemble.
      *
      * @return une chaîne composée de la représentation textuelle de tous les attributs dans l'ensemble
      */

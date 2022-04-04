@@ -54,7 +54,8 @@ public final class ElevationProfileComputer {
             return new ElevationProfile(route.length(), elevationSamples);
         }
 
-        Arrays.fill(elevationSamples, 0, indexOfFirstNotNan, elevationSamples[indexOfFirstNotNan]);
+        Arrays.fill(elevationSamples, 0, indexOfFirstNotNan
+                , elevationSamples[indexOfFirstNotNan]);
 
         index = numberOfSamples - 1;
         while (index >= 0 && indexOfLastNotNan == -1) {
@@ -64,7 +65,8 @@ public final class ElevationProfileComputer {
             index -= 1;
         }
 
-        Arrays.fill(elevationSamples, indexOfLastNotNan, numberOfSamples, elevationSamples[indexOfLastNotNan]);
+        Arrays.fill(elevationSamples, indexOfLastNotNan,
+                numberOfSamples, elevationSamples[indexOfLastNotNan]);
 
         index = indexOfFirstNotNan;
         int indexOfLeftOfNaNs = 0;
@@ -83,7 +85,8 @@ public final class ElevationProfileComputer {
 
                 double y0 = elevationSamples[indexOfLeftOfNaNs];
                 double y1 = elevationSamples[indexOfRightOfNaNs];
-                double x = (double) (index - indexOfLeftOfNaNs) / (double) (indexOfRightOfNaNs - indexOfLeftOfNaNs);
+                double x = (double) (index - indexOfLeftOfNaNs)
+                        / (double) (indexOfRightOfNaNs - indexOfLeftOfNaNs);
 
                 elevationSamples[index] = (float) Math2.interpolate(y0, y1, x);
 
