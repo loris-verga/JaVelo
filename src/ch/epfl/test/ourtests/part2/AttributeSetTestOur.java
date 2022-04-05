@@ -12,7 +12,7 @@ class AttributeSetTestOur {
     @Test
     void constructorNulAttribute(){
         assertThrows(IllegalArgumentException.class, () -> {
-            AttributeSet testSet = new AttributeSet(0);
+            AttributeSet testSet = new AttributeSet(-1);
         });
     }
 

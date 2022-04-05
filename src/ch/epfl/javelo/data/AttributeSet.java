@@ -20,7 +20,7 @@ public record AttributeSet(long bits) {
     public AttributeSet {
 
         Preconditions.checkArgument(0 <= bits
-                && bits < 0b100000000000000000000000000000000000000000000000000000000000000L);
+                && bits < 1L << 62);
     }
 
     /**
