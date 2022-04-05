@@ -82,7 +82,9 @@ public record AttributeSet(long bits) {
         long bitsValue = this.bits();
 
         ListIterator<Attribute> iterator = Attribute.ALL.listIterator();
+
         while (iterator.hasNext()) {
+
             if (((bitsValue >>> iterator.nextIndex()) % 2 == 1)) {
                 joiner.add(iterator.next().keyValue());
             }
@@ -90,6 +92,7 @@ public record AttributeSet(long bits) {
                 iterator.next();
             }
         }
+
         return joiner.toString();
     }
 }
