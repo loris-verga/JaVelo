@@ -270,5 +270,5 @@ public final class Graph {
 
         double xMax = edges.length(edgeId);
         return Functions.sampled(profileSamples, xMax);
-    }
+    }//test
 }
