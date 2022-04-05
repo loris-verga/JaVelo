@@ -172,48 +172,50 @@ public final class Graph {
      * @return l'identité du nœud le plus proche.
      */
     public int nodeClosestTo(PointCh point, double searchDistance) {
-        //On récupère
+
+        //On récupère la liste des secteurs se trouvant dans le rayon searchDistance autour du point.
         List<GraphSectors.Sector> listOfSectorsInRange = sectors.sectorsInArea(point, searchDistance);
-        if (listOfSectorsInRange.size() == 0) {
+
+        if (listOfSectorsInRange.isEmpty()) {
             return -1;
         }
         //On récupère le premier point du premier secteur pour ensuite le comparer avec les autres points.
         int indexOfPointClosestTo = listOfSectorsInRange.get(0).startNodeId();
         double squaredDistance = point.squaredDistanceTo(nodePoint(indexOfPointClosestTo));
-        //On compare tous les points et on garde le point le plus proche.
+
+        //On compare tous les points et on garde le point le plus proche de notre point de référence.
         for (GraphSectors.Sector sector : listOfSectorsInRange) {
             int startNodeId = sector.startNodeId();
             int endNodeId = sector.endNodeId();
 
-            for (int a = startNodeId; a <= endNodeId; ++a) {
-                PointCh otherPoint = nodePoint(a);
+            for (int potentialNodeId = startNodeId; potentialNodeId <= endNodeId; ++potentialNodeId) {
+                PointCh otherPoint = nodePoint(potentialNodeId);
                 if (point.squaredDistanceTo(otherPoint) < squaredDistance) {
                     squaredDistance = point.squaredDistanceTo(otherPoint);
-                    indexOfPointClosestTo = a;
+                    indexOfPointClosestTo = potentialNodeId;
                 }
             }
         }
-        if (point.distanceTo(nodePoint(indexOfPointClosestTo)) <= searchDistance) {
-            return indexOfPointClosestTo;
-        } else {
-            return -1;
-        }
+        //On retourne le point le plus plus proche ou -1 s'il n'y en a pas.
+        return point.distanceTo(nodePoint(indexOfPointClosestTo)) <= searchDistance ?
+                indexOfPointClosestTo : -1;
     }
 
     /**
-     * Cette méthode retourne l'identité du nœud destination de l'arête d'identité donnée,
+     * Cette méthode retourne l'identité du nœud destination de l'arête d'identité donnée.
      *
-     * @param edgeId id de l'arrête
-     * @return l'id du nœud de destination
+     * @param edgeId l'identité de l'arrête.
+     * @return l'identité du nœud de destination.
      */
     public int edgeTargetNodeId(int edgeId) {
         return edges.targetNodeId(edgeId);
     }
 
     /**
-     * La méthode edgeIsInverted retourne vrai si l'arête d'identité donnée va dans le sens contraire de la voie OSM dont elle provient.
+     * La méthode edgeIsInverted retourne true si l'arête d'identité donnée va dans le sens contraire
+     * de la voie OSM dont elle provient.
      *
-     * @param edgeId Id de l'arrête.
+     * @param edgeId l'identité de l'arrête.
      * @return true ou false selon le sens de l'arrête.
      */
     public boolean edgeIsInverted(int edgeId) {
@@ -221,9 +223,9 @@ public final class Graph {
     }
 
     /**
-     * Cette méthode retourne l'ensemble des attributs OSM attachés à l'arête d'identité donnée
+     * Cette méthode retourne l'ensemble des attributs OSM liés à l'arête d'identité donnée.
      *
-     * @param edgeId identité de l'arrête.
+     * @param edgeId l'identité de l'arrête.
      * @return l'ensemble des attributs OSM liés à l'arrête.
      */
     public AttributeSet edgeAttributes(int edgeId) {
@@ -233,7 +235,7 @@ public final class Graph {
     /**
      * Cette méthode retourne la longueur, en mètres, de l'arête d'identité donnée.
      *
-     * @param edgeId id de l'arrête.
+     * @param edgeId l'identité de l'arrête.
      * @return longueur en mètre de l'arrête.
      */
     public double edgeLength(int edgeId) {
@@ -243,25 +245,29 @@ public final class Graph {
     /**
      * Cette méthode retourne le dénivelé positif total de l'arête d'identité donnée.
      *
-     * @param edgeId id de l'arrête
-     * @return le dénivelé total de l'arrête (double)
+     * @param edgeId l'identité de l'arrête.
+     * @return le dénivelé total de l'arrête (double).
      */
     public double edgeElevationGain(int edgeId) {
         return edges.elevationGain(edgeId);
     }
 
     /**
-     * La méthode edgeProfile retourne le profil en long de l'arête d'identité donnée, sous la forme d'une fonction ;
-     * si l'arête ne possède pas de profil, alors cette fonction doit retourner Double.NaN pour n'importe quel argument.
+     * La méthode edgeProfile retourne le profil en long de l'arête d'identité donnée,
+     * sous la forme d'une fonction ; si l'arête ne possède pas de profil, alors
+     * cette fonction doit retourner Double.NaN pour n'importe quel argument.
      *
-     * @param edgeId ID de l'arrête.
-     * @return la fonction.
+     * @param edgeId l'identité de l'arrête.
+     * @return la fonction (DoubleUnaryOperator).
      */
     public DoubleUnaryOperator edgeProfile(int edgeId) {
+
         float[] profileSamples = edges.profileSamples(edgeId);
+
         if (profileSamples.length == 0) {
             return Functions.constant(Double.NaN);
         }
+
         double xMax = edges.length(edgeId);
         return Functions.sampled(profileSamples, xMax);
     }
