@@ -20,17 +20,6 @@ public class Stage6TestOur {
                     (System.nanoTime() - t0) / 1_000_000);
             RouteComputerTestOur.KmlPrinter.write("javelo.kml", r);
             System.out.println(r.length());
-        //
-        //    for(int startNode = 0; startNode + 10000 < g.nodeCount(); startNode += 100000){
-        //            Route actualRoute = rc.bestRouteBetween(startNode, g.nodeCount() -1);
-        //            Route expectedRoute = rcTest.bestRouteBetween(startNode, g.nodeCount() -1);
-        //            if(actualRoute != null){
-        //                if(actualRoute.length() != expectedRoute.length()){
-        //                    System.out.println("actual =" + actualRoute.length());
-        //                    System.out.println("expected =" + expectedRoute.length());
-        //                }
-        //            }
-        //        }
             }
         }
 

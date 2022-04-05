@@ -43,6 +43,7 @@ public class RouteComputer {
          */
         record WeightedNode(int nodeId, float distance)
                 implements Comparable<WeightedNode> {
+
             @Override
             public int compareTo(WeightedNode that) {
                 return Float.compare(this.distance, that.distance);
@@ -78,8 +79,10 @@ public class RouteComputer {
 
                 while (toNodeId != startNodeId) {
                     edgeIndex = 0;
+
                     while (edgeIndex < graph.nodeOutDegree(fromNodeId)) {
                         edgeId = graph.nodeOutEdgeId(fromNodeId, edgeIndex);
+
                         if (graph.edgeTargetNodeId(edgeId) == toNodeId) {
                             edgesStack.push(Edge.of(graph, edgeId, fromNodeId, toNodeId));
                             toNodeId = fromNodeId;
@@ -106,20 +109,24 @@ public class RouteComputer {
             for (int edgeIndex = 0; edgeIndex < graph.nodeOutDegree(nodeWithMinDistance.nodeId()); edgeIndex += 1) {
                 int edgeId = graph.nodeOutEdgeId(nodeWithMinDistance.nodeId, edgeIndex);
                 int nodeIdOutEdge = graph.edgeTargetNodeId(edgeId);
+
                 if (distance[nodeIdOutEdge] != Double.NEGATIVE_INFINITY) {
-                    float newDistanceToNodeOutEdge = distance[nodeWithMinDistance.nodeId] +
-                            (float) (costFunction.costFactor(nodeWithMinDistance.nodeId, edgeId)
+                    float newDistanceToNodeOutEdge = distance[nodeWithMinDistance.nodeId]
+                            + (float) (costFunction.costFactor(nodeWithMinDistance.nodeId, edgeId)
                                     * graph.edgeLength(edgeId));
 
                     if (newDistanceToNodeOutEdge < distance[nodeIdOutEdge]) {
-                        float eagleEyeDistance = (float) graph.nodePoint(endNodeId).distanceTo(graph.nodePoint(nodeIdOutEdge));
+                        float eagleEyeDistance = (float) graph.nodePoint(endNodeId)
+                                .distanceTo(graph.nodePoint(nodeIdOutEdge));
                         distance[nodeIdOutEdge] = newDistanceToNodeOutEdge;
                         predecessor[nodeIdOutEdge] = nodeWithMinDistance.nodeId;
-                        nodesInExploration.add(new WeightedNode(nodeIdOutEdge, newDistanceToNodeOutEdge + eagleEyeDistance));
+                        nodesInExploration.add(new WeightedNode(nodeIdOutEdge
+                                , newDistanceToNodeOutEdge + eagleEyeDistance));
 
                     }
                 }
             }
+
             distance[nodeWithMinDistance.nodeId] = Float.NEGATIVE_INFINITY;
         }
         return null;

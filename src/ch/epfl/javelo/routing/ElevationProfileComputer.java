@@ -22,6 +22,7 @@ public final class ElevationProfileComputer {
      * @return le profil le long de l'itinéraire
      */
     public static ElevationProfile elevationProfile(Route route, double maxStepLength) {
+
         Preconditions.checkArgument(maxStepLength > 0);
 
         int numberOfSamples = (int) (Math.ceil(route.length() / maxStepLength)) + 1;
