@@ -68,27 +68,32 @@ public final class Graph {
         //Création des buffers des différents attributs de la classe Graph.
         IntBuffer nodesBuffer;
         try (FileChannel channelNodes = FileChannel.open(nodesPath)) {
-            nodesBuffer = channelNodes.map(FileChannel.MapMode.READ_ONLY, 0, channelNodes.size()).asIntBuffer();
+            nodesBuffer = channelNodes.map(FileChannel.MapMode.READ_ONLY,
+                    0, channelNodes.size()).asIntBuffer();
         }
 
         ByteBuffer edgesBuffer;
         try (FileChannel channelEdges = FileChannel.open(edgesPath)) {
-            edgesBuffer = channelEdges.map(FileChannel.MapMode.READ_ONLY, 0, channelEdges.size());
+            edgesBuffer = channelEdges.map(FileChannel.MapMode.READ_ONLY,
+                    0, channelEdges.size());
         }
 
         IntBuffer profile_idsBuffer;
         try (FileChannel channelProfile_ids = FileChannel.open(profile_idsPath)) {
-            profile_idsBuffer = channelProfile_ids.map(FileChannel.MapMode.READ_ONLY, 0, channelProfile_ids.size()).asIntBuffer();
+            profile_idsBuffer = channelProfile_ids.map(FileChannel.MapMode.READ_ONLY,
+                    0, channelProfile_ids.size()).asIntBuffer();
         }
 
         ShortBuffer elevationsBuffer;
         try (FileChannel channelElevations = FileChannel.open(elevationsPath)) {
-            elevationsBuffer = channelElevations.map(FileChannel.MapMode.READ_ONLY, 0, channelElevations.size()).asShortBuffer();
+            elevationsBuffer = channelElevations.map(FileChannel.MapMode.READ_ONLY,
+                    0, channelElevations.size()).asShortBuffer();
         }
 
         LongBuffer attributeSetsBuffer;
         try (FileChannel channelAttributeSets = FileChannel.open(attributesPath)) {
-            attributeSetsBuffer = channelAttributeSets.map(FileChannel.MapMode.READ_ONLY, 0, channelAttributeSets.size()).asLongBuffer();
+            attributeSetsBuffer = channelAttributeSets.map(FileChannel.MapMode.READ_ONLY,
+                    0, channelAttributeSets.size()).asLongBuffer();
         }
 
         ArrayList<AttributeSet> listOfAttributeSets = new ArrayList<>();
@@ -98,7 +103,8 @@ public final class Graph {
 
         ByteBuffer sectorsBuffer;
         try (FileChannel channelSectors = FileChannel.open(sectorsPath)) {
-            sectorsBuffer = channelSectors.map(FileChannel.MapMode.READ_ONLY, 0, channelSectors.size());
+            sectorsBuffer = channelSectors.map(FileChannel.MapMode.READ_ONLY,
+                    0, channelSectors.size());
         }
 
         //Création des graphes des nœuds, des arrêtes et des secteurs.
@@ -112,7 +118,8 @@ public final class Graph {
 
 
     /**
-     * Méthode nodeCount
+     * La méthode nodeCount retourne un entier qui représente le nombre total de nœud
+     * que contient le Graph.
      *
      * @return retourne le nombre total de nœuds dans le graph.
      */
@@ -122,7 +129,8 @@ public final class Graph {
 
 
     /**
-     * La méthode nodePoint retourne un PointCh qui représente la position d'un nœud dont passe l'ID en argument.
+     * La méthode nodePoint retourne un PointCh qui représente la position d'un nœud
+     * dont on passe l'identité en argument.
      *
      * @param nodeId identité du point
      * @return retourne la position du nœud d'identité donnée.
@@ -164,15 +172,16 @@ public final class Graph {
      * @return l'identité du nœud le plus proche.
      */
     public int nodeClosestTo(PointCh point, double searchDistance) {
-        List<GraphSectors.Sector> listOfSectors = sectors.sectorsInArea(point, searchDistance);
-        if (listOfSectors.size() == 0) {
+        //On récupère
+        List<GraphSectors.Sector> listOfSectorsInRange = sectors.sectorsInArea(point, searchDistance);
+        if (listOfSectorsInRange.size() == 0) {
             return -1;
         }
         //On récupère le premier point du premier secteur pour ensuite le comparer avec les autres points.
-        int indexOfPointClosestTo = listOfSectors.get(0).startNodeId();
+        int indexOfPointClosestTo = listOfSectorsInRange.get(0).startNodeId();
         double squaredDistance = point.squaredDistanceTo(nodePoint(indexOfPointClosestTo));
         //On compare tous les points et on garde le point le plus proche.
-        for (GraphSectors.Sector sector : listOfSectors) {
+        for (GraphSectors.Sector sector : listOfSectorsInRange) {
             int startNodeId = sector.startNodeId();
             int endNodeId = sector.endNodeId();
 

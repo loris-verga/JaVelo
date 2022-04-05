@@ -2,6 +2,7 @@ package ch.epfl.javelo.data;
 
 import ch.epfl.javelo.Preconditions;
 
+import java.util.ListIterator;
 import java.util.StringJoiner;
 
 /**
@@ -80,12 +81,15 @@ public record AttributeSet(long bits) {
         StringJoiner joiner = new StringJoiner(",", "{", "}");
         long bitsValue = this.bits();
 
-        for (int i = 0; i <= 63; i += 1) {
-            if ((bitsValue >>> i) % 2 == 1) {
-                joiner.add(Attribute.ALL.get(i).keyValue());
+        ListIterator<Attribute> iterator = Attribute.ALL.listIterator();
+        while (iterator.hasNext()) {
+            if (((bitsValue >>> iterator.nextIndex()) % 2 == 1)) {
+                joiner.add(iterator.next().keyValue());
+            }
+            else{
+                iterator.next();
             }
         }
-
         return joiner.toString();
     }
 }
