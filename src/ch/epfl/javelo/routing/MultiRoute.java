@@ -186,7 +186,7 @@ public final class MultiRoute implements Route{
         if (position<0){
             return 0;
         }
-        if (position>this.length()){
+        if (position>=this.length()){
             return segments.size()-1;
         }
 
