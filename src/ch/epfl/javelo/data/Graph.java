@@ -46,12 +46,14 @@ public final class Graph {
 
 
     /**
-     * La méthode loadFrom retourne le graphe JaVelo obtenu à partir des fichiers se trouvant dans le répertoire dont le chemin d'accès est basePath
-     * ou lève IOException en cas d'erreur d'entrée/sortie, p. ex. si l'un des fichiers attendus n'existe pas.
+     * La méthode loadFrom retourne le graphe JaVelo obtenu
+     * à partir des fichiers se trouvant dans le répertoire
+     * dont le chemin d'accès est basePath ou lève IOException
+     * en cas d'erreur d'entrée/sortie, p. ex. si l'un des fichiers attendus n'existe pas.
      *
      * @param basePath: chemin d'accès au répertoire.
      * @return un Graph Javelo
-     * @throws IOException si le fichier attendu n'existe pas
+     * @throws IOException si le fichier attendu n'existe pas.
      */
     public static Graph loadFrom(Path basePath) throws IOException {
 
@@ -99,6 +101,7 @@ public final class Graph {
             sectorsBuffer = channelSectors.map(FileChannel.MapMode.READ_ONLY, 0, channelSectors.size());
         }
 
+        //Création des graphes des nœuds, des arrêtes et des secteurs.
         GraphNodes graphNodes = new GraphNodes(nodesBuffer);
         GraphEdges graphEdges = new GraphEdges(edgesBuffer, profile_idsBuffer, elevationsBuffer);
         GraphSectors graphSectors = new GraphSectors(sectorsBuffer);
@@ -119,7 +122,7 @@ public final class Graph {
 
 
     /**
-     * Méthode nodePoint
+     * La méthode nodePoint retourne un PointCh qui représente la position d'un nœud dont passe l'ID en argument.
      *
      * @param nodeId identité du point
      * @return retourne la position du nœud d'identité donnée.
@@ -131,7 +134,8 @@ public final class Graph {
     }
 
     /**
-     * Méthode nodeOutDegree
+     * La méthode nodeOutDegree retourne un entier qui représente
+     * le nombre d'arrêtes sortant d'un nœud.
      *
      * @param nodeId ID du nœud
      * @return retourne le nombre d'arrêtés sortant du nœud d'identité donnée.

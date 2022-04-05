@@ -24,10 +24,10 @@ public record AttributeSet(long bits) {
     }
 
     /**
-     * Méthode de construction d'AttributeSet
+     * Méthode de construction d'AttributeSet.
      *
-     * @param attributes les attributs que l'on veut dans l'ensemble
-     * @return l'ensemble qui contient tous les attributs en argument
+     * @param attributes les attributs que l'on veut dans l'ensemble.
+     * @return l'ensemble qui contient tous les attributs passés argument.
      */
     public static AttributeSet of(Attribute... attributes) {
 
@@ -56,10 +56,10 @@ public record AttributeSet(long bits) {
 
     /**
      * La méthode intersects retourne true si l'intersection entre l'ensemble récepteur (this)
-     * avec celui passé en argument (that) n'est pas vide.
+     * et celui passé en argument (that) n'est pas vide.
      *
-     * @param that l'ensemble qu'on veut comparer
-     * @return true si l'intersection n'est pas vide
+     * @param that l'ensemble avec lequel on veut comparer.
+     * @return true si l'intersection n'est pas vide.
      */
     public boolean intersects(AttributeSet that) {
 
@@ -69,10 +69,10 @@ public record AttributeSet(long bits) {
     }
 
     /**
-     * Méthode qui retourne une chaîne composée de la représentation textuelle
+     * La redéfinition de la méthode toString retourne une chaîne composée de la représentation textuelle
      * de tous les attributs de l'ensemble.
      *
-     * @return une chaîne composée de la représentation textuelle de tous les attributs dans l'ensemble
+     * @return une chaîne composée de la représentation textuelle de tous les attributs dans l'ensemble.
      */
     @Override
     public String toString() {
