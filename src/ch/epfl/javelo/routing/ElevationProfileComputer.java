@@ -114,6 +114,7 @@ public final class ElevationProfileComputer {
             }
             sampleIndex += 1;
         }
+
         return new ElevationProfile(route.length(), elevationSamples);
     }
 
