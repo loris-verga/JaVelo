@@ -3,20 +3,25 @@ package ch.epfl.javelo.projection;
 import ch.epfl.javelo.Math2;
 
 /**
- * La classe WebMercator qui est une classe publique, finale et non instantiable offre des méthodes statiques qui permettent de
- * convertir entre les coordonnées WGS84 et les coordonnées Web Mercator
- * <p>
- * Les méthodes de la classe WebMercator ne valident pas leurs arguments. Ce travail est laissé aux classes représentant les points
+ * La classe WebMercator qui est une classe publique, finale et non instantiable offre des méthodes statiques
+ * qui permettent de convertir entre les coordonnées WGS84 et les coordonnées Web Mercator.
+ *
+ * Les méthodes de la classe WebMercator ne valident pas leurs arguments.
+ * Ce travail est laissé aux classes représentant les points
  *
  * @author Loris Verga (345661)
  */
 public final class WebMercator {
 
+    //Constructeur privé de sorte que la classe ne soit pas instantiable.
+    private WebMercator(){}
+
     /**
-     * Cette méthode retourne la coordonnée x de la projection d'un point se trouvant à la longitude lon, donnée en radian
+     *La méthode x retourne la coordonnée x de la projection d'un point se trouvant à la longitude lon,
+     *donnée en radian.
      *
-     * @param lon longitude d'un point donnée en radiant
-     * @return coordonnée x de la projection
+     * @param lon La longitude d'un point donnée en radiant.
+     * @return La coordonnée x de la projection.
      */
     public static double x(double lon) {
         return (1 / (2 * Math.PI)) * (lon + Math.PI);

@@ -1,13 +1,15 @@
 package ch.epfl.javelo.projection;
 
 /**
- * Classe SwissBounds
- * <p>
- * Cette méthode non instantiable contient des constantes et des méthodes liées aux limites de la Suisse.
+ *
+ * La classe Swissbounds non instantiable contient des constantes et des méthodes liées aux limites de la Suisse.
  *
  * @author Loris Verga (345661)
  */
 public final class SwissBounds {
+
+    //Constructeur privé de sorte que la classe ne soit pas instantiable.
+    private SwissBounds(){}
 
     //Liste de constantes utiles :
 
@@ -31,12 +33,12 @@ public final class SwissBounds {
 
 
     /**
-     * Méthode containsEN : Cette méthode publique et statique permet de tester si un point (des coordonnées) se trouve
+     * La méthode containsEN, publique et statique permet de tester si un point (des coordonnées) se trouve
      * dans les limites de la Suisse.
      *
-     * @param e coordonnée Est du point dont on veut déterminer s'il se trouve en Suisse
-     * @param n coordonnée Nord du point dont on veut déterminer s'il se trouve en Suisse
-     * @return true si le point se trouve en Suisse
+     * @param e La coordonnée Est du point dont on veut déterminer s'il se trouve en Suisse.
+     * @param n La coordonnée Nord du point dont on veut déterminer s'il se trouve en Suisse.
+     * @return Retourne true si le point se trouve en Suisse.
      */
     public static boolean containsEN(double e, double n) {
         return e >= MIN_E && e <= MAX_E && n >= MIN_N && n <= MAX_N;

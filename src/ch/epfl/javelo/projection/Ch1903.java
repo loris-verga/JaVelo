@@ -1,16 +1,19 @@
 package ch.epfl.javelo.projection;
 
 /**
- * Classe Ch1903 (publique, finale, non instantiable)
  *
- * Cette classe contient des méthodes statiques permettant de convertir entre les coordonnées WGS 84 et les coordonnées suisses.
+ * La classe Ch1903, publique, finale et non instantiable contient des méthodes statiques permettant
+ * de faire des conversions entre les coordonnées WGS 84 et les coordonnées suisses.
  *
- * Attention les méthodes de CH1903 ne valident pas leurs arguments, la validité des coordonnées sera vérifiée
- * par les classes représentant les points.
+ * Attention les méthodes de CH1903 ne valident pas leurs arguments, la validité des coordonnées
+ * sera vérifiée par les classes représentant les points.
  *
  * @author Loris Verga (345661)
  */
-public class Ch1903 {
+public final class Ch1903 {
+
+    //Constructeur privé de sorte à ce que la classe ne soit pas instantiable.
+    private Ch1903(){};
 
     /**
      * Cette méthode retourne la coordonnée E (est) dans le système suisse

@@ -17,10 +17,11 @@ public record PointCh(double e, double n) {
 
 
     /**
-     * squaredDistanceTo retourne le carré de la distance en mètre séparant le récepteur (this) de l'argument that
+     * La méthode squaredDistanceTo retourne le carré de la distance en mètre séparant le récepteur (this)
+     * de l'argument that.
      *
      * @param that autre point
-     * @return valeur de type double, carré de la distance en mètre
+     * @return le carré de la distance en mètre (double)
      */
     public double squaredDistanceTo(PointCh that) {
         double uX = this.e() - that.e();
@@ -29,30 +30,31 @@ public record PointCh(double e, double n) {
     }
 
     /**
-     * distanceTo retourne la distance en mètres séparant le récepteur (this) de l'argument that
+     * La méthode distanceTo retourne la distance en mètres séparant le récepteur (this) de l'argument that.
      *
      * @param that un autre point
-     * @return valeur de type double, distance entre les deux points en mètre
+     * @return la distance entre les deux points en mètre (double)
      */
     public double distanceTo(PointCh that) {
         double uX = this.e() - that.e();
         double uY = this.n() - that.n();
+
         return Math2.norm(uX, uY);
     }
 
     /**
-     * Méthode lon
+     * La méthode lon retourne la longitude du point dans le système WGS84 en radiant.
      *
-     * @return la longitude du point dans le système WGS84 en radiant
+     * @return la longitude dans le système WGS84 en radiant (double).
      */
     public double lon() {
         return Ch1903.lon(this.e(), this.n());
     }
 
     /**
-     * Méthode lat
+     * La méthode lat retourne la latitude du point dans le système WGS84 en radiant.
      *
-     * @return la latitude du point dans le système WGS84 en radiant
+     * @return la latitude dans le système WGS84 en radiant (double).
      */
     public double lat() {
         return Ch1903.lat(this.e(), this.n());
