@@ -22,12 +22,13 @@ public class ElevationProfile {
     private final DoubleUnaryOperator elevationProfilAsSampled;
 
     /**
-     * constructeur public de ElevationProfile
+     * Le constructeur public de ElevationProfile.
      *
-     * @param length           attribut longueur de l'itinéraire
-     * @param elevationSamples tableau contenant les échantillons d'altitude
+     * @param length           La longueur de l'itinéraire.
+     * @param elevationSamples Le tableau contenant les échantillons d'altitude.
      */
     public ElevationProfile(double length, float[] elevationSamples) {
+
         Preconditions.checkArgument(length > 0 && elevationSamples.length >= 2);
         this.length = length;
 
@@ -58,55 +59,55 @@ public class ElevationProfile {
     }
 
     /**
-     * methode length renvoie la longueur de l'itinéraire
+     * La méthode length renvoie la longueur de l'itinéraire.
      *
-     * @return la longueur de l'itinéraire
+     * @return la longueur de l'itinéraire.
      */
     public double length() {
         return length;
     }
 
     /**
-     * methode minElevation retourne l'altitude minimum du profil en mètres
+     * La méthode minElevation retourne l'altitude minimum du profil en mètres.
      *
-     * @return l'altitude minimum du profil
+     * @return l'altitude minimum du profil.
      */
     public double minElevation() {
         return minElevation;
     }
 
     /**
-     * methode maxElevation retourne l'altitude maximum du profil en mètres
+     * La méthode maxElevation retourne l'altitude maximum du profil en mètres.
      *
-     * @return l'altitude maximum du profil
+     * @return l'altitude maximum du profil.
      */
     public double maxElevation() {
         return maxElevation;
     }
 
     /**
-     * methode totalAscent retourne le dénivelé positif total du profil en mètres
+     * La méthode totalAscent retourne le dénivelé positif total du profil en mètres.
      *
-     * @return le dénivelé positif total du profil
+     * @return le dénivelé positif total du profil.
      */
     public double totalAscent() {
         return totalAscent;
     }
 
     /**
-     * methode totalDescent renvoie le dénivelé négatif total du profil en mètres
+     * La méthode totalDescent renvoie le dénivelé négatif total du profil en mètres.
      *
-     * @return le dénivelé négatif total du profil
+     * @return le dénivelé négatif total du profil.
      */
     public double totalDescent() {
         return totalDescent;
     }
 
     /**
-     * methode elevationAt renvoie l'altitude du profil à la position donnée
+     * La méthode elevationAt renvoie l'altitude du profil à la position donnée.
      *
-     * @param position la position à laquelle on veut connaitre l'altitude
-     * @return l'altitude du profil à la position donnée
+     * @param position La position à laquelle on veut connaitre l'altitude.
+     * @return l'altitude du profil à la position donnée.
      */
     public double elevationAt(double position) {
         return elevationProfilAsSampled.applyAsDouble(position);
