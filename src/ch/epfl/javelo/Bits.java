@@ -52,7 +52,7 @@ public final class Bits {
         Preconditions.checkArgument(0 <= start
                 && start <= 31
                 && 0 <= start + length
-                && start + length <= 32
+                && start + length <= Integer.SIZE
                 && length >= 0
                 && length < 32);
 

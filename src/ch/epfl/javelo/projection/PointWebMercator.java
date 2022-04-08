@@ -11,6 +11,8 @@ import ch.epfl.javelo.Preconditions;
  */
 public record PointWebMercator(double x, double y) {
 
+    private static final int ZOOM_CONSTANT = 8;
+
     /**
      * Le constructeur compact de la classe PointWebMercator valide les coordonnées qu'il reçoit
      * et lève une IllegalArgumentException si l'une d'entre elles n'est pas comprise dans l'intervalle [0;1].
@@ -33,8 +35,8 @@ public record PointWebMercator(double x, double y) {
      * @return Un point WebMercator.
      */
     public static PointWebMercator of(int zoomLevel, double x, double y) {
-        double xPointWebMercator = Math.scalb(x, -(zoomLevel + 8));
-        double yPointWebMercator = Math.scalb(y, -(zoomLevel + 8));
+        double xPointWebMercator = Math.scalb(x, -(zoomLevel + ZOOM_CONSTANT));
+        double yPointWebMercator = Math.scalb(y, -(zoomLevel + ZOOM_CONSTANT));
         return new PointWebMercator(xPointWebMercator, yPointWebMercator);
     }
 
@@ -72,7 +74,7 @@ public record PointWebMercator(double x, double y) {
      */
     public double xAtZoomLevel(int zoomLevel) {
         double x = this.x();
-        return Math.scalb(x, 8 + zoomLevel);
+        return Math.scalb(x, ZOOM_CONSTANT + zoomLevel);
     }
 
     /**
@@ -83,7 +85,7 @@ public record PointWebMercator(double x, double y) {
      */
     public double yAtZoomLevel(int zoomLevel) {
         double y = this.y();
-        return Math.scalb(y, 8 + zoomLevel);
+        return Math.scalb(y, ZOOM_CONSTANT + zoomLevel);
     }
 
     /**
