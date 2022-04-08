@@ -17,8 +17,8 @@ public final class Functions {
     /**
      * Cette méthode retourne une fonction constante dont la valeur est toujours y
      *
-     * @param y valeur constante de la fonction
-     * @return retourne une fonction dont la valeur est toujours y
+     * @param y La valeur constante de la fonction.
+     * @return Cette méthode retourne une fonction dont la valeur est toujours y.
      */
     public static DoubleUnaryOperator constant(double y) {
         return new Constant(y);
@@ -26,7 +26,7 @@ public final class Functions {
     }
 
     /**
-     * Sous-classe Constant : Sert à définir la fonction constante
+     * La sous-classe Constant permet de définir la fonction constante.
      */
     private static final class Constant implements DoubleUnaryOperator {
 
@@ -46,8 +46,7 @@ public final class Functions {
 
 
     /**
-     * Méthode DoubleUnaryOperator
-     * Cette méthode retourne une fonction obtenue par interpolation linéaire entre les échantillons samples,
+     * La méthode sampled retourne une fonction obtenue par interpolation linéaire entre les échantillons samples,
      * espacés régulièrement et couvrant la plage allant de 0 à xMax.
      *
      * @param samples tableau de sample
