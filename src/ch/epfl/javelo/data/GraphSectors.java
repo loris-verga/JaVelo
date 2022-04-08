@@ -17,6 +17,7 @@ public record GraphSectors(ByteBuffer buffer) {
     private static final int OFFSET_ID_OF_FIRST_NODE = 0;
     private static final int OFFSET_NB_OF_NODE = OFFSET_ID_OF_FIRST_NODE + Integer.BYTES;
     private static final int SECTOR_INTS = OFFSET_NB_OF_NODE + Short.BYTES;
+    private static final int NUMBER_OF_SECTORS = 128;
 
     /**
      * La classe Sector permet de représenter un secteur JaVelo.
@@ -36,8 +37,8 @@ public record GraphSectors(ByteBuffer buffer) {
         List<Sector> listOfSectorsInArea = new ArrayList<>();
 
         //On calcule les dimensions d'un secteur.
-        double sectorLengthE = SwissBounds.WIDTH / 128.0;
-        double sectorLengthN = SwissBounds.HEIGHT / 128.0;
+        double sectorLengthE = SwissBounds.WIDTH / NUMBER_OF_SECTORS;
+        double sectorLengthN = SwissBounds.HEIGHT / NUMBER_OF_SECTORS;
 
         //On calcule les nouvelles coordonnées du centre du point, sur le repère orthonormé baser sur les secteurs.
         double newCenterE = (center.e() - SwissBounds.MIN_E) / sectorLengthE;
@@ -62,7 +63,7 @@ public record GraphSectors(ByteBuffer buffer) {
         for (int x = infX; x < maxX; x++) {
             for (int y = infY; y < maxY; y++) {
                 //On calcule l'identité du secteur.
-                int sectorId = x + y * 128;
+                int sectorId = x + y * NUMBER_OF_SECTORS;
                 //On trouve l'identité du premier nœud à l'intérieur de buffer.
                 int startNodeId = buffer.getInt(
                         sectorId * SECTOR_INTS + OFFSET_ID_OF_FIRST_NODE);

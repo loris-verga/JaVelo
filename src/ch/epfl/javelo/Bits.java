@@ -21,16 +21,16 @@ public final class Bits {
      */
     public static int extractSigned(int value, int start, int length) {
         Preconditions.checkArgument(0 <= start
-                && start <= 31
+                && start < Integer.SIZE
                 && 0 <= start + length
-                && start + length <= 32
+                && start + length <= Integer.SIZE
                 && length >= 0);
 
         if (length == 0) {
             return 0;
         }
 
-        int leftShift = 32 - (start + length);
+        int leftShift = Integer.SIZE - (start + length);
         int rightShift = start + leftShift;
 
         int leftShiftedValue = value << leftShift;
@@ -50,17 +50,17 @@ public final class Bits {
     public static int extractUnsigned(int value, int start, int length) {
 
         Preconditions.checkArgument(0 <= start
-                && start <= 31
+                && start < Integer.SIZE
                 && 0 <= start + length
-                && start + length <= 32
+                && start + length <= Integer.SIZE
                 && length >= 0
-                && length < 32);
+                && length < Integer.SIZE);
 
         if (length == 0) {
             return 0;
         }
 
-        int leftShift = 32 - (start + length);
+        int leftShift = Integer.SIZE - (start + length);
         int rightShift = start + leftShift;
 
         int leftShiftedValue;

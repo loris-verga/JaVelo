@@ -20,6 +20,10 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
     private static final int OFFSET_ID_OF_SET_OF_OSM = OFFSET_ELEVATION_GAIN + Short.BYTES;
     private static final int EDGE_INTS = OFFSET_ID_OF_SET_OF_OSM + Short.BYTES;
 
+    private static final int PROFIL_TYPE_LENGTH = 2;
+    private static final  int SIZE_OF_COMPRESSED_VALUES_WITH_PROFIL_TYPE_2 = 8;
+    private static final  int SIZE_OF_COMPRESSED_VALUES_WITH_PROFIL_TYPE_3 = 4;
+
     /**
      * La méthode isInverted renvoie true si l'arrête passée en argument va dans le sens inverse de la voie OSM.
      *
@@ -78,7 +82,8 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
     public boolean hasProfile(int edgeId) {
 
         int profileIdAndType = profileIds.get(edgeId);
-        int profilType = Bits.extractUnsigned(profileIdAndType, 30, 2);
+        int profilType = Bits.extractUnsigned(
+                profileIdAndType, Integer.SIZE - PROFIL_TYPE_LENGTH, PROFIL_TYPE_LENGTH);
 
         return profilType != 0;
     }
@@ -98,9 +103,11 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
         int lengthOfProfilList = 1 + (int) Math.ceil(length(edgeId) / 2.0);
         float[] profilList = new float[lengthOfProfilList];
         int profileIdAndType = profileIds.get(edgeId);
-        int profilType = Bits.extractUnsigned(profileIdAndType, 30, 2);
+        int profilType = Bits.extractUnsigned(
+                profileIdAndType, Integer.SIZE - PROFIL_TYPE_LENGTH, PROFIL_TYPE_LENGTH);
 
-        int firstSampleId = Bits.extractUnsigned(profileIdAndType, 0, 30);
+        int firstSampleId = Bits.extractUnsigned(
+                profileIdAndType, 0, Integer.SIZE - PROFIL_TYPE_LENGTH);
 
         float firstSample = Q28_4.asFloat(
                                 Short.toUnsignedInt(
@@ -125,7 +132,8 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
                 // les différences entre chaque échantillon sont stockées par 4 sur 32 bits,
                 // donc on utilise la méthode sampleListForCompressedValues qui permet de
                 // renvoyer la liste d'échantillons.
-                profilList = sampleListForCompressedValues(lengthOfProfilList, firstSample, firstSampleId, 8);
+                profilList = sampleListForCompressedValues(lengthOfProfilList, firstSample, firstSampleId,
+                        SIZE_OF_COMPRESSED_VALUES_WITH_PROFIL_TYPE_2);
                 break;
             }
             case 3: {
@@ -133,7 +141,8 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
                 // la differences entre chaque échantillon est stocké par 8 sur 32 bits,
                 // donc on utilise la méthode sampleListForCompressedValues qui permet de
                 // renvoyer la liste d'échantillons.
-                profilList = sampleListForCompressedValues(lengthOfProfilList, firstSample, firstSampleId, 4);
+                profilList = sampleListForCompressedValues(lengthOfProfilList, firstSample, firstSampleId,
+                        SIZE_OF_COMPRESSED_VALUES_WITH_PROFIL_TYPE_3);
                 break;
             }
         }

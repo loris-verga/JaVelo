@@ -14,7 +14,6 @@ import java.util.function.DoubleUnaryOperator;
 public class ElevationProfile {
 
     private final double length;
-
     private final double minElevation;
     private final double maxElevation;
     private final double totalAscent;
