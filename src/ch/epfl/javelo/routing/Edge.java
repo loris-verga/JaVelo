@@ -16,13 +16,13 @@ public record Edge(int fromNodeId, int toNodeId, PointCh fromPoint, PointCh toPo
                    DoubleUnaryOperator profile) {
 
     /**
-     * Le constructeur d'une instance de Edge
+     * Le constructeur d'une instance de Edge.
      *
-     * @param graph      le graphe ou se situe l'arête
-     * @param edgeId     l'identité de l'arête
-     * @param fromNodeId l'identité du nœud depuis lequel l'arête commence
-     * @param toNodeId   l'identité du nœud depuis lequel l'arête termine
-     * @return une instance d'un objet de type Edge
+     * @param graph      le graphe ou se situe l'arête.
+     * @param edgeId     l'identité de l'arête.
+     * @param fromNodeId l'identité du nœud depuis lequel l'arête commence.
+     * @param toNodeId   l'identité du nœud depuis lequel l'arête termine.
+     * @return une instance d'un objet de type Edge.
      */
     public static Edge of(Graph graph, int edgeId, int fromNodeId, int toNodeId) {
 
@@ -37,8 +37,8 @@ public record Edge(int fromNodeId, int toNodeId, PointCh fromPoint, PointCh toPo
     /**
      * La méthode positionClosestTo retourne les coordonnées du point qui se situe le plus proche du point donné, le long de l'arête.
      *
-     * @param point le point donné
-     * @return la coordonnée du point se situant le plus proche du point donné, le long de l'arête
+     * @param point Le point donné.
+     * @return la coordonnée du point se situant le plus proche du point donné, le long de l'arête.
      */
     public double positionClosestTo(PointCh point) {
 
@@ -53,24 +53,31 @@ public record Edge(int fromNodeId, int toNodeId, PointCh fromPoint, PointCh toPo
     }
 
     /**
-     * La méthode pointAt retourne le point qui se situe a une distance position depuis le début de l'arête, sur l'arête
+     * La méthode pointAt retourne le point qui se situe a une distance position depuis le début de l'arête, sur l'arête.
      *
-     * @param position la distance
-     * @return le point qui se situe a une distance position depuis le début de l'arête, sur l'arête
+     * @param position La distance donnée.
+     * @return le point qui se situe a une distance position depuis le début de l'arête, sur l'arête.
      */
     public PointCh pointAt(double position) {
 
-        double eCoordinate = Math.fma(toPoint.e() - fromPoint.e(), position / length, fromPoint.e());
-        double nCoordinate = Math.fma(toPoint.n() - fromPoint.n(), position / length, fromPoint.n());
+        double eCoordinate = Math.fma(
+                toPoint.e() - fromPoint.e(),
+                position / length,
+                fromPoint.e());
+
+        double nCoordinate = Math.fma(
+                toPoint.n() - fromPoint.n(),
+                position / length,
+                fromPoint.n());
 
         return new PointCh(eCoordinate, nCoordinate);
     }
 
     /**
-     * La méthode elevationAt retourne l'altitude à une position donnée sur l'arête
+     * La méthode elevationAt retourne l'altitude à une position donnée sur l'arête.
      *
-     * @param position la position à laquelle on veut connaître l'altitude
-     * @return l'altitude à une position donnée sur l'arête
+     * @param position La position à laquelle on veut connaître l'altitude.
+     * @return l'altitude à une position donnée sur l'arête.
      */
     public double elevationAt(double position) {
         return profile.applyAsDouble(position);
