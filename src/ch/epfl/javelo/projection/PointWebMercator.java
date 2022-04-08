@@ -108,7 +108,7 @@ public record PointWebMercator(double x, double y) {
      * La méthode toPointCh retourne le point de coordonnées suisses se trouvant à la même position
      * que le récepteur (this) ou null si ce point n'est pas dans les limites de la Suisse définies par SwissBounds.
      *
-     * @return le point de coordonnée dans le système suisse (PointCh)
+     * @return le point de coordonnée dans le système suisse (PointCh).
      */
     public PointCh toPointCh() {
         double longitude = this.lon();
@@ -116,11 +116,7 @@ public record PointWebMercator(double x, double y) {
         double e = Ch1903.e(longitude, latitude);
         double n = Ch1903.n(longitude, latitude);
 
-        if (!(SwissBounds.containsEN(e, n))) {
-            return null;
-        } else {
-            return new PointCh(e, n);
-        }
+        return SwissBounds.containsEN(e, n) ? new PointCh(e, n) : null;
     }
 }
 

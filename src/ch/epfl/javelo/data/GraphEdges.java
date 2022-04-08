@@ -8,7 +8,7 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 /**
- * L'enregistrement GraphEdge représente l'ensemble des arêtes représente le tableau de toutes les arêtes du graphe JaVelo
+ * L'enregistrement GraphEdge représente le tableau de toutes les arêtes du graphe JaVelo.
  *
  * @author Juan Bautista Iaconucci (342153)
  */
@@ -23,7 +23,7 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
     /**
      * La méthode isInverted renvoie true si l'arrête passée en argument va dans le sens inverse de la voie OSM.
      *
-     * @param edgeId l'identité de l'arrête.
+     * @param edgeId L'identité de l'arrête.
      * @return true ou false selon le sens de l'arrête.
      */
     public boolean isInverted(int edgeId) {
@@ -33,8 +33,8 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
     /**
      * La méthode targetNodeId renvoie l'identité du nœud de destination qui se trouve sur l'arrête d'identité donnée.
      *
-     * @param edgeId d'identité l'arrête donnée
-     * @return renvoie l'identité du nœud de destination
+     * @param edgeId L'identité de l'arrête donnée.
+     * @return renvoie l'identité du nœud de destination.
      */
     public int targetNodeId(int edgeId) {
 
@@ -46,8 +46,8 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
     /**
      * La méthode length renvoie la longueur de l'arrête d'identité donnée.
      *
-     * @param edgeId l'identité de l'arrête donnée
-     * @return la longueur de l'arrête.
+     * @param edgeId L'identité de l'arrête donnée
+     * @return La longueur de l'arrête.
      */
     public double length(int edgeId) {
         return Q28_4.asDouble(
@@ -59,8 +59,8 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
     /**
      * La méthode elevationGain retourne la difference de hauteur positive de l'arrête d'identité donnée.
      *
-     * @param edgeId l'identité de l'arrête donnée
-     * @return la difference de hauteur positive
+     * @param edgeId L'identité de l'arrête donnée.
+     * @return La difference de hauteur positive.
      */
     public double elevationGain(int edgeId) {
         return Q28_4.asDouble(
@@ -70,10 +70,10 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
     }
 
     /**
-     * La méthode hasProfile renvoie true si l'arrête d'identité donnée à un profil
+     * La méthode hasProfile renvoie true si l'arrête d'identité donnée à un profil.
      *
-     * @param edgeId l'identité de l'arrête donnée
-     * @return true si l'arrête d'identité donnée à un profil
+     * @param edgeId L'identité de l'arrête donnée.
+     * @return true si l'arrête d'identité donnée à un profil.
      */
     public boolean hasProfile(int edgeId) {
 
@@ -86,8 +86,8 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
     /**
      * La méthode profilSamples retourne une liste d'échantillons du profil de l'arrête d'identité donnée.
      *
-     * @param edgeId l'identité de l'arrête.
-     * @return une liste des échantillons du profil de l'arrête d'identité donnée
+     * @param edgeId L'identité de l'arrête.
+     * @return une liste des échantillons du profil de l'arrête d'identité donnée.
      */
     public float[] profileSamples(int edgeId) {
 
@@ -108,8 +108,8 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
 
         switch (profilType) {
             case 1: {
-                // Si profilType est 1 alors les échantillons ne sont pas compressés
-                // donc on peut directement les extraire depuis le buffer elevations
+                // Si profilType vaut 1 alors les échantillons ne sont pas compressés
+                // donc on peut directement les extraire depuis le buffer elevations.
 
                 float newSample;
                 for (int i = 0; i < lengthOfProfilList; i++) {
@@ -121,24 +121,24 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
                 break;
             }
             case 2: {
-                // Si profilType est 2 alors
-                // les differences entre chaque échantillon sont stocké à 4 sur 32 bits
+                // Si profilType vaut 2 alors
+                // les différences entre chaque échantillon sont stockées par 4 sur 32 bits,
                 // donc on utilise la méthode sampleListForCompressedValues qui permet de
-                // renvoyer la list d'échantillons
+                // renvoyer la liste d'échantillons.
                 profilList = sampleListForCompressedValues(lengthOfProfilList, firstSample, firstSampleId, 8);
                 break;
             }
             case 3: {
-                // Si profilType est 3 alors
-                // la differences entre chaque échantillon est stocké à 8 sur 32 bits
+                // Si profilType vaut 3 alors
+                // la differences entre chaque échantillon est stocké par 8 sur 32 bits,
                 // donc on utilise la méthode sampleListForCompressedValues qui permet de
-                // renvoyer la list d'échantillons
+                // renvoyer la liste d'échantillons.
                 profilList = sampleListForCompressedValues(lengthOfProfilList, firstSample, firstSampleId, 4);
                 break;
             }
         }
 
-        //Si l'arête est dans le sens inverse alors on inverse le sens du tableau
+        //Si l'arête est dans le sens inverse alors on inverse le sens du tableau.
         if (isInverted(edgeId)) {
             profilList = invertList(profilList);
         }
@@ -147,14 +147,14 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
     }
 
     /**
-     * La méthode sampleListForCompressedValues permet de renvoyer la liste d'échantillons de l'arrête d'identité donnée,
-     * pour celles qui ont des profils avec des valeurs compressées.
+     * La méthode sampleListForCompressedValues permet de renvoyer la liste d'échantillon de l'arrête d'identité donnée
+     * pour les arrêtes qui ont des profils avec des valeurs compressées.
      *
-     * @param length                 la longueur de la liste contenant tous les échantillons
-     * @param firstSample            le premier échantillon
-     * @param firstSampleId          l'index du premier échantillon
-     * @param sizeOfCompressedValues la taille en bit des valeurs compresser
-     * @return la liste d'échantillons de l'arrête d'identité donnée
+     * @param length                 La longueur de la liste contenant tous les échantillons.
+     * @param firstSample            Le premier échantillon.
+     * @param firstSampleId          L'index du premier échantillon.
+     * @param sizeOfCompressedValues La taille en bit des valeurs compresser.
+     * @return la liste d'échantillons de l'arrête d'identité donnée.
      */
     private float[] sampleListForCompressedValues(int length, float firstSample
             ,int firstSampleId, int sizeOfCompressedValues) {
@@ -165,37 +165,37 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
         int encodedSample;
         int startOfBits;
 
-        //On ajoute à la liste de profil le premier échantillon qui n'est pas compresser
+        //On ajoute à la liste de profil le premier échantillon qui n'est pas compressé.
         profilList[0] = firstSample;
-        //Le premier échantillon devient l'ancien
+        //Le premier échantillon devient l'ancien.
         float previousSample = firstSample;
-        //On calcule le nombre de valeurs compresser sur 32 bits
+        //On calcule le nombre de valeurs compresser sur 32 bits.
         int nbOfCompressedValuesInBits = Short.SIZE / sizeOfCompressedValues;
 
         int indexOfProfilList = 1;
-        //On calcule jusqu'à quel index on doit aller sur le buffer elevations
+        //On calcule jusqu'à quel index on doit aller sur le buffer elevations.
         int totalElevationIndex = (int) Math.ceil(
                 (profilList.length - 1.0) / nbOfCompressedValuesInBits);
 
         for (int elevationIndex = 1; elevationIndex <= totalElevationIndex; elevationIndex++) {
 
-            //On prend les bits ou se trouve encoder les differences entre chaque échantillon.
+            //On récupère le set de 32 bits qui contient les différences encodées
             encodedSample = elevations.get(firstSampleId + elevationIndex);
 
-            //Pour chaque difference encoder à l'intérieur d'encodedSample.
+            //Pour chaque différence encoder à l'intérieur d'encodedSample,
             for (int indexOfBits = nbOfCompressedValuesInBits - 1; indexOfBits >= 0
                     && indexOfProfilList < profilList.length; indexOfBits--) {
 
-                //On trouve l'index du premier bit de la difference encoder.
+                //on trouve l'index du premier bit de la difference encodée,
                 startOfBits = indexOfBits * sizeOfCompressedValues;
-                //On décode la difference pour la mettre en metre.
+                //on décode la difference pour la mettre en mètre,
                 difference = Q28_4.asFloat(
                                 Bits.extractSigned(
                                         encodedSample, startOfBits, sizeOfCompressedValues));
-                //On trouve le nouvel échantillon en ajoutant a l'ancien échantillon,
-                // la difference entre le nouvel échantillon et l'ancien.
+                //on trouve le nouvel échantillon en ajoutant à l'ancien échantillon la difference entre
+                // le nouvel échantillon et l'ancien,
                 newSample = previousSample + difference;
-                //On ajoute le nouvel échantillon à la liste d'échantillon.
+                //on ajoute le nouvel échantillon à la liste d'échantillon.
                 profilList[indexOfProfilList] = newSample;
                 //Le nouvel échantillon devient l'ancien.
                 previousSample = newSample;
@@ -209,8 +209,8 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
     /**
      * La méthode invertList inverse les éléments d'une liste donnée.
      *
-     * @param profilSample la liste que l'on veut inverser
-     * @return une liste inversée
+     * @param profilSample La liste que l'on veut inverser.
+     * @return une liste inversée.
      */
     private float[] invertList(float[] profilSample) {
 
@@ -227,8 +227,8 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
     /**
      * La méthode attributesIndex renvoie l'identité de l'ensemble d'attributs attaché à l'arête d'identité donnée.
      *
-     * @param edgeId l'identité de l'arrête donnée
-     * @return l'identité de l'ensemble d'attributs attaché à l'arête d'identité donnée
+     * @param edgeId L'identité de l'arrête donnée.
+     * @return l'identité de l'ensemble d'attributs attaché à l'arête d'identité donnée.
      */
     public int attributesIndex(int edgeId) {
 

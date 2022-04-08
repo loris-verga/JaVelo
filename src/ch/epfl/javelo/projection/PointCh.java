@@ -20,8 +20,8 @@ public record PointCh(double e, double n) {
      * La méthode squaredDistanceTo retourne le carré de la distance en mètre séparant le récepteur (this)
      * de l'argument that.
      *
-     * @param that autre point
-     * @return le carré de la distance en mètre (double)
+     * @param that Un autre point.
+     * @return le carré de la distance en mètre (double).
      */
     public double squaredDistanceTo(PointCh that) {
         double uX = this.e() - that.e();
@@ -32,8 +32,8 @@ public record PointCh(double e, double n) {
     /**
      * La méthode distanceTo retourne la distance en mètres séparant le récepteur (this) de l'argument that.
      *
-     * @param that un autre point
-     * @return la distance entre les deux points en mètre (double)
+     * @param that Un autre point.
+     * @return la distance entre les deux points en mètre (double).
      */
     public double distanceTo(PointCh that) {
         double uX = this.e() - that.e();

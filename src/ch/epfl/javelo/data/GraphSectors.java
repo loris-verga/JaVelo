@@ -27,9 +27,9 @@ public record GraphSectors(ByteBuffer buffer) {
      * Cette méthode retourne la liste de tous les secteurs ayant une intersection
      * avec le carré centré au point donné et de côté égal au double de la distance donnée.
      *
-     * @param center   les coordonnées du centre du carré
-     * @param distance la moitié du côté du carré
-     * @return une liste contenant tous les sectors qui sont inclus dans le carré de cotée le double de distance
+     * @param center   Les coordonnées du centre du carré.
+     * @param distance La moitié du côté du carré.
+     * @return une liste contenant tous les sectors qui sont inclus dans le carré de cotée le double de distance.
      */
     public List<Sector> sectorsInArea(PointCh center, double distance) {
 
@@ -63,14 +63,14 @@ public record GraphSectors(ByteBuffer buffer) {
             for (int y = infY; y < maxY; y++) {
                 //On calcule l'identité du secteur.
                 int sectorId = x + y * 128;
-                //On trouve l'identité du premier noeud à l'intérieur de buffer.
+                //On trouve l'identité du premier nœud à l'intérieur de buffer.
                 int startNodeId = buffer.getInt(
                         sectorId * SECTOR_INTS + OFFSET_ID_OF_FIRST_NODE);
-                //On trouve le nombre total de noeud à l'intérieur de buffer.
+                //On trouve le nombre total de nœud à l'intérieur de buffer.
                 int nBOfNodes = Short.toUnsignedInt(
                         buffer.getShort(
                                 sectorId * SECTOR_INTS + OFFSET_NB_OF_NODE));
-                //On calcule l'identité du dernier noeud.
+                //On calcule l'identité du dernier nœud.
                 int endNodeId = startNodeId + nBOfNodes;
                 //On ajoute le nouveau secteur dans la liste de secteur
                 listOfSectorsInArea.add(new Sector(startNodeId, endNodeId));

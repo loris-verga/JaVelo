@@ -21,7 +21,7 @@ public record GraphNodes(IntBuffer buffer) {
     /**
      * La méthode count retourne le nombre total de nœud.
      *
-     * @return le nombre total de nœuds
+     * @return le nombre total de nœuds.
      */
     public int count() {
 
@@ -31,8 +31,8 @@ public record GraphNodes(IntBuffer buffer) {
     /**
      * La méthode nodeE retourne la coordonnée Est du nœud.
      *
-     * @param nodeId identité du nœud
-     * @return la coordonnée Est du nœud
+     * @param nodeId L'identité du nœud.
+     * @return la coordonnée Est du nœud.
      */
     public double nodeE(int nodeId) {
 
@@ -42,10 +42,10 @@ public record GraphNodes(IntBuffer buffer) {
     }
 
     /**
-     * La méthode nodeN retourne la coordonnée Nord du nœud
+     * La méthode nodeN retourne la coordonnée Nord du nœud.
      *
-     * @param nodeId identité du nœud
-     * @return la coordonnée Nord du nœud
+     * @param nodeId L'identité du nœud.
+     * @return la coordonnée Nord du nœud.
      */
     public double nodeN(int nodeId) {
 
@@ -55,10 +55,10 @@ public record GraphNodes(IntBuffer buffer) {
     }
 
     /**
-     * La méthode outDegree donne le nombre d'arêtes sortant du nœud
+     * La méthode outDegree donne le nombre d'arêtes sortant du nœud.
      *
-     * @param nodeId identité du nœud
-     * @return le nombre d'arêtes sortant du nœud
+     * @param nodeId L'identité du nœud.
+     * @return le nombre d'arêtes sortant du nœud.
      */
     public int outDegree(int nodeId) {
 
@@ -70,8 +70,8 @@ public record GraphNodes(IntBuffer buffer) {
     /**
      * La méthode edgeId retourne l'identité de la edgeIndex-ième arête sortant du nœud.
      *
-     * @param nodeId identité du nœud
-     * @return l'identité de la edgeIndex-ième arête sortant du nœud
+     * @param nodeId L'identité du nœud.
+     * @return l'identité de la edgeIndex-ième arête sortant du nœud.
      */
     public int edgeId(int nodeId, int edgeIndex) {
         Preconditions.checkArgument(0 <= edgeIndex && edgeIndex < outDegree(nodeId));

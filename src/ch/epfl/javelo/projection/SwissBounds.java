@@ -38,7 +38,7 @@ public final class SwissBounds {
      *
      * @param e La coordonnée Est du point dont on veut déterminer s'il se trouve en Suisse.
      * @param n La coordonnée Nord du point dont on veut déterminer s'il se trouve en Suisse.
-     * @return Retourne true si le point se trouve en Suisse.
+     * @return true si le point se trouve en Suisse.
      */
     public static boolean containsEN(double e, double n) {
         return e >= MIN_E && e <= MAX_E && n >= MIN_N && n <= MAX_N;
