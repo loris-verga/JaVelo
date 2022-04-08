@@ -18,10 +18,10 @@ public record Edge(int fromNodeId, int toNodeId, PointCh fromPoint, PointCh toPo
     /**
      * Le constructeur d'une instance de Edge.
      *
-     * @param graph      le graphe ou se situe l'arête.
-     * @param edgeId     l'identité de l'arête.
-     * @param fromNodeId l'identité du nœud depuis lequel l'arête commence.
-     * @param toNodeId   l'identité du nœud depuis lequel l'arête termine.
+     * @param graph      Le graphe ou se situe l'arête.
+     * @param edgeId     L'identité de l'arête.
+     * @param fromNodeId L'identité du nœud depuis lequel l'arête commence.
+     * @param toNodeId   L'identité du nœud depuis lequel l'arête termine.
      * @return une instance d'un objet de type Edge.
      */
     public static Edge of(Graph graph, int edgeId, int fromNodeId, int toNodeId) {
@@ -35,7 +35,8 @@ public record Edge(int fromNodeId, int toNodeId, PointCh fromPoint, PointCh toPo
     }
 
     /**
-     * La méthode positionClosestTo retourne les coordonnées du point qui se situe le plus proche du point donné, le long de l'arête.
+     * La méthode positionClosestTo retourne les coordonnées du point qui se situe
+     * le plus proche du point donné, le long de l'arête.
      *
      * @param point Le point donné.
      * @return la coordonnée du point se situant le plus proche du point donné, le long de l'arête.
@@ -53,7 +54,8 @@ public record Edge(int fromNodeId, int toNodeId, PointCh fromPoint, PointCh toPo
     }
 
     /**
-     * La méthode pointAt retourne le point qui se situe a une distance position depuis le début de l'arête, sur l'arête.
+     * La méthode pointAt retourne le point qui se situe a une distance position
+     * depuis le début de l'arête, sur l'arête.
      *
      * @param position La distance donnée.
      * @return le point qui se situe a une distance position depuis le début de l'arête, sur l'arête.

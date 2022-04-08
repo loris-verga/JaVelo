@@ -17,9 +17,9 @@ public final class ElevationProfileComputer {
     /**
      * La méthode elevationProfile retourne le profil le long de l'itinéraire.
      *
-     * @param route         l'itinéraire dont on veut obtenir le profil.
-     * @param maxStepLength la distance maximale entre les échantillons du profil
-     * @return le profil le long de l'itinéraire
+     * @param route         L'itinéraire dont on veut obtenir le profil.
+     * @param maxStepLength La distance maximale entre les échantillons du profil
+     * @return le profil le long de l'itinéraire.
      */
     public static ElevationProfile elevationProfile(Route route, double maxStepLength) {
 
