@@ -23,16 +23,16 @@ public final class MultiRoute implements Route{
      * @param segments une liste de Routes qui vont constituer cette route multiple.
      */
     public MultiRoute(List<Route> segments){
-        Preconditions.checkArgument(!(segments.size() == 0));
+        Preconditions.checkArgument(!segments.isEmpty());
         this.segments = new ArrayList<>(segments);
     }
 
 
     /**
-     * Cette méthode retourne l'index du segment à la position donnée (en mètres)
+     * La méthode indexOfSegmentAt retourne l'index du segment à la position donnée (en mètres).
      *
-     * @param position donnée en mètre
-     * @return index du segment
+     * @param position donnée en mètre.
+     * @return index du segment.
      */
     public int indexOfSegmentAt(double position) {
         if (position < 0) {
@@ -52,8 +52,8 @@ public final class MultiRoute implements Route{
     }
 
     /**
-     * Cette méthode retourne la longueur de l'itinéraire, en mètre
-     * @return la longueur de l'itinéraire
+     * La méthode length retourne la longueur de l'itinéraire, en mètre.
+     * @return la longueur de l'itinéraire (double).
      */
     public double length(){
         double length = 0;
@@ -64,8 +64,8 @@ public final class MultiRoute implements Route{
     }
 
     /**
-     * Cette méthode retourne la totalité des arrêtes de l'itinéraire.
-     * @return une liste de Edge
+     * La méthode edges retourne la totalité des arrêtes de l'itinéraire.
+     * @return une liste de Edge.
      */
     public List<Edge> edges() {
         List<Edge> listOfEdges = new ArrayList<>();
@@ -76,8 +76,8 @@ public final class MultiRoute implements Route{
     }
 
     /**
-     * Cette méthode retourne la totalité des points situés aux extrémités des arêtes de l'itinéraire,
-     * @return une liste de PointCh
+     * La méthode points retourne la totalité des points situés aux extrémités des arêtes de l'itinéraire.
+     * @return une liste de PointCh.
      */
     public List<PointCh> points(){
 
@@ -96,8 +96,8 @@ public final class MultiRoute implements Route{
 
 
     /**
-     * Cette méthode retourne le point se trouvant à la position donnée le long de l'itinéraire.
-     * @param position position du point
+     * La méthode pointAt retourne le point se trouvant à la position donnée le long de l'itinéraire.
+     * @param position La position du point.
      * @return le PointCh se trouvant à cette position.
      */
     public PointCh pointAt(double position){
@@ -108,10 +108,10 @@ public final class MultiRoute implements Route{
 
 
     /**
-     * Cette méthode retourne l'identité du nœud appartenant à l'itinéraire et se trouvant le plus
-     * proche de la position donnée
-     * @param position la position le long de l'itinéraire complet.
-     * @return le nœud le plus proche de la position donnée se trouvant sur l'itinéraire
+     * La méthode nodeClosestTo retourne l'identité du nœud appartenant à l'itinéraire
+     * et se trouvant le plus proche de la position donnée.
+     * @param position La position le long de l'itinéraire complet.
+     * @return le nœud le plus proche de la position donnée se trouvant sur l'itinéraire.
      */
     public int nodeClosestTo(double position){
         int indexOfSegment = this.indexOfSubRouteAt(position);
@@ -120,10 +120,10 @@ public final class MultiRoute implements Route{
     }
 
     /**
-     * Cette méthode retourne le point de l'itinéraire se trouvant le plus proche du point
-     * de référence donnée
-     * @param point le pointCh de référence.
-     * @return le RoutePoint le plus proche du point de référence
+     * La méthode pointClosestTo retourne le point de l'itinéraire se trouvant le plus proche du point
+     * de référence donnée.
+     * @param point Le pointCh de référence.
+     * @return le RoutePoint le plus proche du point de référence.
      */
     public RoutePoint pointClosestTo(PointCh point){
         RoutePoint pointClosestTo = segments.get(0).pointClosestTo(point);
@@ -150,8 +150,8 @@ public final class MultiRoute implements Route{
 
 
     /**
-     * Cette méthode retourne l'altitude à la position donnée le long de l'itinéraire.
-     * @param position position le long de l'itinéraire entier.
+     * La méthode elevationAt retourne l'altitude à la position donnée le long de l'itinéraire.
+     * @param position La position le long de l'itinéraire entier.
      * @return l'élévation à cette position.
      */
     public double elevationAt(double position){
@@ -162,7 +162,7 @@ public final class MultiRoute implements Route{
 
 
     /**
-     * Cette méthode privée retourne la position relative sur un segment.
+     * La méthode privée positionOnTheSegment retourne la position relative sur un segment.
      * @param position position sur l'ensemble de l'itinéraire
      * @param indexOfSegment index du segment
      * @return position sur le segment
@@ -177,7 +177,7 @@ public final class MultiRoute implements Route{
     }
 
     /**
-     * Cette méthode privée retourne l'index du sous-segment à la position donnée (en mètres)
+     * La méthode privée indexOfSubRouteAt retourne l'index du sous-segment à la position donnée (en mètres).
      *
      * @param position donnée en mètre
      * @return index du segment

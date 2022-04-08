@@ -7,7 +7,7 @@ import ch.epfl.javelo.projection.PointCh;
 import java.util.*;
 
 /**
- * RouteComputer représente un planificateur d'itinéraire
+ * La classe RouteComputer représente un planificateur d'itinéraire.
  *
  * @author Juan Bautista Iaconucci (342153)
  */
@@ -17,7 +17,7 @@ public class RouteComputer {
     private final Graph graph;
 
     /**
-     * Le constructeur de RouteComputer construit un planificateur d'itinéraire pour le graphe et la fonction de coût donnés
+     * Le constructeur de RouteComputer crée un planificateur d'itinéraire pour le graphe et la fonction de coût donnée.
      *
      * @param graph        le graph sur lequel on veut construire l'itinéraire
      * @param costFunction la fonction cout qui est utilisé pour construire l'itinéraire
