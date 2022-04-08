@@ -1,6 +1,8 @@
-package ch.epfl.javelo.routing;
+package ch.epfl.test.professorTest.part6;
 
 import ch.epfl.javelo.data.Graph;
+import ch.epfl.javelo.routing.CityBikeCF;
+import ch.epfl.javelo.routing.RouteComputer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
