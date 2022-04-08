@@ -19,7 +19,7 @@ public record GraphSectors(ByteBuffer buffer) {
     private static final int SECTOR_INTS = OFFSET_NB_OF_NODE + Short.BYTES;
 
     /**
-     * Classe record qui permet de représenter un secteur JaVelo.
+     * La classe Sector permet de représenter un secteur JaVelo.
      */
     public record Sector(int startNodeId, int endNodeId) {}
 
@@ -35,20 +35,25 @@ public record GraphSectors(ByteBuffer buffer) {
 
         List<Sector> listOfSectorsInArea = new ArrayList<>();
 
+        //On calcule les dimensions d'un secteur.
         double sectorLengthE = SwissBounds.WIDTH / 128.0;
         double sectorLengthN = SwissBounds.HEIGHT / 128.0;
 
+        //On calcule les nouvelles coordonnées du centre du point, sur le repère orthonormé baser sur les secteurs.
         double newCenterE = (center.e() - SwissBounds.MIN_E) / sectorLengthE;
         double newCenterN = (center.n() - SwissBounds.MIN_N) / sectorLengthN;
 
+        //On re-dimensionne les dimensions du carré dans ce nouveau repère.
         double newSideLengthE = distance / sectorLengthE;
         double newSideLengthN = distance / sectorLengthN;
 
+        //On calcule les points d'extrémité du rectangle englobant tous les secteurs dans le "carré".
         int infX = (int) Math.floor(newCenterE - newSideLengthE);
         int infY = (int) Math.floor(newCenterN - newSideLengthN);
         int maxX = (int) Math.ceil(newCenterE + newSideLengthE);
         int maxY = (int) Math.ceil(newCenterN + newSideLengthN);
 
+        //On vérifie que ces points sont bien à l'intérieur du repère.
         infX = Math2.clamp(0, infX, 128);
         infY = Math2.clamp(0, infY, 128);
         maxX = Math2.clamp(0, maxX, 128);
@@ -56,10 +61,18 @@ public record GraphSectors(ByteBuffer buffer) {
 
         for (int x = infX; x < maxX; x++) {
             for (int y = infY; y < maxY; y++) {
+                //On calcule l'identité du secteur.
                 int sectorId = x + y * 128;
-                int startNodeId = buffer.getInt(sectorId * SECTOR_INTS + OFFSET_ID_OF_FIRST_NODE);
-                int nBOfNodes = Short.toUnsignedInt(buffer.getShort(sectorId * SECTOR_INTS + OFFSET_NB_OF_NODE));
+                //On trouve l'identité du premier noeud à l'intérieur de buffer.
+                int startNodeId = buffer.getInt(
+                        sectorId * SECTOR_INTS + OFFSET_ID_OF_FIRST_NODE);
+                //On trouve le nombre total de noeud à l'intérieur de buffer.
+                int nBOfNodes = Short.toUnsignedInt(
+                        buffer.getShort(
+                                sectorId * SECTOR_INTS + OFFSET_NB_OF_NODE));
+                //On calcule l'identité du dernier noeud.
                 int endNodeId = startNodeId + nBOfNodes;
+                //On ajoute le nouveau secteur dans la liste de secteur
                 listOfSectorsInArea.add(new Sector(startNodeId, endNodeId));
             }
         }
