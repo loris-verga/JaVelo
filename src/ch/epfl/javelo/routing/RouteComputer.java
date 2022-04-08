@@ -28,18 +28,20 @@ public class RouteComputer {
     }
 
     /**
-     * La méthode bestRouteBetween retourne l'itinéraire de coût total minimal allant du nœud d'identité startNodeId au nœud d'identité endNodeId dans le graphe passé au constructeur
+     * La méthode bestRouteBetween retourne l'itinéraire de coût total minimal allant du nœud d'identité startNodeId
+     * au nœud d'identité endNodeI dans le graphe passé au constructeur.
      *
-     * @param startNodeId l'identité du premier nœud sur l'itinéraire
-     * @param endNodeId   l'identité du dernier nœud sur l'itinéraire
-     * @return l'itinéraire de coût total minimal allant du nœud d'identité startNodeId au nœud d'identité endNodeId dans le graphe passé au constructeur
+     * @param startNodeId L'identité du premier nœud sur l'itinéraire.
+     * @param endNodeId   L'identité du dernier nœud sur l'itinéraire.
+     * @return l'itinéraire de coût total minimal.
      */
     public Route bestRouteBetween(int startNodeId, int endNodeId) {
 
         /**
-         * Le record WeightedNode imbriquer à l'intérieur de bestRouteBetween, permet de contenir l'identité d'un nœud et sa distance
-         * @param nodeId l'identité du nœud
-         * @param distance la distance la plus courte entre ce nœud et le nœud de départ
+         * Le record WeightedNode imbriquer à l'intérieur de bestRouteBetween, permet de contenir
+         * l'identité d'un nœud et sa distance.
+         * @param nodeId L'identité du nœud
+         * @param distance La distance la plus courte entre ce nœud et le nœud de départ.
          */
         record WeightedNode(int nodeId, float distance)
                 implements Comparable<WeightedNode> {
@@ -130,6 +132,5 @@ public class RouteComputer {
             distance[nodeWithMinDistance.nodeId] = Float.NEGATIVE_INFINITY;
         }
         return null;
-
     }
 }

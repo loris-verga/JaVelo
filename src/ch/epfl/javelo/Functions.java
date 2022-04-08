@@ -10,6 +10,9 @@ import java.util.function.DoubleUnaryOperator;
  */
 public final class Functions {
 
+    //Constructeur privé de sorte que la classe ne soit pas instantiable.
+    private Functions(){};
+
 
     /**
      * Cette méthode retourne une fonction constante dont la valeur est toujours y

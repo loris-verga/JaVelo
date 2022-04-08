@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * La classe SingleRoute publique et immuable (donc finale), représente un itinéraire simple,
- * c.-à-d. reliant un point de départ à un point d'arrivée, sans point de passage intermédiaire. Elle implémente l'interface Route.
+ * La classe SingleRoute publique et immuable, représente un itinéraire simple,
+ * c.-à-d. reliant un point de départ à un point d'arrivée, sans point de passage intermédiaire.
  *
  * @author Loris Verga (345661)
  */
@@ -45,7 +45,7 @@ public final class SingleRoute implements Route {
 
 
     /**
-     * Cette méthode retourne l'index du segment de l'itinéraire contenant la position donnée
+     * La méthode indexOfSegmentAt retourne l'index du segment de l'itinéraire contenant la position donnée
      * qui vaut toujours zéro dans le cas d'un itinéraire simple.
      *
      * @param position donnée en mètre
@@ -57,9 +57,9 @@ public final class SingleRoute implements Route {
     }
 
     /**
-     * Cette méthode retourne la longueur de l'itinéraire en mètres.
+     * La méthode length retourne la longueur de l'itinéraire en mètres.
      *
-     * @return la longueur de l'itinéraire en double
+     * @return la longueur de l'itinéraire (double).
      */
     @Override
     public double length() {
@@ -71,9 +71,9 @@ public final class SingleRoute implements Route {
     }
 
     /**
-     * Cette méthode retourne la totalité des arêtes de l'itinéraire.
+     * La méthode edges méthode retourne la totalité des arêtes de l'itinéraire.
      *
-     * @return une liste de Edge
+     * @return une liste de Edge.
      */
     @Override
     public List<Edge> edges() {
@@ -81,7 +81,7 @@ public final class SingleRoute implements Route {
     }
 
     /**
-     * Cette méthode retourne la totalité des points situés aux extrémités des arêtes de l'itinéraire.
+     * La méthode points retourne la totalité des points situés aux extrémités des arêtes de l'itinéraire.
      *
      * @return une liste de PointCh
      */
@@ -96,9 +96,9 @@ public final class SingleRoute implements Route {
     }
 
     /**
-     * Cette méthode retourne le point se trouvant à la position donnée le long de l'itinéraire.
+     * La méthode pointAt retourne le point se trouvant à la position donnée le long de l'itinéraire.
      *
-     * @param position position du point
+     * @param position La position du point.
      * @return un PointCh se trouvant sur l'itinéraire.
      */
     @Override
@@ -115,10 +115,11 @@ public final class SingleRoute implements Route {
     }
 
     /**
-     * Cette méthode retourne l'identité du nœud appartenant à l'itinéraire et se trouvant le plus proche de la position donnée.
+     * La méthode nodeClosestTo retourne l'identité du nœud appartenant à l'itinéraire
+     * et se trouvant le plus proche de la position donnée.
      *
-     * @param position position sur l'itinéraire
-     * @return ID du nœud
+     * @param position La position sur l'itinéraire.
+     * @return l'identité du nœud.
      */
     @Override
     public int nodeClosestTo(double position) {
@@ -143,10 +144,10 @@ public final class SingleRoute implements Route {
 
 
     /**
-     * Cette méthode retourne l'altitude à la position donnée le long de l'itinéraire
+     * La méthode elevationAt retourne l'altitude à la position donnée le long de l'itinéraire
      * qui peut valoir NaN si l'arête contenant cette position n'a pas de profil.
      *
-     * @param position position du point
+     * @param position La position du point.
      * @return l'élévation (un double)
      */
     @Override
@@ -170,7 +171,8 @@ public final class SingleRoute implements Route {
     }
 
     /**
-     * Cette méthode retourne le point de l'itinéraire se trouvant le plus proche du point de référence donné.
+     * La méthode pointClosestTo retourne le point de l'itinéraire se trouvant
+     * le plus proche du point de référence donné.
      *
      * @param point le PointCh de référence
      * @return le RoutePoint se trouvant sur l'itinéraire
@@ -178,6 +180,8 @@ public final class SingleRoute implements Route {
     @Override
     public RoutePoint pointClosestTo(PointCh point) {
 
+        //Nous obtenons le premier point de l'itinéraire et le comparons avec tous les autres points
+        //et nous gardons le meilleur.
         PointCh pointClosest;
         double positionPointClosest = edges.get(0).positionClosestTo(point);
         double squaredDistPointClosest;
@@ -236,7 +240,7 @@ public final class SingleRoute implements Route {
 
 
     /**
-     * Cette méthode effectue une binarySearch avec le tableau de position.
+     * La méthode binarySearch effectue une binarySearch avec le tableau de position.
      *
      * @param position position le long de l'itinéraire
      * @return le résultat de la binary search
@@ -246,7 +250,8 @@ public final class SingleRoute implements Route {
     }
 
     /**
-     * Cette méthode modifie la position pour qu'elle soit valide pour l'utilisation de nos méthodes spécifiques.
+     * La méthode modifiedPosition modifie la position pour qu'elle soit valide
+     * pour l'utilisation de nos méthodes spécifiques.
      *
      * @param position position le long de l'itinéraire
      * @return la position modifiée

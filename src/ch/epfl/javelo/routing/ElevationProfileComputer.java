@@ -93,7 +93,7 @@ public final class ElevationProfileComputer {
             if (!Float.isNaN(elevationSamples[sampleIndex])){
                 indexOfLeftOfNaNs = sampleIndex;
             }
-            //Sinon on cherche la prochaine valeur qui n'est pas un NotANumber
+            //Dans le cas contraire,  on cherche la prochaine valeur qui n'est pas un NotANumber
             //qui devient l'index de la valeur à droite des NotANumbers
             //et par interpolation utilisant ces valeurs,
             //on trouve les valeurs correspondant aux valeurs NotANumber.

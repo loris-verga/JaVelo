@@ -11,7 +11,7 @@ public final class Bits {
     }
 
     /**
-     * Retourne depuis value, la plage de length bits commençant au bit d'index start,
+     * La méthode extractSigned retourne depuis value, la plage de length bits commençant au bit d'index start,
      * en l'interprétant comme valeur signée en complément a deux.
      *
      * @param value  vecteur de 32 bits qu'on veut extraire une valeur
@@ -39,7 +39,7 @@ public final class Bits {
     }
 
     /**
-     * Retourne depuis value, la plage de length bits commençant au bit d'index start,
+     * La méthode extractUnsigned retourne depuis value, la plage de length bits commençant au bit d'index start,
      * en l'interprétant comme valeur non signée en complément a deux
      *
      * @param value  vecteur de 32 bits qu'on veut extraire une valeur
