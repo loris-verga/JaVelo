@@ -1,7 +1,6 @@
 package ch.epfl.javelo;
 
 /**
- * Classe Math2
  * La classe Math2 offre des méthodes statiques permettant d'effectuer certains calculs mathématiques.
  *
  * @author Juan Bautista Iaconucci (342153)
@@ -10,10 +9,11 @@ package ch.epfl.javelo;
 
 public final class Math2 {
 
+    //Constructeur privé de sorte que la classe ne soit pas instantiable.
     private Math2() {}
 
     /**
-     * Retourne la partie entière de la division de x par y.
+     * La méthode ceilDiv retourne la partie entière de la division de x par y.
      *
      * @param x La coordonnée x (ne doit pas être negative)
      * @param y La coordonnée y (ne doit pas être negative et non nul)
@@ -27,7 +27,7 @@ public final class Math2 {
     }
 
     /**
-     * Retourne la valeur du point sur l'axe y passant par la droite (0,y0) et (1,y1) du point x.
+     * La méthode interpolate retourne la valeur du point sur l'axe y passant par la droite (0,y0) et (1,y1) du point x.
      *
      * @param y0 Le premier point passant par la droite
      * @param y1 Le deuxième point passant par la droite
@@ -39,7 +39,7 @@ public final class Math2 {
     }
 
     /**
-     * Retourne la valeur (int) la plus proche de v dans l'intervalle entre min et max.
+     * La méthode clamp retourne la valeur (int) la plus proche de v dans l'intervalle entre min et max.
      *
      * @param min Le minimum de l'intervalle (ne peut pas être supérieur à max)
      * @param max Le maximum de l'intervalle (ne peut pas être inférieur à min)
@@ -60,7 +60,7 @@ public final class Math2 {
     }
 
     /**
-     * Retourne la valeur (double) la plus proche de v dans l'intervalle entre min et max
+     * La méthode clamp retourne la valeur (double) la plus proche de v dans l'intervalle entre min et max
      *
      * @param min Le minimum de l'intervalle (ne peut pas être supérieur à max)
      * @param max Le maximum de l'intervalle (ne peut pas être inférieur à min)
@@ -81,7 +81,7 @@ public final class Math2 {
     }
 
     /**
-     * Retourne le sinus hyperbolique inverse de x.
+     * La méthode asinh retourne le sinus hyperbolique inverse de x.
      *
      * @param x la coordonnée x
      * @return le sinus hyperbolique inverse de x
@@ -91,7 +91,7 @@ public final class Math2 {
     }
 
     /**
-     * Retourne le produit scalar entre un vecteur u et v
+     * La méthode dotProduct retourne le produit scalar entre un vecteur u et v
      *
      * @param uX La coordonnée x du vecteur u
      * @param uY La coordonnée y du vecteur u
@@ -104,21 +104,21 @@ public final class Math2 {
     }
 
     /**
-     * Retourne le carré de la norme du vecteur u
+     * La méthode squaredNorm retourne le carré de la norme du vecteur u
      *
-     * @param uX La coordonnée x du vecteur u
-     * @param uY La coordonnée y du vecteur u
-     * @return Le carré de la norme du vecteur u
+     * @param uX La coordonnée x du vecteur u.
+     * @param uY La coordonnée y du vecteur u.
+     * @return Le carré de la norme du vecteur u.
      */
     public static double squaredNorm(double uX, double uY) {
         return uX * uX + uY * uY;
     }
 
     /**
-     * Retourne la norme du vecteur u
+     * La méthode norm retourne la norme du vecteur u.
      *
-     * @param uX La coordonnée x du vecteur u
-     * @param uY La coordonnée y du vecteur u
+     * @param uX La coordonnée x du vecteur u.
+     * @param uY La coordonnée y du vecteur u.
      * @return La norme du vecteur u
      */
     public static double norm(double uX, double uY) {
@@ -126,15 +126,15 @@ public final class Math2 {
     }
 
     /**
-     * Retourne la longueur de la projection du vecteur AP sur la droite AB
+     * La méthode projectionLength retourne la longueur de la projection du vecteur AP sur la droite AB.
      *
-     * @param aX La coordonnée x du point a
-     * @param aY La coordonnée y du point a
-     * @param bX La coordonnée x du point b
-     * @param bY La coordonnée y du point b
-     * @param pX La coordonnée x du point p
-     * @param pY La coordonnée y du point p
-     * @return la longueur de la projection du vecteur AP sur la droite AB
+     * @param aX La coordonnée x du point a.
+     * @param aY La coordonnée y du point a.
+     * @param bX La coordonnée x du point b.
+     * @param bY La coordonnée y du point b.
+     * @param pX La coordonnée x du point p.
+     * @param pY La coordonnée y du point p.
+     * @return la longueur de la projection du vecteur AP sur la droite AB.
      */
     public static double projectionLength(double aX, double aY, double bX, double bY, double pX, double pY) {
         double uX = pX - aX;

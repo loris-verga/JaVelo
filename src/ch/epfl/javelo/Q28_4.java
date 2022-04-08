@@ -12,10 +12,10 @@ public final class Q28_4 {
     private Q28_4() {}
 
     /**
-     * Cette méthode retourne la valeur Q28.4 correspondant à l'entier donné
+     * La méthode ofInt retourne la valeur Q28.4 correspondant à l'entier donné.
      *
-     * @param i entier à convertir
-     * @return valeur convertie en Q28,4
+     * @param i entier à convertir.
+     * @return valeur convertie en Q28,4.
      */
     public static int ofInt(int i) {
 
@@ -23,7 +23,7 @@ public final class Q28_4 {
     }
 
     /**
-     * Cette méthode retourne la valeur de type double égale à la valeur Q28.4 donnée
+     * La méthode asDouble retourne la valeur de type double égale à la valeur Q28.4 donnée
      *
      * @param q28_4 valeur en format q28_4
      * @return valeur convertie en double
@@ -34,7 +34,7 @@ public final class Q28_4 {
     }
 
     /**
-     * Cette méthode retourne la valeur de type float correspondant à la valeur Q28.4 donnée.
+     * La méthode asFloat retourne la valeur de type float correspondant à la valeur Q28.4 donnée.
      *
      * @param q28_4 valeur en format q28_4
      * @return valeur convertie en float
