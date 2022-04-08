@@ -19,7 +19,7 @@ public record GraphNodes(IntBuffer buffer) {
     private static final int NODE_INTS = OFFSET_OUT_EDGES + 1;
 
     /**
-     * Methode qui retourne le nombre total de nœud.
+     * La méthode count retourne le nombre total de nœud.
      *
      * @return le nombre total de nœuds
      */
@@ -29,7 +29,7 @@ public record GraphNodes(IntBuffer buffer) {
     }
 
     /**
-     * Methode qui retourne la coordonnée Est du nœud.
+     * La méthode nodeE retourne la coordonnée Est du nœud.
      *
      * @param nodeId identité du nœud
      * @return la coordonnée Est du nœud
@@ -42,7 +42,7 @@ public record GraphNodes(IntBuffer buffer) {
     }
 
     /**
-     * Methode qui donne la coordonnée Nord du nœud
+     * La méthode nodeN retourne la coordonnée Nord du nœud
      *
      * @param nodeId identité du nœud
      * @return la coordonnée Nord du nœud
@@ -55,20 +55,20 @@ public record GraphNodes(IntBuffer buffer) {
     }
 
     /**
-     * Methode qui donne le nombre d'arêtes sortant du nœud
+     * La méthode outDegree donne le nombre d'arêtes sortant du nœud
      *
      * @param nodeId identité du nœud
      * @return le nombre d'arêtes sortant du nœud
      */
     public int outDegree(int nodeId) {
 
-        int bitsContainingNumberOfOutEdges = buffer.get((nodeId) * NODE_INTS + OFFSET_OUT_EDGES);
+        int bitsNumberOfOutEdges = buffer.get((nodeId) * NODE_INTS + OFFSET_OUT_EDGES);
 
-        return Bits.extractUnsigned(bitsContainingNumberOfOutEdges, 28, 4);
+        return Bits.extractUnsigned(bitsNumberOfOutEdges, 28, 4);
     }
 
     /**
-     * Methode qui retourne l'identité de la edgeIndex-ième arête sortant du nœud.
+     * La méthode edgeId retourne l'identité de la edgeIndex-ième arête sortant du nœud.
      *
      * @param nodeId identité du nœud
      * @return l'identité de la edgeIndex-ième arête sortant du nœud

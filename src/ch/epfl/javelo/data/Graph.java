@@ -23,7 +23,6 @@ import java.util.function.DoubleUnaryOperator;
  */
 public final class Graph {
 
-    //Les attributs de la classe graphe.
     private final GraphNodes nodes;
     private final GraphSectors sectors;
     private final GraphEdges edges;
@@ -196,7 +195,7 @@ public final class Graph {
                 }
             }
         }
-        //On retourne le point le plus plus proche ou -1 s'il n'y en a pas.
+        //On retourne le point le plus proche ou -1 s'il n'y en a pas.
         return point.distanceTo(nodePoint(indexOfPointClosestTo)) <= searchDistance ?
                 indexOfPointClosestTo : -1;
     }
@@ -270,5 +269,5 @@ public final class Graph {
 
         double xMax = edges.length(edgeId);
         return Functions.sampled(profileSamples, xMax);
-    }//test
+    }
 }

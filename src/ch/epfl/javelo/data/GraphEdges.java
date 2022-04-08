@@ -8,7 +8,7 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 /**
- * L'enregistrement GraphEdge représente l'ensemble des arrêtes représente le tableau de toutes les arêtes du graphe JaVelo
+ * L'enregistrement GraphEdge représente l'ensemble des arêtes représente le tableau de toutes les arêtes du graphe JaVelo
  *
  * @author Juan Bautista Iaconucci (342153)
  */
@@ -50,7 +50,10 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
      * @return la longueur de l'arrête.
      */
     public double length(int edgeId) {
-        return Q28_4.asDouble(Short.toUnsignedInt(edgesBuffer.getShort(EDGE_INTS * edgeId + OFFSET_LENGTH_OF_EDGE)));
+        return Q28_4.asDouble(
+                Short.toUnsignedInt(
+                    edgesBuffer.getShort(
+                            EDGE_INTS * edgeId + OFFSET_LENGTH_OF_EDGE)));
     }
 
     /**
@@ -60,7 +63,10 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
      * @return la difference de hauteur positive
      */
     public double elevationGain(int edgeId) {
-        return Q28_4.asDouble(Short.toUnsignedInt(edgesBuffer.getShort(EDGE_INTS * edgeId + OFFSET_ELEVATION_GAIN)));
+        return Q28_4.asDouble(
+                Short.toUnsignedInt(
+                        edgesBuffer.getShort(
+                                EDGE_INTS * edgeId + OFFSET_ELEVATION_GAIN)));
     }
 
     /**
@@ -96,29 +102,47 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
 
         int firstSampleId = Bits.extractUnsigned(profileIdAndType, 0, 30);
 
-        float firstSample = Q28_4.asFloat(Short.toUnsignedInt(elevations.get(firstSampleId)));
+        float firstSample = Q28_4.asFloat(
+                                Short.toUnsignedInt(
+                                    elevations.get(firstSampleId)));
 
         switch (profilType) {
             case 1: {
+                // Si profilType est 1 alors les échantillons ne sont pas compressés
+                // donc on peut directement les extraire depuis le buffer elevations
+
                 float newSample;
                 for (int i = 0; i < lengthOfProfilList; i++) {
-                    newSample = Q28_4.asFloat(Short.toUnsignedInt(elevations.get(firstSampleId + i)));
+                    newSample = Q28_4.asFloat(
+                            Short.toUnsignedInt(
+                                    elevations.get(firstSampleId + i)));
                     profilList[i] = newSample;
                 }
                 break;
             }
             case 2: {
+                // Si profilType est 2 alors
+                // les differences entre chaque échantillon sont stocké à 4 sur 32 bits
+                // donc on utilise la méthode sampleListForCompressedValues qui permet de
+                // renvoyer la list d'échantillons
                 profilList = sampleListForCompressedValues(lengthOfProfilList, firstSample, firstSampleId, 8);
                 break;
             }
             case 3: {
+                // Si profilType est 3 alors
+                // la differences entre chaque échantillon est stocké à 8 sur 32 bits
+                // donc on utilise la méthode sampleListForCompressedValues qui permet de
+                // renvoyer la list d'échantillons
                 profilList = sampleListForCompressedValues(lengthOfProfilList, firstSample, firstSampleId, 4);
                 break;
             }
         }
+
+        //Si l'arête est dans le sens inverse alors on inverse le sens du tableau
         if (isInverted(edgeId)) {
             profilList = invertList(profilList);
         }
+
         return profilList;
     }
 
@@ -132,7 +156,8 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
      * @param sizeOfCompressedValues la taille en bit des valeurs compresser
      * @return la liste d'échantillons de l'arrête d'identité donnée
      */
-    private float[] sampleListForCompressedValues(int length, float firstSample, int firstSampleId, int sizeOfCompressedValues) {
+    private float[] sampleListForCompressedValues(int length, float firstSample
+            ,int firstSampleId, int sizeOfCompressedValues) {
 
         float[] profilList = new float[length];
         float newSample;
@@ -140,27 +165,44 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
         int encodedSample;
         int startOfBits;
 
+        //On ajoute à la liste de profil le premier échantillon qui n'est pas compresser
         profilList[0] = firstSample;
+        //Le premier échantillon devient l'ancien
         float previousSample = firstSample;
+        //On calcule le nombre de valeurs compresser sur 32 bits
         int nbOfCompressedValuesInBits = Short.SIZE / sizeOfCompressedValues;
 
         int indexOfProfilList = 1;
-        int totalElevationIndex = (int) Math.ceil((profilList.length - 1.0) / nbOfCompressedValuesInBits);
+        //On calcule jusqu'à quel index on doit aller sur le buffer elevations
+        int totalElevationIndex = (int) Math.ceil(
+                (profilList.length - 1.0) / nbOfCompressedValuesInBits);
+
         for (int elevationIndex = 1; elevationIndex <= totalElevationIndex; elevationIndex++) {
 
+            //On prend les bits ou se trouve encoder les differences entre chaque échantillon.
             encodedSample = elevations.get(firstSampleId + elevationIndex);
 
+            //Pour chaque difference encoder à l'intérieur d'encodedSample.
             for (int indexOfBits = nbOfCompressedValuesInBits - 1; indexOfBits >= 0
                     && indexOfProfilList < profilList.length; indexOfBits--) {
 
+                //On trouve l'index du premier bit de la difference encoder.
                 startOfBits = indexOfBits * sizeOfCompressedValues;
-                difference = Q28_4.asFloat(Bits.extractSigned(encodedSample, startOfBits, sizeOfCompressedValues));
+                //On décode la difference pour la mettre en metre.
+                difference = Q28_4.asFloat(
+                                Bits.extractSigned(
+                                        encodedSample, startOfBits, sizeOfCompressedValues));
+                //On trouve le nouvel échantillon en ajoutant a l'ancien échantillon,
+                // la difference entre le nouvel échantillon et l'ancien.
                 newSample = previousSample + difference;
+                //On ajoute le nouvel échantillon à la liste d'échantillon.
                 profilList[indexOfProfilList] = newSample;
+                //Le nouvel échantillon devient l'ancien.
                 previousSample = newSample;
                 indexOfProfilList++;
             }
         }
+
         return profilList;
     }
 
@@ -172,24 +214,26 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
      */
     private float[] invertList(float[] profilSample) {
 
-        float[] newProfilSample = new float[profilSample.length];
+        int length = profilSample.length;
+        float[] newProfilSample = new float[length];
 
-        for (int i = 0; i < profilSample.length; i++) {
-
-            newProfilSample[i] = profilSample[profilSample.length - (i + 1)];
+        for (int i = 0; i < length; i++) {
+            newProfilSample[i] = profilSample[length - (i + 1)];
         }
 
         return newProfilSample;
     }
 
     /**
-     * La méthode attributesIndex renvoie l'identité de l'ensemble d'attributs attaché à l'arête d'identité donnée-
+     * La méthode attributesIndex renvoie l'identité de l'ensemble d'attributs attaché à l'arête d'identité donnée.
      *
      * @param edgeId l'identité de l'arrête donnée
      * @return l'identité de l'ensemble d'attributs attaché à l'arête d'identité donnée
      */
     public int attributesIndex(int edgeId) {
 
-        return Short.toUnsignedInt(edgesBuffer.getShort(EDGE_INTS * edgeId + OFFSET_ID_OF_SET_OF_OSM));
+        return Short.toUnsignedInt(
+                edgesBuffer.getShort(
+                        EDGE_INTS * edgeId + OFFSET_ID_OF_SET_OF_OSM));
     }
 }

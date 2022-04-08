@@ -10,8 +10,7 @@ package ch.epfl.javelo;
 
 public final class Math2 {
 
-    private Math2() {
-    }
+    private Math2() {}
 
     /**
      * Retourne la partie entière de la division de x par y.
