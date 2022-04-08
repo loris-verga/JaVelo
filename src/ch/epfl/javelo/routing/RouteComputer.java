@@ -2,7 +2,6 @@ package ch.epfl.javelo.routing;
 
 import ch.epfl.javelo.Preconditions;
 import ch.epfl.javelo.data.Graph;
-import ch.epfl.javelo.projection.PointCh;
 
 import java.util.*;
 
@@ -19,8 +18,8 @@ public class RouteComputer {
     /**
      * Le constructeur de RouteComputer crée un planificateur d'itinéraire pour le graphe et la fonction de coût donnée.
      *
-     * @param graph        le graph sur lequel on veut construire l'itinéraire
-     * @param costFunction la fonction cout qui est utilisé pour construire l'itinéraire
+     * @param graph        Le graph sur lequel on veut construire l'itinéraire.
+     * @param costFunction la fonction cout qui est utilisé pour construire l'itinéraire.
      */
     public RouteComputer(Graph graph, CostFunction costFunction) {
         this.graph = graph;
@@ -57,6 +56,7 @@ public class RouteComputer {
         float[] distance = new float[graph.nodeCount()];
         int[] predecessor = new int[graph.nodeCount()];
 
+        //On initialise les valeurs du tableau distance et du tableau predecessor.
         for (int nodeId = 0; nodeId < graph.nodeCount(); nodeId += 1) {
             distance[nodeId] = Float.POSITIVE_INFINITY;
             predecessor[nodeId] = 0;
@@ -66,9 +66,12 @@ public class RouteComputer {
         PriorityQueue<WeightedNode> nodesInExploration = new PriorityQueue<>();
         nodesInExploration.add(new WeightedNode(startNodeId, 0.f));
 
+        //Pendant que l'on n'a pas fini d'explorer tous les nodes dans la queue.
         while (!nodesInExploration.isEmpty()) {
+            //On enlève le nœud avec la plus petite distance du nœud d'arrivée de la queue.
             WeightedNode nodeWithMinDistance = nodesInExploration.remove();
 
+            //Si ce nœud correspond au nœud d'arriver, ça vaut dire qu'on a trouvé l'itinéraire le plus court.
             if (nodeWithMinDistance.nodeId == endNodeId) {
                 nodesInExploration.clear();
 
@@ -79,6 +82,10 @@ public class RouteComputer {
 
                 Stack<Edge> edgesStack = new Stack<>();
 
+                //En utilisant le tableau predecessor,
+                //on arrive à reconstruire l'itinéraire inverse
+                //en vérifiant que les identités des arêtes sont bien celles
+                //qui contiennent les nodes dans ce tableau
                 while (toNodeId != startNodeId) {
                     edgeIndex = 0;
 
@@ -97,40 +104,52 @@ public class RouteComputer {
 
                 List<Edge> edgesList = new ArrayList<>();
 
+                //Comme on a le chemin dans le sens inverse, il faut qu'on l'inverse
+                //pour avoir une liste d'arêtes dans le bon sense
                 while (!(edgesStack.empty())) {
                     edgesList.add(edgesStack.pop());
                 }
 
+                //On crée une SingleRoute à partir du tableau d'arêtes
                 return new SingleRoute(edgesList);
             }
 
+
+            //sinon on vérifie que le nœud n'a pas déjà été parcourus
+            //(donc que sa distance soit égal a -infini)
             if(distance[nodeWithMinDistance.nodeId] == Float.NEGATIVE_INFINITY){
                 continue;
             }
 
+            //On parcourt tous les arêtes sortantes du nœud
+            //pour comparer si on a trouvé un chemin plus court pour le nœud d'arriver de l'arête,
+            //que celui déjà stocker le tableau distance,
+            //si c'est le cas la nouvelle valeur le remplace dans le tableau
             for (int edgeIndex = 0; edgeIndex < graph.nodeOutDegree(nodeWithMinDistance.nodeId()); edgeIndex += 1) {
                 int edgeId = graph.nodeOutEdgeId(nodeWithMinDistance.nodeId, edgeIndex);
                 int nodeIdOutEdge = graph.edgeTargetNodeId(edgeId);
 
-                if (distance[nodeIdOutEdge] != Double.NEGATIVE_INFINITY) {
-                    float newDistanceToNodeOutEdge = distance[nodeWithMinDistance.nodeId]
+                float newDistanceToNodeOutEdge = distance[nodeWithMinDistance.nodeId]
                             + (float) (costFunction.costFactor(nodeWithMinDistance.nodeId, edgeId)
                                     * graph.edgeLength(edgeId));
 
-                    if (newDistanceToNodeOutEdge < distance[nodeIdOutEdge]) {
-                        float eagleEyeDistance = (float) graph.nodePoint(endNodeId)
-                                .distanceTo(graph.nodePoint(nodeIdOutEdge));
-                        distance[nodeIdOutEdge] = newDistanceToNodeOutEdge;
-                        predecessor[nodeIdOutEdge] = nodeWithMinDistance.nodeId;
-                        nodesInExploration.add(new WeightedNode(nodeIdOutEdge
+                if (newDistanceToNodeOutEdge < distance[nodeIdOutEdge]) {
+                    float eagleEyeDistance = (float) graph.nodePoint(endNodeId)
+                            .distanceTo(graph.nodePoint(nodeIdOutEdge));
+                    distance[nodeIdOutEdge] = newDistanceToNodeOutEdge;
+                    predecessor[nodeIdOutEdge] = nodeWithMinDistance.nodeId;
+                    nodesInExploration.add(new WeightedNode(nodeIdOutEdge
                                 , newDistanceToNodeOutEdge + eagleEyeDistance));
 
                     }
-                }
-            }
 
+            }
+            //Le nœud a été explorer donc sa distance devient -infini
+            //pour que l'on ne le parcourt pas une 2ème fois.
             distance[nodeWithMinDistance.nodeId] = Float.NEGATIVE_INFINITY;
         }
+        //Si on sort de la boucle,
+        //ça veux dire qu'un chemin entre les deux nœuds n'existe pas.
         return null;
     }
 }
