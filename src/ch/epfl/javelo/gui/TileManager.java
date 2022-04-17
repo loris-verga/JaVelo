@@ -2,14 +2,16 @@ package ch.epfl.javelo.gui;
 
 import javafx.scene.image.Image;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.StringJoiner;
 
 /**
  * La classe TileManager, publique et finale, représente un gestionnaire de tuiles OSM. Son rôle est d'obtenir
@@ -40,10 +42,10 @@ public final class TileManager {
      * @param tileId
      * @return
      */
-    public Image imageForTileAt(TileId tileId){
+    public Image imageForTileAt(TileId tileId) {
 
         //Retourne l'image si elle se trouve dans la mémoire cache.
-        if (cacheMemory.containsKey(tileId)){
+        if (cacheMemory.containsKey(tileId)) {
             return cacheMemory.get(tileId);
         }
 
@@ -55,26 +57,54 @@ public final class TileManager {
                 resolve(Integer.toString(indexX)).
                 resolve(Integer.toString(indexY));
 
-        if (Files.exists(pathOfImage)){
+        if (Files.exists(pathOfImage)) {
             try (InputStream imageStream = Files.newInputStream(pathOfImage)) {
                 Image image = new Image(imageStream);
                 addImageCacheMemory(image, tileId);
                 return image;
-            }
-            catch(IOException e){
+            } catch (IOException e) {
                 //TODO what to do ?
             }
+        } else {
+
+            //Récupération de l'image sur le serveur.
+
+            StringBuilder urlBuilder = new StringBuilder("https://tile.openstreetmap.org/");
+            urlBuilder.append(zoomLevel).append("/");
+            urlBuilder.append(indexX).append("/");
+            urlBuilder.append(indexY).append(".png");
+
+            StringBuilder nameOfFile = new StringBuilder(indexY);
+            nameOfFile.append(".png");
+
+            try {
+                URL urlImage = new URL(urlBuilder.toString());
+                URLConnection connection = urlImage.openConnection();
+
+                try (InputStream imageStream = connection.getInputStream();
+                     FileOutputStream outPutStream = new FileOutputStream(nameOfFile.toString())) {
+                    Image image = new Image(imageStream);
+                    addImageCacheMemory(image, tileId);
+                    Files.createDirectories(pathOfImage);
+                    imageStream.transferTo(outPutStream);
+                }
+
+                //Bloc catch
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            //Récupération de l'image.
+            try (InputStream imageStream = Files.newInputStream(pathOfImage)) {
+                Image image = new Image(imageStream);
+                return image;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        else{
-
-        }
-
-
-
-
-
-
-
         return null;
     }
 
