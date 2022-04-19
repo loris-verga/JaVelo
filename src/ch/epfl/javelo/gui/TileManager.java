@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.StringJoiner;
 
 /**
  * La classe TileManager, publique et finale, représente un gestionnaire de tuiles OSM. Son rôle est d'obtenir
@@ -33,6 +32,7 @@ public final class TileManager {
 
 
 
+
     /**
      * La méthode imageForTileAt prend en argument l'identité d'une tuile et retourne son image.
      * L'image est cherchée tout d'abord dans le cache mémoire et si elle s'y trouve est retournée.
@@ -49,58 +49,61 @@ public final class TileManager {
             return cacheMemory.get(tileId);
         }
 
-        //Cherche l'image dans la mémoire disque.
-        int zoomLevel = tileId.zoomLevel();
-        int indexX = tileId.indexX();
-        int indexY = tileId.indexY();
-        Path pathOfImage = path.resolve(Integer.toString(zoomLevel)).
-                resolve(Integer.toString(indexX)).
-                resolve(Integer.toString(indexY));
+        //Récupération des attributs du chemin de l'image.
+        String zoomLevel = Integer.toString(tileId.zoomLevel());
+        String indexX = Integer.toString(tileId.indexX());
+        String indexY = Integer.toString(tileId.indexY()) + ".png";
 
+        //Création du path de l'image pour la trouver/créer dans les fichiers.
+        Path pathOfImage = path.resolve(zoomLevel).
+                resolve(indexX).resolve(indexY);
+
+
+        //Si l'image existe dans la mémoire disque, on retourne l'image et on met à jour la mémoire cache.
         if (Files.exists(pathOfImage)) {
             try (InputStream imageStream = Files.newInputStream(pathOfImage)) {
                 Image image = new Image(imageStream);
                 addImageCacheMemory(image, tileId);
                 return image;
             } catch (IOException e) {
-                //TODO what to do ?
+                e.printStackTrace();
             }
         } else {
 
-            //Récupération de l'image sur le serveur.
+            //Récupération de l'image sur le serveur :
 
+            //Création de l'URL
             StringBuilder urlBuilder = new StringBuilder("https://tile.openstreetmap.org/");
             urlBuilder.append(zoomLevel).append("/");
             urlBuilder.append(indexX).append("/");
-            urlBuilder.append(indexY).append(".png");
+            urlBuilder.append(indexY);
 
-            StringBuilder nameOfFile = new StringBuilder(indexY);
-            nameOfFile.append(".png");
-
+            //Récupération de l'image sur le serveur.
             try {
                 URL urlImage = new URL(urlBuilder.toString());
                 URLConnection connection = urlImage.openConnection();
+                connection.setRequestProperty("User-Agent", "Javelo");
+                Files.createDirectories(pathOfImage.getParent());
+                Files.createFile(pathOfImage);
 
+                //Transfer de l'image sur la mémoire disque depuis le serveur.
                 try (InputStream imageStream = connection.getInputStream();
-                     FileOutputStream outPutStream = new FileOutputStream(nameOfFile.toString())) {
-                    Image image = new Image(imageStream);
-                    addImageCacheMemory(image, tileId);
-                    Files.createDirectories(pathOfImage);
+                     FileOutputStream outPutStream = new FileOutputStream(String.valueOf(pathOfImage))) {
                     imageStream.transferTo(outPutStream);
+
+                    //Récupération de l'image dans le disque pour la retourner.
+                    try (InputStream newImageStream = Files.newInputStream(pathOfImage)) {
+                        Image image = new Image(newImageStream);
+                        addImageCacheMemory(image, tileId);
+                        return image;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 //Bloc catch
             } catch (MalformedURLException e) {
                 e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-            //Récupération de l'image.
-            try (InputStream imageStream = Files.newInputStream(pathOfImage)) {
-                Image image = new Image(imageStream);
-                return image;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -120,12 +123,6 @@ public final class TileManager {
             cacheMemory.put(tileId, image);
         }
     }
-
-
-
-
-
-
 
 
     /**
