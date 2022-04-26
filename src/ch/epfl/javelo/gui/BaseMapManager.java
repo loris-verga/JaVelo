@@ -23,7 +23,7 @@ public final class BaseMapManager {
     private boolean redrawNeeded;
     private Pane pane;
     private Canvas canvas;
-    //private final WaypointsManager waypointsManager;
+    private final WaypointsManager waypointsManager;
 
 
     //dimensions d'une tuile :
@@ -37,10 +37,10 @@ public final class BaseMapManager {
      *                    une propriété JavaFX contenant les paramètres de la carte affichée.
      */
     //TODO ajouter des paramètres
-    public BaseMapManager(TileManager tileManager,  ObjectProperty<MapViewParameters> mapViewParametersProperty){
+    public BaseMapManager(TileManager tileManager,WaypointsManager waypointsManager,   ObjectProperty<MapViewParameters> mapViewParametersProperty){
         this.tileManager = tileManager;
         this.mapViewParametersProperty = mapViewParametersProperty;
-        //this.waypointsManager = wayPointsManager;
+        this.waypointsManager = waypointsManager;
         this.redrawNeeded = true;
 
         //Création d'un canevas :
