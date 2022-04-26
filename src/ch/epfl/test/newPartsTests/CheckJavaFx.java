@@ -1,4 +1,4 @@
-package ch.epfl.javelo.gui;
+package ch.epfl.test.newPartsTests;
 
 import javafx.scene.paint.Color;
 

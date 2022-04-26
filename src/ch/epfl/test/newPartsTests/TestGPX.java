@@ -1,4 +1,4 @@
-package ch.epfl.javelo.routing;
+package ch.epfl.test.newPartsTests;
 
 import ch.epfl.javelo.Functions;
 import ch.epfl.javelo.projection.PointCh;

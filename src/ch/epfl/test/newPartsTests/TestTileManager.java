@@ -1,5 +1,6 @@
-package ch.epfl.javelo.gui;
+package ch.epfl.test.newPartsTests;
 
+import ch.epfl.javelo.gui.TileManager;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.image.Image;

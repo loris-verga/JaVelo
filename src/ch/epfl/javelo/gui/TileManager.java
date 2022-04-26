@@ -15,6 +15,8 @@ import java.util.Map;
 /**
  * La classe TileManager, publique et finale, représente un gestionnaire de tuiles OSM. Son rôle est d'obtenir
  * les tuiles depuis un serveur de tuiles et de les stocker dans un cache mémoire et dans un cache disque.
+ *
+ * @author Loris Verga (345661)
  */
 public final class TileManager {
 

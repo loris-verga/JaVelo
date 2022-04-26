@@ -10,7 +10,8 @@ import javafx.geometry.Point2D;
  * graphique. Il possède trois attributs qui sont :
  * @param zoomLevel le niveau de zoom
  * @param minX la coordonnée x du coin haut-gauche de la portion de carte affichée (Web Mercator)
- * @param minY la coordonnée y du coin haut-gauche de la portion de carte affichée (Web Mercator)
+ *
+ * @author Loris Verga (345661)
  */
 public record MapViewParameters(int zoomLevel, double minX, double minY) {
 
