@@ -1,6 +1,9 @@
 package ch.epfl.javelo.gui;
 
 
+import ch.epfl.javelo.projection.PointWebMercator;
+import ch.epfl.javelo.projection.WebMercator;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
@@ -17,7 +20,10 @@ public final class BaseMapManager {
 
     private final TileManager tileManager;
     private final ObjectProperty<MapViewParameters> mapViewParametersProperty;
-    private final WaypointsManager waypointsManager;
+    private boolean redrawNeeded;
+    private Pane pane;
+    private Canvas canvas;
+    //private final WaypointsManager waypointsManager;
 
 
     //dimensions d'une tuile :
@@ -31,30 +37,77 @@ public final class BaseMapManager {
      *                    une propriété JavaFX contenant les paramètres de la carte affichée.
      */
     //TODO ajouter des paramètres
-    public BaseMapManager(TileManager tileManager,WaypointsManager wayPointsManager,  ObjectProperty<MapViewParameters> mapViewParametersProperty){
+    public BaseMapManager(TileManager tileManager,  ObjectProperty<MapViewParameters> mapViewParametersProperty){
         this.tileManager = tileManager;
         this.mapViewParametersProperty = mapViewParametersProperty;
-        this.waypointsManager = wayPointsManager;
+        //this.waypointsManager = wayPointsManager;
+        this.redrawNeeded = true;
+
+        //Création d'un canevas :
+        canvas = new Canvas();
+
+        //On place le canevas dans un panneau. L'avantage est que le panneau
+        //est redimensionné automatiquement.
+        pane = new Pane(canvas);
+
+        //On lie la largeur et la hauteur du canevas à celle du panneau.
+        canvas.widthProperty().bind(pane.widthProperty());
+        canvas.heightProperty().bind(pane.heightProperty());
+
+        canvas.sceneProperty().addListener((p, oldS, newS) -> {
+            assert oldS == null;
+            newS.addPreLayoutPulseListener(this::redrawIfNeeded);
+        });
 
     }
 
 
     /**
      * La méthode pane retourne le panneau JavaFX affichant le fond de la carte.
-     * @return
+     * @return un panneau de type Pane
      */
     public Pane pane(){
+        return pane;
+    }
 
-        //Création d'un canevas :
-        Canvas canvas = new Canvas();
 
-        //On place le canevas dans un panneau. L'avantage est que le panneau
-        //est redimensionné automatiquement.
-        Pane pane = new Pane(canvas);
 
-        //On lie la largeur et la hauteur du canevas à celle du panneau.
-        canvas.widthProperty().bind(pane.widthProperty());
-        canvas.heightProperty().bind(pane.heightProperty());
+    private TileManager.TileId[][] tilesInArea(Point2D topLeft, int zoomLevel, double height, double width) {
+
+        //On calcule le point d'extrémité de la fenêtre visible :
+
+        double minX = mapViewParametersProperty.get().minX();
+        double minY = mapViewParametersProperty.get().minY();
+
+        //Index de la tuile en haut gauche :
+        int indexX = (int) Math.floor(minX / TILE_LENGTH);
+        int indexY = (int) Math.floor(minY / TILE_LENGTH);
+
+        //Coins haut-gauches de cette tuile :
+        double topLeftX = indexX * TILE_LENGTH;
+        double topLeftY = indexY * TILE_LENGTH;
+
+        //Différence entre la position de la tuile et la position du coin haut-gauche de la fenêtre :
+        double diffX = minX - topLeftX;
+        double diffY = minY - topLeftY;
+
+        //Calcul du nombre de tuiles à ajouter en plus de la première tuile haut-gauche :
+        int numberOfTilesToAddRight = (int) Math.ceil((width - diffX) / TILE_LENGTH);
+        int numberOfTilesToAddDown = (int) Math.ceil((height - diffY) / TILE_LENGTH);
+        TileManager.TileId [] [] arrayOfTiles = new TileManager.TileId [numberOfTilesToAddDown+1][numberOfTilesToAddRight+1];
+
+        for (int y = 0; y <= numberOfTilesToAddDown; ++y) {
+            for (int x = 0; x <= numberOfTilesToAddRight; ++x) {
+                arrayOfTiles[y][x] = new TileManager.TileId(zoomLevel, indexX + x, indexY + y);
+            }
+        }
+        return arrayOfTiles;
+    }
+
+
+    private void redrawIfNeeded() {
+        if (!redrawNeeded) return;
+        redrawNeeded = false;
 
         //Récupération du contexte graphique du canevas.
         GraphicsContext graphicsContextCanvas = canvas.getGraphicsContext2D();
@@ -76,45 +129,16 @@ public final class BaseMapManager {
             for (int y = 0; y < arrayOfTiles.length; ++y) {
                 for (int x = 0; x < arrayOfTiles[0].length; ++x) {
                     graphicsContextCanvas.drawImage(
-                            tileManager.imageForTileAt(arrayOfTiles[x][y]), x*256, y*256);
+                            tileManager.imageForTileAt(arrayOfTiles[y][x]), x*256, y*256);
                 }
             }
         }
+        redrawOnNextPulse();
 
-        return pane;
     }
 
-
-
-    private TileManager.TileId[][] tilesInArea(Point2D topLeft, int zoomLevel, double height, double width) {
-
-        //On calcule les points d'extrémité de la fenêtre visible :
-        double minX = topLeft.getX();
-        double minY = topLeft.getY();
-
-        //Index de la tuile en haut gauche :
-        int indexX = (int) Math.floor(minX / TILE_LENGTH);
-        int indexY = (int) Math.floor(minY / TILE_LENGTH);
-
-        //Coins haut-gauches de cette tuile :
-        double topLeftX = indexX * TILE_LENGTH;
-        double topLeftY = indexY * TILE_LENGTH;
-
-        //Différence entre la position de la tuile et la position du coin haut-gauche de la fenêtre :
-        double diffX = minX - topLeftX;
-        double diffY = minY - topLeftY;
-
-        //Calcul du nombre de tuiles à ajouter en plus de la première tuile haut-gauche :
-        int numberOfTilesToAddRight = (int) Math.ceil((width - diffX) / TILE_LENGTH);
-        int numberOfTilesToAddDown = (int) Math.ceil((height - diffY) / TILE_LENGTH);
-
-        TileManager.TileId [] [] arrayOfTiles = new TileManager.TileId [numberOfTilesToAddDown+1][numberOfTilesToAddRight+1];
-
-        for (int y = 0; y <= numberOfTilesToAddRight; ++y) {
-            for (int x = 0; x <= numberOfTilesToAddDown; ++x) {
-                arrayOfTiles[x][y] = new TileManager.TileId(zoomLevel, indexX + x, indexY + y);
-            }
-        }
-        return arrayOfTiles;
+    private void redrawOnNextPulse() {
+        redrawNeeded = true;
+        Platform.requestNextPulse();
     }
 }
