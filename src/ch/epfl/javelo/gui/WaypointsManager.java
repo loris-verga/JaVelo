@@ -35,17 +35,30 @@ public final class WaypointsManager {
     public Pane pane(){
     Pane pane = new Pane();
 
-    for(Waypoint wpt : waypointList){
+    for(int i = 0; i < waypointList.size(); i++){
+
         SVGPath exteriorPath = new SVGPath();
-        exteriorPath.setContent("pin_outside");
+        exteriorPath.getStyleClass().add("pin_outside");
+        exteriorPath.setContent("M-8-20C-5-14-2-7 0 0 2-7 5-14 8-20 20-40-20-40-8-20");
 
         SVGPath interiorPath = new SVGPath();
-        interiorPath.setContent("pin_inside");
+        interiorPath.getStyleClass().add("pin_inside");
+        interiorPath.setContent("M0-23A1 1 0 000-29 1 1 0 000-23");
 
         Group groupWpt = new Group(exteriorPath,interiorPath);
 
-        groupWpt.setLayoutX(property.get().viewX(PointWebMercator.ofPointCh(wpt.position())));
-        groupWpt.setLayoutY(property.get().viewY(PointWebMercator.ofPointCh(wpt.position())));
+        if(i != 0 && i != waypointList.size() - 1) {
+            groupWpt.getStyleClass().addAll("pin","middle");
+        }
+        else if(i == 0){
+            groupWpt.getStyleClass().addAll("pin","first");
+        }
+        else {
+            groupWpt.getStyleClass().addAll("pin","last");
+        }
+
+        groupWpt.setLayoutX(property.get().viewX(PointWebMercator.ofPointCh(waypointList.get(i).position())));
+        groupWpt.setLayoutY(property.get().viewY(PointWebMercator.ofPointCh(waypointList.get(i).position())));
 
         pane.getChildren().add(groupWpt);
     }

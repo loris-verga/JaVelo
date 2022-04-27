@@ -28,7 +28,7 @@ public final class Stage8Test extends Application {
                 new TileManager(cacheBasePath, tileServerHost);
 
         MapViewParameters mapViewParameters =
-                new MapViewParameters(12, 543200, 370650);
+                new MapViewParameters(12,  543200, 370650);
         ObjectProperty<MapViewParameters> mapViewParametersP =
                 new SimpleObjectProperty<>(mapViewParameters);
         ObservableList<Waypoint> waypoints =
