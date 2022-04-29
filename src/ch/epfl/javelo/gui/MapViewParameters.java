@@ -17,15 +17,12 @@ public record MapViewParameters(int zoomLevel, double minX, double minY) {
 
 
     /**
-     * La méthode topLeft retourne les coordonnées du coin haut-gauche du fond de carte sous
+     * La méthode topLeft retourne les coordonnées du coin haut-gauche (en WebMercator) du fond de carte sous
      * la forme d'un objet de type Point2D.
      * @return un Point2D représentant le point en haut à gauche.
      */
     public Point2D topLeft(){
-        PointWebMercator point = PointWebMercator.of(zoomLevel, minX, minY);
-        double lon = Math.toDegrees(point.lon());
-        double lat = Math.toDegrees(point.lat());
-        return new Point2D(lon, lat);
+        return new Point2D(minX, minY);
         }
 
     /**
