@@ -1,8 +1,6 @@
 package ch.epfl.javelo.data;
 
 import ch.epfl.javelo.Preconditions;
-
-import java.util.ListIterator;
 import java.util.StringJoiner;
 
 /**
@@ -36,7 +34,7 @@ public record AttributeSet(long bits) {
 
         for (Attribute a : attributes) {
             long mask = 1L << a.ordinal();
-            value = value + mask;
+            value = value | mask;
         }
 
         return (new AttributeSet(value));
@@ -79,17 +77,10 @@ public record AttributeSet(long bits) {
     public String toString() {
 
         StringJoiner joiner = new StringJoiner(",", "{", "}");
-        long bitsValue = this.bits();
 
-        ListIterator<Attribute> iterator = Attribute.ALL.listIterator();
-
-        while (iterator.hasNext()) {
-
-            if (((bitsValue >>> iterator.nextIndex()) % 2 == 1)) {
-                joiner.add(iterator.next().keyValue());
-            }
-            else{
-                iterator.next();
+        for(Attribute a : Attribute.ALL){
+            if(this.contains(a)){
+                joiner.add(a.keyValue());
             }
         }
 

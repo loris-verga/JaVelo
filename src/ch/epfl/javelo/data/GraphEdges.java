@@ -6,6 +6,7 @@ import ch.epfl.javelo.Q28_4;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
+import java.util.Collections;
 
 /**
  * L'enregistrement GraphEdge représente le tableau de toutes les arêtes du graphe JaVelo.
@@ -224,13 +225,14 @@ public record GraphEdges(ByteBuffer edgesBuffer, IntBuffer profileIds, ShortBuff
     private float[] invertList(float[] profilSample) {
 
         int length = profilSample.length;
-        float[] newProfilSample = new float[length];
 
-        for (int i = 0; i < length; i++) {
-            newProfilSample[i] = profilSample[length - (i + 1)];
+        for (int i = 0; i < length/2; i++) {
+            float var = profilSample[i];
+            profilSample[i] = profilSample[length - (i + 1)];
+            profilSample[length - (i + 1)] = var;
         }
 
-        return newProfilSample;
+        return profilSample;
     }
 
     /**

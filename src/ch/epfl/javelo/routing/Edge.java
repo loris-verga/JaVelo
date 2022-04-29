@@ -62,15 +62,15 @@ public record Edge(int fromNodeId, int toNodeId, PointCh fromPoint, PointCh toPo
      */
     public PointCh pointAt(double position) {
 
-        double eCoordinate = Math.fma(
-                toPoint.e() - fromPoint.e(),
-                position / length,
-                fromPoint.e());
-
-        double nCoordinate = Math.fma(
-                toPoint.n() - fromPoint.n(),
-                position / length,
-                fromPoint.n());
+        double eCoordinate = Math2.interpolate(
+                fromPoint.e(),
+                toPoint.e(),
+                position / length);
+        
+        double nCoordinate = Math2.interpolate(
+                fromPoint.n(),
+                toPoint.n(),
+                position / length);
 
         return new PointCh(eCoordinate, nCoordinate);
     }
