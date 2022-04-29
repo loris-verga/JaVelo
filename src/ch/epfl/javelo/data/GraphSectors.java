@@ -7,6 +7,8 @@ import ch.epfl.javelo.projection.SwissBounds;
 import java.nio.ByteBuffer;
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * GraphSectors représente le tableau contenant les 16384 secteurs de JaVelo.
  *
@@ -55,10 +57,10 @@ public record GraphSectors(ByteBuffer buffer) {
         int maxY = (int) Math.ceil(newCenterN + newSideLengthN);
 
         //On vérifie que ces points sont bien à l'intérieur du repère.
-        infX = Math2.clamp(0, infX, 128);
-        infY = Math2.clamp(0, infY, 128);
-        maxX = Math2.clamp(0, maxX, 128);
-        maxY = Math2.clamp(0, maxY, 128);
+        infX = Math2.clamp(0, infX, NUMBER_OF_SECTORS);
+        infY = Math2.clamp(0, infY,  NUMBER_OF_SECTORS);
+        maxX = Math2.clamp(0, maxX,  NUMBER_OF_SECTORS);
+        maxY = Math2.clamp(0, maxY,  NUMBER_OF_SECTORS);
 
         for (int x = infX; x < maxX; x++) {
             for (int y = infY; y < maxY; y++) {

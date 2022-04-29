@@ -10,8 +10,9 @@ import java.util.*;
  *
  * @author Juan Bautista Iaconucci (342153)
  */
-public class RouteComputer {
+public final class RouteComputer {
 
+    private static final float DISTANCE_OF_NODE_ALREADY_EXPLORED = Float.NEGATIVE_INFINITY;
     private final CostFunction costFunction;
     private final Graph graph;
 
@@ -117,7 +118,7 @@ public class RouteComputer {
 
             //sinon on vérifie que le nœud n'a pas déjà été parcourus
             //(donc que sa distance soit égal a -infini)
-            if(distance[nodeWithMinDistance.nodeId] == Float.NEGATIVE_INFINITY){
+            if(distance[nodeWithMinDistance.nodeId] == DISTANCE_OF_NODE_ALREADY_EXPLORED ){
                 continue;
             }
 

@@ -84,17 +84,6 @@ public final class BaseMapManager {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
             double x = e.getX();
             double y = e.getY();
             PointWebMercator oldPointMouse = mapViewParameters.pointAt(x,y);
@@ -110,11 +99,6 @@ public final class BaseMapManager {
             PointWebMercator topRight = mapViewParameters1.pointAt(canvas.getWidth(), 0);
             double distance = topRight.x()-topLeft.x();
             double prop = canvas.getWidth() / distance;
-
-
-
-
-
 
             double vectorX = -newPointMouse.x()+oldPointMouse.x();
             vectorX = vectorX * prop;

@@ -1,6 +1,5 @@
 package ch.epfl.test.ourtests.part2;
 
-import ch.epfl.javelo.Math2;
 import ch.epfl.javelo.data.Attribute;
 import ch.epfl.javelo.data.AttributeSet;
 import org.junit.jupiter.api.Test;
@@ -9,6 +8,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AttributeSetTestOur {
 
+    @Test
+    void testOnDoubleAttributs(){
+        AttributeSet testSet1 = AttributeSet.of(Attribute.HIGHWAY_SERVICE,Attribute.HIGHWAY_SERVICE);
+        var actual1 = testSet1.bits();
+        var expected1 = 1L;
+        assertEquals(expected1, actual1);
+    }
 
     @Test
     void constructorNulAttribute(){
