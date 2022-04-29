@@ -26,8 +26,8 @@ public final class Ch1903 {
     public static double e(double lon, double lat) {
         double longitude = Math.toDegrees(lon);
         double latitude = Math.toDegrees(lat);
-        double lambda_un = Math.pow(10, -4) * (3600 * longitude - 26782.5);
-        double phi_un = Math.pow(10, -4) * (3600 * latitude - 169028.66);
+        double lambda_un = 0.0001 * (3600 * longitude - 26782.5);
+        double phi_un = 0.0001 * (3600 * latitude - 169028.66);
         return 2600072.37
                 + 211455.93 * lambda_un
                 - 10938.51 * lambda_un * phi_un
@@ -47,8 +47,8 @@ public final class Ch1903 {
         double longitude = Math.toDegrees(lon);
         double latitude = Math.toDegrees(lat);
 
-        double lambda_un = Math.pow(10, -4) * (3600 * longitude - 26782.5);
-        double phi_un = Math.pow(10, -4) * (3600 * latitude - 169028.66);
+        double lambda_un = 0.0001 * (3600 * longitude - 26782.5);
+        double phi_un = 0.0001 * (3600 * latitude - 169028.66);
         return 1200147.07
                 + 308807.95 * phi_un
                 + 3745.25 * lambda_un * lambda_un
@@ -66,8 +66,8 @@ public final class Ch1903 {
      * @return la coordonnée longitude dans le système WGS84.
      */
     public static double lon(double e, double n) {
-        double x = Math.pow(10, -6) * (e - 2600000);
-        double y = Math.pow(10, -6) * (n - 1200000);
+        double x = 0.000001 * (e - 2600000);
+        double y = 0.000001 * (n - 1200000);
 
         double lambda_zero = 2.6779094
                 + 4.728982 * x
@@ -88,8 +88,8 @@ public final class Ch1903 {
      * @return la coordonnée latitude dans le système WGS84.
      */
     public static double lat(double e, double n) {
-        double x = Math.pow(10, -6) * (e - 2600000);
-        double y = Math.pow(10, -6) * (n - 1200000);
+        double x = 0.000001 * (e - 2600000);
+        double y = 0.000001 * (n - 1200000);
 
         double phi_zero = 16.9023892
                 + 3.238272 * y

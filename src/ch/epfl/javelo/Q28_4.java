@@ -9,6 +9,8 @@ package ch.epfl.javelo;
  */
 public final class Q28_4 {
 
+    private static final int NB_AFTER_PERIOD_CONSTANT = 4;
+
     private Q28_4() {}
 
     /**
@@ -19,7 +21,7 @@ public final class Q28_4 {
      */
     public static int ofInt(int i) {
 
-        return i << 4;
+        return i << NB_AFTER_PERIOD_CONSTANT;
     }
 
     /**
@@ -30,7 +32,7 @@ public final class Q28_4 {
      */
     public static double asDouble(int q28_4) {
 
-        return Math.scalb((double) q28_4, -4);
+        return Math.scalb((double) q28_4, -NB_AFTER_PERIOD_CONSTANT);
     }
 
     /**
@@ -41,6 +43,6 @@ public final class Q28_4 {
      */
     public static float asFloat(int q28_4) {
 
-        return Math.scalb((float) q28_4, -4);
+        return Math.scalb((float) q28_4, -NB_AFTER_PERIOD_CONSTANT);
     }
 }
