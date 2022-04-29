@@ -111,7 +111,7 @@ public final class Math2 {
      * @return Le carré de la norme du vecteur u.
      */
     public static double squaredNorm(double uX, double uY) {
-        return dotProduct(uX ,uX ,uY ,uY );
+        return uX*uX + uY * uY;
     }
 
     /**
