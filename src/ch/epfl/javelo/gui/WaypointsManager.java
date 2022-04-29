@@ -77,7 +77,6 @@ public final class WaypointsManager {
         }
     }
 
-
     public void addWayPoint(int x, int y){
 
         PointCh position = new PointCh(x,y);
@@ -90,5 +89,9 @@ public final class WaypointsManager {
         }
         else{
             errorConsumer.accept("Aucune route à proximité");}
+    }
+
+    private void drawWaypoints(){
+
     }
 }
