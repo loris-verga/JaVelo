@@ -11,6 +11,12 @@ import ch.epfl.javelo.Preconditions;
  */
 public record PointCh(double e, double n) {
 
+    /**
+     * Constructeur d'un pointCh.
+     * @param e coordonnée est du point.
+     * @param n coordonné nord du point.
+     * @throws IllegalArgumentException si le point ne se trouve pas en suisse.
+     */
     public PointCh {
         Preconditions.checkArgument(SwissBounds.containsEN(e, n));
     }

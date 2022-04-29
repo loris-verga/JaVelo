@@ -64,9 +64,10 @@ public final class Functions {
         private final double xMax;
 
         public Sampled(float[] sampled, double xMax) {
+            Preconditions.checkArgument(sampled.length >= 2 && xMax > 0);
             this.sampled = sampled.clone();
             this.xMax = xMax;
-            Preconditions.checkArgument(this.sampled.length >= 2 && xMax > 0);
+
         }
 
         @Override

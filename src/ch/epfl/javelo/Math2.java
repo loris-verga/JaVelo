@@ -48,7 +48,7 @@ public final class Math2 {
      * @throws IllegalArgumentException si min est inférieur à max
      */
     public static int clamp(int min, int v, int max) {
-        Preconditions.checkArgument(min < max);
+        Preconditions.checkArgument(min <= max);
 
         if (v < min) {
             return min;
@@ -69,7 +69,7 @@ public final class Math2 {
      * @throws IllegalArgumentException si min est inférieur à max
      */
     public static double clamp(double min, double v, double max) {
-        Preconditions.checkArgument(min < max);
+        Preconditions.checkArgument(min <= max);
 
         if (v < min) {
             return min;
@@ -111,7 +111,7 @@ public final class Math2 {
      * @return Le carré de la norme du vecteur u.
      */
     public static double squaredNorm(double uX, double uY) {
-        return uX * uX + uY * uY;
+        return dotProduct(uX ,uX ,uY ,uY );
     }
 
     /**

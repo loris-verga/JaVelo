@@ -50,12 +50,12 @@ public record PointWebMercator(double x, double y) {
     public static PointWebMercator ofPointCh(PointCh pointCh) {
 
         //Récupération des coordonnées dans le système suisse
-        double coord_est = pointCh.e();
-        double coord_nord = pointCh.n();
+        double estCoordinate = pointCh.e();
+        double northCoordinate = pointCh.n();
 
         //Conversion dans le système WGS84
-        double lon = Ch1903.lon(coord_est, coord_nord);
-        double lat = Ch1903.lat(coord_est, coord_nord);
+        double lon = Ch1903.lon(estCoordinate, northCoordinate);
+        double lat = Ch1903.lat(estCoordinate, northCoordinate);
 
         //Conversion des coordonnées dans le système WebMercator
         double x = WebMercator.x(lon);

@@ -21,7 +21,7 @@ public record AttributeSet(long bits) {
     public AttributeSet {
 
         Preconditions.checkArgument(0 <= bits
-                && bits < 1L << 62);
+                && bits < 1L << Attribute.COUNT);
     }
 
     /**
