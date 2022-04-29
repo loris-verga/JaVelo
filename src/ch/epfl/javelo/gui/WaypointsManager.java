@@ -4,6 +4,7 @@ import ch.epfl.javelo.data.Graph;
 import ch.epfl.javelo.projection.PointCh;
 import ch.epfl.javelo.projection.PointWebMercator;
 import javafx.beans.property.ObjectProperty;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
@@ -33,6 +34,13 @@ public final class WaypointsManager {
         this.errorConsumer = errorConsumer;
         this.pane = new Pane();
         pane.setPickOnBounds(false);
+
+
+        property.addListener(e->{
+            pane.getChildren().clear();
+            updateWayPoint();
+        });
+
 
         updateWayPoint();
     }

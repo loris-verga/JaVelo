@@ -57,7 +57,7 @@ public final class BaseMapManager {
         //On lie la largeur et la hauteur du canevas à celle du panneau.
         canvas.widthProperty().bind(pane.widthProperty());
         canvas.heightProperty().bind(pane.heightProperty());
-
+        //On redessine les tuiles lorsqu'on redimensionne la fenêtre.
         canvas.sceneProperty().addListener((p, oldS, newS) -> {
             assert oldS == null;
             newS.addPreLayoutPulseListener(this::redrawIfNeeded);
@@ -65,9 +65,9 @@ public final class BaseMapManager {
 
 
 
-
+        //Récupération de
         SimpleLongProperty minimumScrollTime = new SimpleLongProperty();
-        //Changement du niveau de zoom :
+
         pane.setOnScroll(e -> {
             if (e.getDeltaY() == 0d){ return;}
             long currentTime = System.currentTimeMillis();
@@ -79,17 +79,6 @@ public final class BaseMapManager {
             int newZoom = (int)Math.round(zoomLevel + zoomDelta);
             if (newZoom > 19){newZoom = 19;}
             else if (newZoom<8){newZoom = 8;}
-
-            System.out.println(newZoom);
-
-
-
-
-
-
-
-
-
 
 
 
@@ -145,7 +134,6 @@ public final class BaseMapManager {
         });
 
         //On applique les changements lorsque les paramètres de la carte changent.
-        mapViewParametersProperty.addListener(e-> System.out.println("changement à mapViewParameters"));
         mapViewParametersProperty.addListener(e-> redrawOnNextPulse());
 
     }
