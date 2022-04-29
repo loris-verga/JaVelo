@@ -65,9 +65,8 @@ public final class BaseMapManager {
 
 
 
-        //Récupération de
+        //Changement du niveau de zoom :
         SimpleLongProperty minimumScrollTime = new SimpleLongProperty();
-
         pane.setOnScroll(e -> {
             if (e.getDeltaY() == 0d){ return;}
             long currentTime = System.currentTimeMillis();
@@ -80,39 +79,35 @@ public final class BaseMapManager {
             if (newZoom > 19){newZoom = 19;}
             else if (newZoom<8){newZoom = 8;}
 
+            //Récupération de la position de la souris :
+            double mousePosX = e.getX(), mousePosY = e.getY();
+            //Position WebMercator du point sous la souris.
+            PointWebMercator oldPointMouse = mapViewParameters.pointAt(mousePosX,mousePosY);
+            //Position WebMercator du point haut-gauche.
+            PointWebMercator pointTopLeft = mapViewParameters.pointAt(0,0);
+            //MapViewParameters avec nouveau niveau de zoom et coin haut-gauche inchangé.
+            MapViewParameters newMapViewParameters = new MapViewParameters(newZoom,
+                    pointTopLeft.xAtZoomLevel(newZoom), pointTopLeft.yAtZoomLevel(newZoom));
 
-
-
-
-            double x = e.getX();
-            double y = e.getY();
-            PointWebMercator oldPointMouse = mapViewParameters.pointAt(x,y);
-
-            PointWebMercator point = mapViewParameters.pointAt(0,0);
-
-            MapViewParameters mapViewParameters1 = new MapViewParameters(newZoom,
-                    point.xAtZoomLevel(newZoom), point.yAtZoomLevel(newZoom));
-
-            PointWebMercator newPointMouse = mapViewParameters1.pointAt(x,y);
-
-            PointWebMercator topLeft = mapViewParameters1.pointAt(0,0);
-            PointWebMercator topRight = mapViewParameters1.pointAt(canvas.getWidth(), 0);
+            //Nouveau point WebMercator situé sous la souris.
+            PointWebMercator newPointMouse = newMapViewParameters.pointAt(mousePosX,mousePosY);
+            //Nouveau point WebMercator du coin haut-gauche :
+            PointWebMercator topLeft = newMapViewParameters.pointAt(0,0);
+            //Point haut-droite :
+            PointWebMercator topRight = newMapViewParameters.pointAt(canvas.getWidth(), 0);
+            //Obtention du rapport de proportionnalité :
             double distance = topRight.x()-topLeft.x();
             double prop = canvas.getWidth() / distance;
 
+            //Obtention des vecteurs de décalage du coin haut-gauche pour que le point situé sous la souris reste
+            //inchangé après un changement de zoom :
+            double vectorX = (oldPointMouse.x()-newPointMouse.x())*prop;
+            double vectorY = (oldPointMouse.y()-newPointMouse.y())*prop;
 
-
-
-
-
-            double vectorX = -newPointMouse.x()+oldPointMouse.x();
-            vectorX = vectorX * prop;
-            System.out.println(vectorX);
-            double vectorY = -newPointMouse.y()+oldPointMouse.y();
-            vectorY = vectorY * prop;
-
-
-            mapViewParametersProperty.set(mapViewParameters1.withMinXY(mapViewParameters1.minX()+vectorX, mapViewParameters1.minY()+vectorY));
+            //Changement du MapViewParameters :
+            mapViewParametersProperty.set(newMapViewParameters.withMinXY(
+                    newMapViewParameters.minX()+vectorX,
+                    newMapViewParameters.minY()+vectorY));
         });
 
 
