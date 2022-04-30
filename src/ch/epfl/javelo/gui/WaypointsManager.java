@@ -20,36 +20,39 @@ import java.util.function.Consumer;
 public final class WaypointsManager {
 
         private static final int MAX_CLOSEST_NODE_DISTANCE = 1000;
+        private static final int INDEX_OF_WAYPOINT_INDEX_IN_STYLE_CLASS_LIST = 2;
         private final Graph graph;
-        private ObjectProperty<MapViewParameters> property;
+        private ObjectProperty<MapViewParameters> mapViewParametersProperty;
         private ObservableList<Waypoint> waypointList;
         private Consumer<String> errorConsumer;
         private Pane pane;
 
-    public WaypointsManager(Graph graph, ObjectProperty<MapViewParameters> property,
+    public WaypointsManager(Graph graph, ObjectProperty<MapViewParameters> mapViewParametersProperty,
                             ObservableList<Waypoint> waypointList, Consumer<String> errorConsumer){
         this.graph = graph;
-        this.property = property;
+        this.mapViewParametersProperty = mapViewParametersProperty;
         this.waypointList = waypointList;
         this.errorConsumer = errorConsumer;
         this.pane = new Pane();
         pane.setPickOnBounds(false);
 
-
-        property.addListener(e->{
-            pane.getChildren().clear();
-            updateWayPoint();
+        mapViewParametersProperty.addListener(e->{
+            updateWayPoints();
         });
 
+        this.waypointList.addListener((ListChangeListener)e -> updateWayPoints());
 
-        updateWayPoint();
+        updateWayPoints();
     }
 
     public Pane pane(){
         return pane;
     }
 
-    public void updateWayPoint() {
+    public void updateWayPoints() {
+        System.out.println("update");
+        pane.getChildren().clear();
+
         for (int i = 0; i < waypointList.size(); i++) {
 
             SVGPath exteriorPath = new SVGPath();
@@ -70,28 +73,54 @@ public final class WaypointsManager {
                 groupWpt.getStyleClass().addAll("pin", "last");
             }
 
-            groupWpt.setLayoutX(property.get().viewX(PointWebMercator.ofPointCh(waypointList.get(i).position())));
-            groupWpt.setLayoutY(property.get().viewY(PointWebMercator.ofPointCh(waypointList.get(i).position())));
+            groupWpt.setLayoutX(mapViewParametersProperty.get().viewX(PointWebMercator.ofPointCh(waypointList.get(i).position())));
+            groupWpt.setLayoutY(mapViewParametersProperty.get().viewY(PointWebMercator.ofPointCh(waypointList.get(i).position())));
+
+            groupWpt.getStyleClass().add(String.valueOf(i));
+
+            groupWpt.setOnMouseReleased(e ->{
+
+                int index = Integer.valueOf(groupWpt.getStyleClass().get(2));
+
+                if(e.isStillSincePress()) {
+                    waypointList.remove(index);
+                }
+                else{
+                    waypointList.set(index,createWaypoint(e.getSceneX(),e.getSceneY()));
+                }
+                });
+
+            groupWpt.setOnMouseDragged(e ->{
+                groupWpt.setLayoutX(e.getSceneX());
+                groupWpt.setLayoutY(e.getSceneY());
+            });
 
             pane.getChildren().add(groupWpt);
         }
     }
 
-    public void addWayPoint(int x, int y){
+    private Waypoint createWaypoint(double x, double y){
 
-        PointCh position = new PointCh(x,y);
+        PointCh position = mapViewParametersProperty.get().pointAt(x,y).toPointCh();
+
         int nodeClosestToWaypoint =
                 graph.nodeClosestTo(position, MAX_CLOSEST_NODE_DISTANCE);
 
         if(nodeClosestToWaypoint != -1){
-            Waypoint waypoint = new Waypoint(position, nodeClosestToWaypoint);
-            waypointList.add(waypoint);
+            Waypoint wayPoint = new Waypoint(position, nodeClosestToWaypoint);
+            return wayPoint;
         }
         else{
             errorConsumer.accept("Aucune route à proximité");}
+            return null;
     }
 
-    private void drawWaypoints(){
+    public void addWayPoint(double x, double y){
+        Waypoint waypoint = createWaypoint(x,y);
 
+        if(waypoint != null){
+            waypointList.add(waypoint);
+        }
     }
+
 }

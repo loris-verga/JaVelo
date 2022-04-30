@@ -131,6 +131,12 @@ public final class BaseMapManager {
         //On applique les changements lorsque les paramètres de la carte changent.
         mapViewParametersProperty.addListener(e-> redrawOnNextPulse());
 
+        pane.setOnMouseReleased(e ->{
+            //TODO Juan a fais ca pour creer des waypoints,j'ai mis en commentaire car je ne suis pas sure si c'est un double click
+            if(e.isStillSincePress()){
+                waypointsManager.addWayPoint(e.getX(), e.getY());
+            }
+        });
     }
 
 
