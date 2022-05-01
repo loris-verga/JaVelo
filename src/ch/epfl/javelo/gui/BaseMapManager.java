@@ -1,18 +1,13 @@
 package ch.epfl.javelo.gui;
 
 
-import ch.epfl.javelo.Math2;
 import ch.epfl.javelo.projection.PointWebMercator;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-
-import java.awt.*;
-import java.util.Map;
 
 
 /**
@@ -131,10 +126,11 @@ public final class BaseMapManager {
         //On applique les changements lorsque les paramètres de la carte changent.
         mapViewParametersProperty.addListener(e-> redrawOnNextPulse());
 
-        pane.setOnMouseReleased(e ->{
-            //TODO Juan a fais ca pour creer des waypoints,j'ai mis en commentaire car je ne suis pas sure si c'est un double click
+        //On crée un nouveau point de passage quand la click sur la carte,
+        //et si la souris ne bouge pas durant le click
+        pane.setOnMouseClicked(e ->{
             if(e.isStillSincePress()){
-                waypointsManager.addWayPoint(e.getX(), e.getY());
+                waypointsManager.addWaypoint(e.getX(), e.getY());
             }
         });
     }
