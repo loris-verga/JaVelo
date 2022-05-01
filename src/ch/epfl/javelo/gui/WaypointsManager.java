@@ -20,30 +20,31 @@ import java.util.function.Consumer;
  * @author Juan Bautista Iaconucci (342153)
  */
 public final class WaypointsManager {
+    //todo tu vois ça Loris??
 
-        private static final String EXTERIOR_PATH_TEXT = "M-8-20C-5-14-2-7 0 0 2-7 5-14 8-20 20-40-20-40-8-20";
-        private static final String EXTERIOR_PATH_STYLE_CLASS = "pin_outside";
+    private static final String EXTERIOR_PATH_TEXT = "M-8-20C-5-14-2-7 0 0 2-7 5-14 8-20 20-40-20-40-8-20";
+    private static final String EXTERIOR_PATH_STYLE_CLASS = "pin_outside";
 
-        private static final String INTERIOR_PATH_TEXT = "M0-23A1 1 0 000-29 1 1 0 000-23";
-        private static final String INTERIOR_PATH_STYLE_CLASS = "pin_inside";
+    private static final String INTERIOR_PATH_TEXT = "M0-23A1 1 0 000-29 1 1 0 000-23";
+    private static final String INTERIOR_PATH_STYLE_CLASS = "pin_inside";
 
-        private static final String GENERAL_WAYPOINT_PIN_STYLE_CLASS = "pin";
-        private static final String FIRST_WAYPOINT_PIN_STYLE_CLASS = "first";
-        private static final String MIDDLE_WAYPOINT_PIN_STYLE_CLASS = "middle";
-        private static final String LAST_WAYPOINT_PIN_STYLE_CLASS = "last";
+    private static final String GENERAL_WAYPOINT_PIN_STYLE_CLASS = "pin";
+    private static final String FIRST_WAYPOINT_PIN_STYLE_CLASS = "first";
+    private static final String MIDDLE_WAYPOINT_PIN_STYLE_CLASS = "middle";
+    private static final String LAST_WAYPOINT_PIN_STYLE_CLASS = "last";
 
-        private static final int MAX_CLOSEST_NODE_DISTANCE = 1000;
-        private static final String ERROR_MESSAGE = "Aucune route à proximité";
+    private static final int MAX_CLOSEST_NODE_DISTANCE = 1000;
+    private static final String ERROR_MESSAGE = "Aucune route à proximité";
 
-        //creation d'une map privé qui permet de renvoyer l'index au quelle se trouve un point de passage,
-        //dans la liste de point de passage en ayant seulement accès son marqueur associer.
-        private Map<Group,Integer> mapWaypointPinToIndex = new HashMap<>();
+    //creation d'une map privé qui permet de renvoyer l'index au quelle se trouve un point de passage,
+    //dans la liste de point de passage en ayant seulement accès son marqueur associer.
+    private Map<Group,Integer> mapWaypointPinToIndex = new HashMap<>();
 
-        private final Graph graph;
-        private ObjectProperty<MapViewParameters> mapViewParametersProperty;
-        private ObservableList<Waypoint> waypointList;
-        private Consumer<String> errorConsumer;
-        private Pane pane;
+    private final Graph graph;
+    private ObjectProperty<MapViewParameters> mapViewParametersProperty;
+    private ObservableList<Waypoint> waypointList;
+    private Consumer<String> errorConsumer;
+    private Pane pane;
 
     /**
      * Le constructeur de WaypointManager initialise tous les attributs et ajoute un auditeur aux paramètres du fond de la carte,
@@ -153,7 +154,7 @@ public final class WaypointsManager {
         waypointPin.getStyleClass().add(GENERAL_WAYPOINT_PIN_STYLE_CLASS);
 
         if (0 < index && index < waypointList.size() -1 ) {
-           waypointPin.getStyleClass().add(MIDDLE_WAYPOINT_PIN_STYLE_CLASS);
+            waypointPin.getStyleClass().add(MIDDLE_WAYPOINT_PIN_STYLE_CLASS);
         } else if (index == 0) {
             waypointPin.getStyleClass().add(FIRST_WAYPOINT_PIN_STYLE_CLASS);
         } else {

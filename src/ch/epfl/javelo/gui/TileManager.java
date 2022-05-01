@@ -118,7 +118,7 @@ public final class TileManager {
         if (cacheMemory.size()<100){
             cacheMemory.put(tileId, image);
         }
-        else{ //TODO check if it's correct
+        else{
             Iterator<Map.Entry<TileId, Image>> iterator = cacheMemory.entrySet().iterator();
             TileId tileIdOfOldestAccessedElement = iterator.next().getKey();
             cacheMemory.remove(tileIdOfOldestAccessedElement);
