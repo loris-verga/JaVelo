@@ -14,6 +14,7 @@ import ch.epfl.javelo.projection.PointCh;
  */
 public record RoutePoint(PointCh point, double position, double distanceToReference) {
 
+    //L'attribut NONE représente un RoutePoint nul.
     public final static RoutePoint NONE = new RoutePoint(null, Double.NaN, Double.POSITIVE_INFINITY);
 
 
@@ -25,6 +26,9 @@ public record RoutePoint(PointCh point, double position, double distanceToRefere
      * @return un nouveau RoutePoint avec la modification
      */
     public RoutePoint withPositionShiftedBy(double positionDifference) {
+        if (positionDifference == 0){
+            return this;
+        }
         return new RoutePoint(new PointCh(point.e(), point.n()),
                 position + positionDifference, distanceToReference);
     }

@@ -20,11 +20,11 @@ public final class BaseMapManager {
     private final TileManager tileManager;
     private final ObjectProperty<MapViewParameters> mapViewParametersProperty;
     private boolean redrawNeeded;
-    private Pane pane;
-    private Canvas canvas;
+    private final Pane pane;
+    private final Canvas canvas;
     private final WaypointsManager waypointsManager;
 
-
+    //Ces attributs permettent de sauvegarder la dernière position de la souris.
     private double lastPositionMouseX;
     private double lastPositionMouseY;
 
@@ -147,7 +147,11 @@ public final class BaseMapManager {
         return pane;
     }
 
-
+    /**
+     * La méthode diffX permet de connaître la différence entre le coin de la tuile haut-gauche et le coin de
+     * la fenêtre selon la coordonnée x.
+     * @return un double.
+     */
     private double diffX(){
         //Coordonnée haut gauche de la carte.
         double minX = mapViewParametersProperty.get().minX();
@@ -158,7 +162,11 @@ public final class BaseMapManager {
         //Différence entre la position de la tuile et la position du coin haut-gauche de la fenêtre :
         return minX - topLeftX;
     }
-
+    /**
+     * La méthode diffX permet de connaître la différence entre le coin de la tuile haut-gauche et le coin de
+     * la fenêtre selon la coordonnée y.
+     * @return un double.
+     */
     private double diffY(){
         //Coordonnée haut gauche de la carte.
         double minY = mapViewParametersProperty.get().minY();
@@ -170,6 +178,13 @@ public final class BaseMapManager {
         return minY -topLeftY;
     }
 
+    /**
+     * La méthode tilesInArea permet d'obtenir les tuiles à afficher.
+     * @param zoomLevel le niveau de zoom.
+     * @param height la hauteur de la fenêtre.
+     * @param width la largeur de la fenêtre.
+     * @return un tableau à deux dimensions contenant les tuiles.
+     */
     private TileManager.TileId[][] tilesInArea(int zoomLevel, double height, double width) {
 
         //On calcule le point d'extrémité de la fenêtre visible :
@@ -195,7 +210,9 @@ public final class BaseMapManager {
     }
 
 
-
+    /**
+     * La méthode redrawIfNeeded permet de redessiner les tuiles.
+     */
     private void redrawIfNeeded() {
         if (!redrawNeeded) return;
         redrawNeeded = false;
@@ -229,6 +246,9 @@ public final class BaseMapManager {
 
     }
 
+    /**
+     * La méthode redrawOnNextPulse permet de gérer la fréquence de dessin.
+     */
     private void redrawOnNextPulse() {
         redrawNeeded = true;
         Platform.requestNextPulse();

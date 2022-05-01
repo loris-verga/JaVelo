@@ -20,7 +20,6 @@ import java.util.function.Consumer;
  * @author Juan Bautista Iaconucci (342153)
  */
 public final class WaypointsManager {
-    //todo tu vois ça Loris??
 
     private static final String EXTERIOR_PATH_TEXT = "M-8-20C-5-14-2-7 0 0 2-7 5-14 8-20 20-40-20-40-8-20";
     private static final String EXTERIOR_PATH_STYLE_CLASS = "pin_outside";
