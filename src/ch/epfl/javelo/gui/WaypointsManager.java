@@ -32,7 +32,7 @@ public final class WaypointsManager {
     private static final String MIDDLE_WAYPOINT_PIN_STYLE_CLASS = "middle";
     private static final String LAST_WAYPOINT_PIN_STYLE_CLASS = "last";
 
-    private static final int MAX_CLOSEST_NODE_DISTANCE = 1000;
+    private static final int MAX_CLOSEST_NODE_DISTANCE = 500;
     private static final String ERROR_MESSAGE = "Aucune route à proximité";
 
     //creation d'une map privé qui permet de renvoyer l'index au quelle se trouve un point de passage,
