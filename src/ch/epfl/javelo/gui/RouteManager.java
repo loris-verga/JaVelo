@@ -30,38 +30,45 @@ public final class RouteManager {
         this.routeBean = routeBean;
         this.mapViewParametersProperty = mapViewParametersProperty;
         this.errorConsumer = errorConsumer;
+
         this.pane = new Pane();
+        pane.setPickOnBounds(false);
 
-        createLine();
-
-        createCercle();
-
-        routeBean.routeProperty().addListener((o,p,n)->{
+        if(routeBean.getRoute() != null) {
             createLine();
             createCercle();
+        }
+
+        routeBean.routeProperty().addListener((o,p,n)->{
+            if(routeBean.getRoute() != null) {
+                createLine();
+                createCercle();
+            }
+            else{
+                line.setVisible(false);
+                circle.setVisible(false);
+            }
         });
 
         mapViewParametersProperty.addListener((o,p,n) ->{
             int previousZoomLevel = p.zoomLevel();
             int currentZoomLevel = n.zoomLevel();
-            if(previousZoomLevel != currentZoomLevel){
-                createLine();
-                createCercle();
-            }
-            else {
-                double displacementX = n.minX() - p.minX();
-                double displacementY = n.minY() - p.minY();
+            if(routeBean.getRoute() != null) {
+                if (previousZoomLevel != currentZoomLevel) {
+                    createLine();
+                    createCercle();
+                } else {
+                    double displacementX = n.minX() - p.minX();
+                    double displacementY = n.minY() - p.minY();
 
-                line.setLayoutX(line.getLayoutX() - displacementX);
-                line.setLayoutY(line.getLayoutY() - displacementY);
+                    line.setLayoutX(line.getLayoutX() - displacementX);
+                    line.setLayoutY(line.getLayoutY() - displacementY);
 
-                circle.setCenterX(circle.getCenterX() - displacementX);
-                circle.setCenterY(circle.getCenterY() - displacementY);
+                    circle.setCenterX(circle.getCenterX() - displacementX);
+                    circle.setCenterY(circle.getCenterY() - displacementY);
+                }
             }
         } );
-
-        pane.setPickOnBounds(false);
-
     }
 
     public Pane pane(){
@@ -72,51 +79,48 @@ public final class RouteManager {
         pane.getChildren().remove(line);
 
         line = new Polyline();
-
+        line.setVisible(true);
         line.setId("route");
 
-        if(routeBean.getRoute()!= null && routeBean.getRoute().points().size() > 1) {
-            for (PointCh point : routeBean.getRoute().points()) {
+        for (PointCh point : routeBean.getRoute().points()) {
 
-                PointWebMercator pointWM = PointWebMercator.ofPointCh(point);
+            PointWebMercator pointWM = PointWebMercator.ofPointCh(point);
 
-                double x = mapViewParametersProperty.get().viewX(pointWM);
-                double y = mapViewParametersProperty.get().viewY(pointWM);
+            double x = mapViewParametersProperty.get().viewX(pointWM);
+            double y = mapViewParametersProperty.get().viewY(pointWM);
 
-                line.getPoints().addAll(x, y);
-            }
+            line.getPoints().addAll(x, y);
         }
-        else{line.setVisible(false);}
+
         pane.getChildren().add(line);
     }
 
     private void createCercle() {
         pane.getChildren().remove(circle);
 
-        circle =  new Circle(5);
-
+        circle = new Circle();
+        circle.setVisible(true);
         circle.setId("highlight");
 
-        if(routeBean.getRoute()!= null && routeBean.getRoute().points().size() > 1) {
-            double positionOnRouteOfCircle = routeBean.getHighlightedPosition();
+        double positionOnRouteOfCircle = routeBean.getHighlightedPosition();
 
-            PointCh positionOfCircle = routeBean.getRoute().pointAt(positionOnRouteOfCircle);
-            PointWebMercator positionOfCircletWM = PointWebMercator.ofPointCh(positionOfCircle);
+        PointCh positionOfCircleCh = routeBean.getRoute().pointAt(positionOnRouteOfCircle);
+        PointWebMercator positionOfCircleWM = PointWebMercator.ofPointCh(positionOfCircleCh);
 
-            double x = mapViewParametersProperty.get().viewX(positionOfCircletWM);
-            double y = mapViewParametersProperty.get().viewY(positionOfCircletWM);
+        double x = mapViewParametersProperty.get().viewX(positionOfCircleWM);
+        double y = mapViewParametersProperty.get().viewY(positionOfCircleWM);
 
-            circle.setCenterX(x);
-            circle.setCenterY(y);
-        }
-        else{circle.setVisible(false);}
+        circle.setCenterX(x);
+        circle.setCenterY(y);
 
         circle.setOnMouseClicked(e ->{
 
             Point2D position2D = pane.localToParent(e.getX(),e.getY());
             PointCh positionCH = mapViewParametersProperty.get().pointAt(position2D.getX() , position2D.getY()).toPointCh();
+
             int index = routeBean.getRoute().indexOfSegmentAt(routeBean.getHighlightedPosition());
             int nodeClosestToWaypoint = routeBean.getRoute().nodeClosestTo(routeBean.getHighlightedPosition());
+
             Waypoint newWaypoint = new Waypoint(positionCH, nodeClosestToWaypoint);
 
             for(Waypoint waypoint : routeBean.getWaypoints()) {
@@ -131,6 +135,5 @@ public final class RouteManager {
         });
 
         pane.getChildren().add(circle);
-
     }
 }
