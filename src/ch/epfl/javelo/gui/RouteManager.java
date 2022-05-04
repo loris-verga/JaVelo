@@ -25,6 +25,14 @@ public final class RouteManager {
     private ReadOnlyObjectProperty<MapViewParameters> mapViewParametersProperty;
     private Consumer<String> errorConsumer;
 
+    /**
+     * Le constructeur de RouteManager permet d'initialiser ses attributs, et ajoute un auditeur à l'itinéraire du routeBean
+     * qui quand celle ci change on crée à nouveaux la ligne et le disque,
+     * et un autre aux paramètres de la carte, pour pouvoir déplacer la line et le disque en fonctions des paramètres qui ont changée.
+     * @param routeBean le bean de l'itinéraire.
+     * @param mapViewParametersProperty les paramètres de la carte affichée.
+     * @param errorConsumer le consommateur d'erreurs.
+     */
     public RouteManager(RouteBean routeBean, ReadOnlyObjectProperty<MapViewParameters> mapViewParametersProperty, Consumer<String> errorConsumer){
 
         this.routeBean = routeBean;
@@ -39,6 +47,9 @@ public final class RouteManager {
             createCercle();
         }
 
+        //Quand l'itinéraire change,
+        //si la route est définie alors on crée la ligne et le disque,
+        //sinon on les rend invisible.
         routeBean.routeProperty().addListener((o,p,n)->{
             if(routeBean.getRoute() != null) {
                 createLine();
@@ -50,6 +61,9 @@ public final class RouteManager {
             }
         });
 
+        //Quand les paramètres de la carte change,
+        //si le niveau de zoom a changé on crée à nouveau la ligne et le disque,
+        //sinon on les repositionne aux bonnes coordonnées.
         mapViewParametersProperty.addListener((o,p,n) ->{
             int previousZoomLevel = p.zoomLevel();
             int currentZoomLevel = n.zoomLevel();
@@ -69,18 +83,27 @@ public final class RouteManager {
                 }
             }
         } );
+
     }
 
+    /**
+     * La méthode pane retourne le panneau contenant la ligne représentant l'itinéraire et le disque de mise en évidence.
+     * @return le panneau contenant la ligne représentant l'itinéraire et le disque de mise en évidence.
+     */
     public Pane pane(){
         return pane;
     }
 
+    /**
+     * La méthode createLine privée, permet de créer et dessiner la ligne représentant l'itinéraire.
+     */
     private void createLine(){
         pane.getChildren().remove(line);
 
         line = new Polyline();
-        line.setVisible(true);
         line.setId("route");
+
+        line.setVisible(true);
 
         for (PointCh point : routeBean.getRoute().points()) {
 
@@ -95,10 +118,15 @@ public final class RouteManager {
         pane.getChildren().add(line);
     }
 
+    /**
+     * La méthode createCercle privée, permet de créer et dessiner le disque de mise en évidence.
+     */
     private void createCercle() {
         pane.getChildren().remove(circle);
 
-        circle = new Circle();
+        //todo wished that circle and line could have the same reference to the same object,
+        //todo instead of creating one each time something moves...
+        circle = new Circle(5);
         circle.setVisible(true);
         circle.setId("highlight");
 
@@ -113,6 +141,10 @@ public final class RouteManager {
         circle.setCenterX(x);
         circle.setCenterY(y);
 
+        //Quand on clique sur le disque,
+        //on regarde s'il y a déjà un point de passage qui contient le noeud situer à la position de la souris,
+        //si c'est le cas l'erreur est consommé,
+        //sinon on ajoute le point de passage dans la liste des points de passage.
         circle.setOnMouseClicked(e ->{
 
             Point2D position2D = pane.localToParent(e.getX(),e.getY());
