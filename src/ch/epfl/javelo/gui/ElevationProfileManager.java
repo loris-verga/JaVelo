@@ -5,6 +5,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -13,6 +14,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Transform;
 
 /**
  * La classe ElevationProfileManager gère l'affichage et l'interaction avec le profil
@@ -42,6 +44,9 @@ public final class ElevationProfileManager {
 
     private final VBox vBox;
     private final Text textVbox;
+
+    private final Insets inset = new Insets(10, 10, 20, 40); //TODO utiliser pour part 2
+    private final Transform transform; //TODO créer cette tranformation
 
 
     /**
@@ -109,6 +114,7 @@ public final class ElevationProfileManager {
     public ReadOnlyDoubleProperty mousePositionProfileProperty(){
         return this.mousePositionOnProfileProperty; //TODO check que la la valeur soit arrondie à l'entier le plus proche.
     }
+
 
 
 
