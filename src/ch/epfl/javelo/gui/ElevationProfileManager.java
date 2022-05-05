@@ -79,6 +79,9 @@ public final class ElevationProfileManager {
         this.polygon.setId("profile");
         pane.getChildren().add(polygon);
 
+        this.line = new Line();
+        pane.getChildren().add(line);
+
         this.vBox = new VBox();
         vBox.setId("profile_data");
         borderPane.setBottom(vBox);
