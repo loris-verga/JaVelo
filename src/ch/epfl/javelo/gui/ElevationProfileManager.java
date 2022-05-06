@@ -6,11 +6,13 @@ import javafx.beans.property.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
+import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.*;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
@@ -191,6 +193,7 @@ public final class ElevationProfileManager {
 
     private void createGrid(){
         path.getElements().clear();
+        group.getChildren().clear();
 
         double pixelsBetweenVerticalLines;
         int verticalStep = 0;
@@ -219,32 +222,59 @@ public final class ElevationProfileManager {
                 break;
             }
         }
+        if(verticalStep!=0 && horizontalStep!=0) {
+            int numberOfVerticalLines = (int) blueRectangleProperty.get().getWidth() / verticalStep;
+            int numberOfHorizontalLines = (int) blueRectangleProperty.get().getHeight() / horizontalStep;
 
-        int numberOfVerticalLines = (int) blueRectangleProperty.get().getWidth() / verticalStep;
-        int numberOfHorizontalLines = (int)blueRectangleProperty.get().getHeight() / horizontalStep;
 
-        for(int i = 0; i <= numberOfVerticalLines; i++){
-            Point2D point2DMoveTo = worldToScreenProperty.get()
-                    .transform(i * verticalStep ,blueRectangleProperty.get().getMinY());
-            PathElement moveTo = new MoveTo(point2DMoveTo.getX(),point2DMoveTo.getY());
+            for (int i = 0; i <= numberOfVerticalLines; i++) {
+                int valueOfPosition = i * verticalStep;
 
-            Point2D point2DLineTo = worldToScreenProperty.get()
-                    .transform(i * verticalStep ,blueRectangleProperty.get().getMaxY());
-            PathElement lineTo = new LineTo(point2DLineTo.getX(), point2DLineTo.getY());
+                Point2D point2DMoveTo = worldToScreenProperty.get()
+                        .transform(valueOfPosition, blueRectangleProperty.get().getMinY());
+                PathElement moveTo = new MoveTo(point2DMoveTo.getX(), point2DMoveTo.getY());
 
-            path.getElements().addAll(moveTo,lineTo);
-        }
+                Point2D point2DLineTo = worldToScreenProperty.get()
+                        .transform(valueOfPosition, blueRectangleProperty.get().getMaxY());
+                PathElement lineTo = new LineTo(point2DLineTo.getX(), point2DLineTo.getY());
 
-        for(int i = 0; i <= numberOfHorizontalLines; i++){
-            Point2D point2DMoveTo = worldToScreenProperty.get()
-                    .transform(blueRectangleProperty.get().getMinX(), i * horizontalStep + blueRectangleProperty.get().getMinY() + blueRectangleProperty.get().getMinY()%horizontalStep);
-            PathElement moveTo = new MoveTo(point2DMoveTo.getX(), point2DMoveTo.getY());
+                Text positionText = new Text();
+                positionText.setTextOrigin(VPos.TOP);
+                positionText.setText(String.valueOf(valueOfPosition / 1000));
+                positionText.setX(point2DMoveTo.getX() - positionText.prefWidth(0) / 2);
+                positionText.setY(point2DMoveTo.getY());
 
-            Point2D point2DLineTo = worldToScreenProperty.get()
-                    .transform(blueRectangleProperty.get().getMaxX(), i * horizontalStep + blueRectangleProperty.get().getMinY() + blueRectangleProperty.get().getMinY()%horizontalStep);
-            PathElement lineTo = new LineTo(point2DLineTo.getX(), point2DLineTo.getY());
+                positionText.getStyleClass().addAll("grid_label", "vertical");
+                positionText.setFont(Font.font("Avenir", 10));
+                group.getChildren().add(positionText);
 
-            path.getElements().addAll(moveTo,lineTo);
+                path.getElements().addAll(moveTo, lineTo);
+            }
+
+            double firstHorizontalLineY = blueRectangleProperty.get().getMinY() - blueRectangleProperty.get().getMinY() % horizontalStep + horizontalStep;
+            for (int i = 0; i <= numberOfHorizontalLines; i++) {
+                int valueOfElevation = i * horizontalStep + (int) firstHorizontalLineY;
+
+                Point2D point2DMoveTo = worldToScreenProperty.get()
+                        .transform(blueRectangleProperty.get().getMinX(), valueOfElevation);
+                PathElement moveTo = new MoveTo(point2DMoveTo.getX(), point2DMoveTo.getY());
+
+                Point2D point2DLineTo = worldToScreenProperty.get()
+                        .transform(blueRectangleProperty.get().getMaxX(), valueOfElevation);
+                PathElement lineTo = new LineTo(point2DLineTo.getX(), point2DLineTo.getY());
+
+                Text positionText = new Text();
+                positionText.setTextOrigin(VPos.CENTER);
+                positionText.setText(String.valueOf(valueOfElevation));
+                positionText.setX(point2DMoveTo.getX() - (positionText.prefWidth(0) + 2));
+                positionText.setY(point2DMoveTo.getY());
+
+                positionText.getStyleClass().addAll("grid_label", "horizontal");
+                positionText.setFont(Font.font("Avenir", 10));
+                group.getChildren().add(positionText);
+
+                path.getElements().addAll(moveTo, lineTo);
+            }
         }
     }
 
