@@ -105,6 +105,10 @@ public final class ElevationProfileManager {
 
         blueRectangleProperty = new SimpleObjectProperty<>();
 
+        pane.sceneProperty().addListener((p, oldS, newS) -> {
+            assert oldS == null;
+            newS.addPreLayoutPulseListener(this::redraw);
+        });
 
         line.layoutXProperty().bind(Bindings.createDoubleBinding(
                 () -> highlightedPositionProperty.get(), highlightedPositionProperty));
@@ -114,11 +118,6 @@ public final class ElevationProfileManager {
         line.endYProperty().bind(Bindings.createDoubleBinding(
                 () -> blueRectangleProperty.get().getMaxY()));
         line.visibleProperty().bind(highlightedPositionProperty.greaterThanOrEqualTo(0));
-
-        pane.sceneProperty().addListener((p, oldS, newS) -> {
-            assert oldS == null;
-            newS.addPreLayoutPulseListener(this::redraw);
-        });
 
 
 
@@ -164,6 +163,8 @@ public final class ElevationProfileManager {
         double ty = - inset.getTop();
         screenToWorld.prependTranslation( tx, ty);
 
+        double p1 = borderPane.getWidth() ;
+        double p2 = borderPane.getHeight();
 
         tx = blueRectangleProperty.get().getWidth()
                 / (borderPane.getWidth() - (inset.getLeft() + inset.getRight()));
@@ -180,7 +181,6 @@ public final class ElevationProfileManager {
     }
 
     private void createBlueRectangleProperty(){
-        blueRectangleProperty = new SimpleObjectProperty<>();
 
         double minX = 0;
         double minY = elevationProfileProperty.get().minElevation();
@@ -223,7 +223,7 @@ public final class ElevationProfileManager {
         int numberOfVerticalLines = (int) blueRectangleProperty.get().getWidth() / verticalStep;
         int numberOfHorizontalLines = (int)blueRectangleProperty.get().getHeight() / horizontalStep;
 
-        for(int i = 1; i <= numberOfVerticalLines; i++){
+        for(int i = 0; i <= numberOfVerticalLines; i++){
             Point2D point2DMoveTo = worldToScreenProperty.get()
                     .transform(i * verticalStep ,blueRectangleProperty.get().getMinY());
             PathElement moveTo = new MoveTo(point2DMoveTo.getX(),point2DMoveTo.getY());
@@ -235,13 +235,13 @@ public final class ElevationProfileManager {
             path.getElements().addAll(moveTo,lineTo);
         }
 
-        for(int i = 1; i <= numberOfHorizontalLines; i++){
+        for(int i = 0; i <= numberOfHorizontalLines; i++){
             Point2D point2DMoveTo = worldToScreenProperty.get()
-                    .transform(blueRectangleProperty.get().getMinX(), i * horizontalStep);
+                    .transform(blueRectangleProperty.get().getMinX(), i * horizontalStep + blueRectangleProperty.get().getMinY() + blueRectangleProperty.get().getMinY()%horizontalStep);
             PathElement moveTo = new MoveTo(point2DMoveTo.getX(), point2DMoveTo.getY());
 
             Point2D point2DLineTo = worldToScreenProperty.get()
-                    .transform(blueRectangleProperty.get().getMaxX(), i * horizontalStep);
+                    .transform(blueRectangleProperty.get().getMaxX(), i * horizontalStep + blueRectangleProperty.get().getMinY() + blueRectangleProperty.get().getMinY()%horizontalStep);
             PathElement lineTo = new LineTo(point2DLineTo.getX(), point2DLineTo.getY());
 
             path.getElements().addAll(moveTo,lineTo);
