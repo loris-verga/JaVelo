@@ -129,6 +129,7 @@ public final class RouteBean {
                 if (newRoute == null){
                     setNullItinerary();
                     return;
+
                 }
                 listOfSinglesRoutes.add(newRoute);
                 cacheMemoryAdd(new Pair<Pair<Integer, Integer>, Route>(itineraryPair, newRoute));

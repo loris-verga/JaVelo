@@ -1,6 +1,7 @@
 package ch.epfl.javelo.gui;
 
 import ch.epfl.javelo.routing.ElevationProfile;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -39,7 +40,6 @@ public final class ElevationProfileManager {
     //La ligne représente la position en évidence.
     private final Line line;
 
-    //TODO add text
 
     private final VBox vBox;
     private final Text textVbox;
@@ -98,6 +98,16 @@ public final class ElevationProfileManager {
         borderPane.setBottom(vBox);
         textVbox = new Text();
         vBox.getChildren().add(textVbox);
+
+
+
+        line.layoutXProperty().bind(Bindings.createDoubleBinding(
+                () -> highlightedPositionProperty.get(), highlightedPositionProperty));
+        line.startYProperty().bind(Bindings.select(blueRectangleProperty.get().getMinY()));
+
+        line.endYProperty().bind(Bindings.select(blueRectangleProperty.get().getMaxY()));
+        line.visibleProperty().bind(highlightedPositionProperty.greaterThanOrEqualTo(0));
+
     }
 
     /**
@@ -195,6 +205,15 @@ public final class ElevationProfileManager {
                     .transform(i * verticalStep ,blueRectangleProperty.get().getMaxY());
             PathElement lineTo = new LineTo(point2DLineTo.getX(), point2DLineTo.getY());
 
+            /*
+            //Ajout des étiquettes de position
+            Text textLabel = new Text(Integer.toString(i));
+            //TODO CHECK IF IT IS THE RIGHT LINE
+            textLabel.textOriginProperty().set(VPos.TOP);
+            textLabel.prefWidth(0);
+
+ */
+
             path.getElements().addAll(moveTo,lineTo);
         }
 
@@ -210,4 +229,10 @@ public final class ElevationProfileManager {
             path.getElements().addAll(moveTo,lineTo);
         }
     }
+
+    public double mousePositionOnProfileProperty() {
+        return mousePositionOnProfileProperty.get();
+    }
+
+
 }
