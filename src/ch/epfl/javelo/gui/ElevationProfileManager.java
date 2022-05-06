@@ -205,15 +205,6 @@ public final class ElevationProfileManager {
                     .transform(i * verticalStep ,blueRectangleProperty.get().getMaxY());
             PathElement lineTo = new LineTo(point2DLineTo.getX(), point2DLineTo.getY());
 
-            /*
-            //Ajout des étiquettes de position
-            Text textLabel = new Text(Integer.toString(i));
-            //TODO CHECK IF IT IS THE RIGHT LINE
-            textLabel.textOriginProperty().set(VPos.TOP);
-            textLabel.prefWidth(0);
-
- */
-
             path.getElements().addAll(moveTo,lineTo);
         }
 
