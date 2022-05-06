@@ -67,7 +67,7 @@ public final class ElevationProfileManager {
      *                            évidence.
      */
     public ElevationProfileManager(ReadOnlyObjectProperty<ElevationProfile> elevationProfile,
-                                   ReadOnlyDoubleProperty highlightedPosition){
+                                   ReadOnlyDoubleProperty highlightedPosition) throws NonInvertibleTransformException {
         this.elevationProfileProperty = elevationProfile;
         this.highlightedPositionProperty = highlightedPosition;
 
@@ -98,6 +98,15 @@ public final class ElevationProfileManager {
         borderPane.setBottom(vBox);
         textVbox = new Text();
         vBox.getChildren().add(textVbox);
+
+        screenToWorldProperty = new SimpleObjectProperty<>();
+        worldToScreenProperty = new SimpleObjectProperty<>();
+
+        blueRectangleProperty = new SimpleObjectProperty<>();
+        createBlueRectangleProperty();
+
+        createTransformationsProperty();
+        createGrid();
     }
 
     /**
@@ -143,7 +152,6 @@ public final class ElevationProfileManager {
     }
 
     private void createBlueRectangleProperty(){
-        blueRectangleProperty = new SimpleObjectProperty<>();
 
         double minX = 0;
         double minY = elevationProfileProperty.get().minElevation();
