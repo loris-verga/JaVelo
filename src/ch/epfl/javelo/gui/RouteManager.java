@@ -112,7 +112,7 @@ public final class RouteManager {
                     double displacementX = n.minX() - p.minX();
                     double displacementY = n.minY() - p.minY();
 
-                    line.setLayoutX(line.getLayoutX() - displacementX);
+                    line.setLayoutX( line.getLayoutX() - displacementX);
                     line.setLayoutY(line.getLayoutY() - displacementY);
 
                     disk.setCenterX(disk.getCenterX() - displacementX);
@@ -154,7 +154,7 @@ public final class RouteManager {
             double x = mapViewParametersProperty.get().viewX(pointWM);
             double y = mapViewParametersProperty.get().viewY(pointWM);
 
-            line.getPoints().addAll(x, y);
+            line.getPoints().addAll(x,y);
         }
     }
 

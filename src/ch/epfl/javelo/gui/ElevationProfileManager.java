@@ -164,10 +164,11 @@ public final class ElevationProfileManager {
         double ty = - inset.getTop();
         screenToWorld.prependTranslation( tx, ty);
 
+
         tx = blueRectangleProperty.get().getWidth()
-                / (pane.getWidth() - (inset.getLeft() + inset.getRight()));
+                / (borderPane.getWidth() - (inset.getLeft() + inset.getRight()));
         ty = - blueRectangleProperty.get().getHeight()
-                /(pane.getHeight() - (inset.getTop() + inset.getBottom()));
+                /(borderPane.getHeight() - (inset.getTop() + inset.getBottom()));
         screenToWorld.prependScale( tx, ty);
 
         tx = blueRectangleProperty.get().getMinX();
@@ -185,7 +186,7 @@ public final class ElevationProfileManager {
         double minY = elevationProfileProperty.get().minElevation();
         double width = elevationProfileProperty.get().length();
         double height = elevationProfileProperty.get().maxElevation() - elevationProfileProperty.get().minElevation();
-        blueRectangleProperty.set(new Rectangle2D(minX, minY, width, height));
+        blueRectangleProperty.set(new Rectangle2D(minX, minY,width, height));
     }
 
     private void createGrid(){
@@ -202,7 +203,7 @@ public final class ElevationProfileManager {
                     .deltaTransform(
                             new Point2D(POSITION_STEPS[i], 0));
             pixelsBetweenVerticalLines = point.getX();
-            if(pixelsBetweenVerticalLines < 50){
+            if(pixelsBetweenVerticalLines > 50){
                 verticalStep = POSITION_STEPS[i];
                 break;
             }
@@ -212,9 +213,9 @@ public final class ElevationProfileManager {
             Point2D point = worldToScreenProperty.get()
                                 .deltaTransform(
                                     new Point2D(0,ELEVATION_STEPS[i]));
-            pixelsBetweenHorizontalLines = point.getY();
-            if(pixelsBetweenHorizontalLines < 25){
-                horizontalStep = POSITION_STEPS[i];
+            pixelsBetweenHorizontalLines = Math.abs(point.getY());
+            if(pixelsBetweenHorizontalLines > 25){
+                horizontalStep = ELEVATION_STEPS[i];
                 break;
             }
         }
