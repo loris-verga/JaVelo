@@ -16,8 +16,6 @@ import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Transform;
 
-import java.util.InvalidPropertiesFormatException;
-
 /**
  * La classe ElevationProfileManager gère l'affichage et l'interaction avec le profil
  * en long d'un itinéraire.
@@ -106,25 +104,36 @@ public final class ElevationProfileManager {
         worldToScreenProperty = new SimpleObjectProperty<>();
 
         blueRectangleProperty = new SimpleObjectProperty<>();
-        createBlueRectangleProperty();
 
-        try {
-            createTransformationsProperty();
-        } catch (NonInvertibleTransformException e){
-            e.printStackTrace();
-        }
-        createGrid();
 
         line.layoutXProperty().bind(Bindings.createDoubleBinding(
                 () -> highlightedPositionProperty.get(), highlightedPositionProperty));
+
         line.startYProperty().bind(Bindings.createDoubleBinding(
                 () -> blueRectangleProperty.get().getMinY()));
         line.endYProperty().bind(Bindings.createDoubleBinding(
                 () -> blueRectangleProperty.get().getMaxY()));
         line.visibleProperty().bind(highlightedPositionProperty.greaterThanOrEqualTo(0));
 
+        pane.sceneProperty().addListener((p, oldS, newS) -> {
+            assert oldS == null;
+            newS.addPreLayoutPulseListener(this::redraw);
+        });
 
 
+
+    }
+
+    private void redraw(){
+        if (pane.getHeight() != 0 && pane.getWidth() != 0) {
+            createBlueRectangleProperty();
+            try {
+                createTransformationsProperty();
+            } catch (NonInvertibleTransformException e) {
+                e.printStackTrace();
+            }
+            createGrid();
+        }
     }
 
     /**
