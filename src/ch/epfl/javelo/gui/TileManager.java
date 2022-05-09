@@ -29,7 +29,7 @@ public final class TileManager {
     public TileManager(Path path, String tileServerName){
         this.path = path;
         this.tileServerName = tileServerName;
-        this.cacheMemory = new LinkedHashMap<TileId, Image>(100, 0.75F, true); //TODO check
+        this.cacheMemory = new LinkedHashMap<>(100, 0.75F, true);
     }
 
 
@@ -41,8 +41,8 @@ public final class TileManager {
      * Si elle ne s'y trouve pas elle est cherchée dans le cache disque. Si elle s'y trouve elle
      * est retournée et placée dans le cache mémoire. Si elle ne s'y trouve pas elle est cherchée
      * sur le serveur, retournée et placée dans les mémoires.
-     * @param tileId
-     * @return
+     * @param tileId l'identité de la tuile.
+     * @return l'image correspondante à l'identité de la tuile.
      */
     public Image imageForTileAt(TileId tileId) {
 
@@ -54,7 +54,7 @@ public final class TileManager {
         //Récupération des attributs du chemin de l'image.
         String zoomLevel = Integer.toString(tileId.zoomLevel());
         String indexX = Integer.toString(tileId.indexX());
-        String indexY = Integer.toString(tileId.indexY()) + ".png";
+        String indexY = tileId.indexY() + ".png";
 
         //Création du path de l'image pour la trouver/créer dans les fichiers.
         Path pathOfImage = path.resolve(zoomLevel).
@@ -75,10 +75,10 @@ public final class TileManager {
             //Récupération de l'image sur le serveur :
 
             //Création de l'URL
-            StringBuilder urlBuilder = new StringBuilder("https://tile.openstreetmap.org/");
-            urlBuilder.append(zoomLevel).append("/");
-            urlBuilder.append(indexX).append("/");
-            urlBuilder.append(indexY);
+            StringBuilder urlBuilder = new StringBuilder(tileServerName +"/");
+            urlBuilder.append(zoomLevel).append("/").
+                    append(indexX).append("/").
+                    append(indexY);
 
             //Récupération de l'image sur le serveur.
             try {
@@ -102,10 +102,6 @@ public final class TileManager {
                         e.printStackTrace();
                     }
                 }
-
-                //Bloc catch
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -145,17 +141,14 @@ public final class TileManager {
          * @param indexX    l'index X de la tuile,
          * @param indexY    et l'index Y de la tuile.
          */
-        public TileId(int zoomLevel, int indexX, int indexY) {
+        public TileId {
             if (!isValid(zoomLevel, indexX, indexY)) {
                 throw new IllegalArgumentException();
             }
-            this.zoomLevel = zoomLevel;
-            this.indexX = indexX;
-            this.indexY = indexY;
         }
 
         /**
-         * La méthode isVaild retourne vrai si et seulement si les trois arguments sont valides.
+         * La méthode isValid retourne vrai si et seulement si les trois arguments sont valides.
          *
          * @param zoomLevel le niveau de zoom de la tuile.
          * @param indexX    l'index X de la tuile.
@@ -163,9 +156,9 @@ public final class TileManager {
          * @return vrai si les arguments sont valides.
          */
         public boolean isValid(int zoomLevel, int indexX, int indexY) {
-            return zoomLevel >= 0 && //TODO le prof a dit depuis piazza de ne pas vérifier upperbound de zoomlevel
+            return zoomLevel >= 0 &&
                     indexX >= 0 &&
-                    indexY >= 0; //TODO Check if there exist an upper bound
+                    indexY >= 0;
         }
     }
 }
