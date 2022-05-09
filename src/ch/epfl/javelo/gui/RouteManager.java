@@ -26,13 +26,13 @@ public final class RouteManager {
 
     private static final String ERROR_CONSUMER_MESSAGE ="Un point de passage est déjà présent à cet endroit !";
 
-    private Polyline line;
-    private Circle disk;
+    private final Polyline line;
+    private final Circle disk;
 
-    private Pane pane;
-    private RouteBean routeBean;
-    private ReadOnlyObjectProperty<MapViewParameters> mapViewParametersProperty;
-    private Consumer<String> errorConsumer;
+    private final Pane pane;
+    private final RouteBean routeBean;
+    private final ReadOnlyObjectProperty<MapViewParameters> mapViewParametersProperty;
+    private final Consumer<String> errorConsumer;
 
     /**
      * Le constructeur de RouteManager permet d'initialiser ses attributs, et ajoute un auditeur à l'itinéraire du routeBean
@@ -59,7 +59,7 @@ public final class RouteManager {
         disk.setId(HIGHLIGHT_DISK_ID);
 
         //Quand on clique sur le disque,
-        //on regarde s'il y a déjà un point de passage qui contient le noeud situer à la position de la souris,
+        //on regarde s'il y a déjà un point de passage qui contient le nœud situer à la position de la souris,
         //si c'est le cas l'erreur est consommé,
         //sinon on ajoute le point de passage dans la liste des points de passage.
         disk.setOnMouseClicked(e ->{

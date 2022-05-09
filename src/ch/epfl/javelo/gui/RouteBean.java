@@ -91,7 +91,7 @@ public final class RouteBean {
 
     /**
      * La méthode getHighlightedPosition retourne la position mise en évidence.
-     * @return
+     * @return la position.
      */
     public double getHighlightedPosition() {
         return highlightedPosition.get();
