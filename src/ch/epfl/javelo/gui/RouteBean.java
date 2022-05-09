@@ -52,48 +52,80 @@ public final class RouteBean {
 
         waypoints.addListener((ListChangeListener) e -> recalculateItinerary());
 
-
-
         recalculateItinerary();
 
     }
 
 
-
-
+    /**
+     * La méthode getWaypoints
+     * @return retourne une liste observable de waypoints.
+     */
     public ObservableList<Waypoint> getWaypoints() {
         return waypoints;
     }
 
+    /**
+     * La méthode getRoute
+     * @return retourne la route que contient la propriété.
+     */
     public Route getRoute() {
         return route.get();
     }
 
+    /**
+     * La méthode routeProperty
+     * @return retourne la propriété qui contient la route.
+     */
     public ReadOnlyObjectProperty<Route> routeProperty() {
         return route;
     }
 
+    /**
+     * La méthode getHighlightedPositionProperty
+     * @return retourne la propriété qui contient la position mise en évidence.
+     */
     public DoubleProperty getHighlightedPositionProperty(){
         return highlightedPosition;
     }
 
+    /**
+     * La méthode getHighlightedPosition retourne la position mise en évidence.
+     * @return
+     */
     public double getHighlightedPosition() {
         return highlightedPosition.get();
     }
 
+    /**
+     * La méthode setHighlightedPosition permet de modifier la position mise en évidence.
+     * @param highlightedPosition la nouvelle position mise en évidence le long de l'itinéraire.
+     */
     public void setHighlightedPosition(double highlightedPosition) {
         this.highlightedPosition.set(highlightedPosition);
     }
 
+    /**
+     * La méthode getElevationProfile
+     * @return retourne le profil contenu dans la propriété.
+     */
     public ElevationProfile getElevationProfile() {
         return elevationProfile.get();
     }
 
+    /**
+     * La méthode elevationProfileProperty
+     * @return retourne la propriété qui contient le profil.
+     */
     public ReadOnlyObjectProperty<ElevationProfile> elevationProfileProperty() {
         return elevationProfile;
     }
 
-
+    /**
+     * La méthode cacheMemoryAdd permet d'ajouter une route au cache mémoire.
+     * @param pair une paire constituée d'une part des nœuds de départ et d'arrivée et de
+     *             l'autre part de la route.
+     */
     private void cacheMemoryAdd(Pair<Pair<Integer, Integer>, Route> pair){
         if (cacheMemory.size()<100){
             cacheMemory.put(pair.getKey(), pair.getValue());
@@ -105,6 +137,9 @@ public final class RouteBean {
 
     }
 
+    /**
+     * La méthode recalculateItinerary permet de recalculer l'itinéraire.
+     */
     private void recalculateItinerary(){
         if (waypoints.size() < 2){
             setNullItinerary();
@@ -132,7 +167,7 @@ public final class RouteBean {
 
                 }
                 listOfSinglesRoutes.add(newRoute);
-                cacheMemoryAdd(new Pair<Pair<Integer, Integer>, Route>(itineraryPair, newRoute));
+                cacheMemoryAdd(new Pair<>(itineraryPair, newRoute));
             }
             firstWaypointToLink = secondWayPointToLink;
         }
@@ -142,6 +177,9 @@ public final class RouteBean {
         elevationProfile.set(ElevationProfileComputer.elevationProfile(newItinerary, MAX_STEP_LENGTH));
     }
 
+    /**
+     * La méthode setNullItinerary permet de rendre l'itinéraire courant nul.
+     */
     private void setNullItinerary(){
         route.set(null);
         elevationProfile.set(null);

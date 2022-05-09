@@ -37,17 +37,17 @@ public final class WaypointsManager {
 
     //creation d'une map privé qui permet de renvoyer l'index au quelle se trouve un point de passage,
     //dans la liste de point de passage en ayant seulement accès son marqueur associer.
-    private Map<Group,Integer> mapWaypointPinToIndex = new HashMap<>();
+    private final Map<Group,Integer> mapWaypointPinToIndex = new HashMap<>();
 
     private final Graph graph;
-    private ObjectProperty<MapViewParameters> mapViewParametersProperty;
-    private ObservableList<Waypoint> waypointList;
-    private Consumer<String> errorConsumer;
-    private Pane pane;
+    private final ObjectProperty<MapViewParameters> mapViewParametersProperty;
+    private final ObservableList<Waypoint> waypointList;
+    private final Consumer<String> errorConsumer;
+    private final Pane pane;
 
     /**
      * Le constructeur de WaypointManager initialise tous les attributs et ajoute un auditeur aux paramètres du fond de la carte,
-     * qui quand celle ci change, on redessine tous les marqueurs de point de passage ,
+     * qui quand celle ci change, on redessine tous les marqueurs de point de passage
      * et un auditeur à la liste des points de passage pour quand elle change, on recrée tous les marqueurs.
      * @param graph le graph ou se trouve les points de passage.
      * @param mapViewParametersProperty les paramètres du fond de la carte.
@@ -73,7 +73,7 @@ public final class WaypointsManager {
         });
 
         //Quand la liste des points de passage change,
-        //on re-créer tous les marqueurs de point de passage.
+        //on récrée tous les marqueurs de point de passage.
         waypointList.addListener((ListChangeListener)e -> createWaypointPins());
 
         createWaypointPins();
@@ -203,7 +203,7 @@ public final class WaypointsManager {
      * La méthode addWaypoint privée, crée et retourne un point de passage à la position donnée
      * @param x la coordonnée x du panneau centrer en haut à gauche, que l'on veut placer le point de passage.
      * @param y la coordonnée y du panneau centrer en haut à gauche, que l'on veut placer le point de passage.
-     * @return un point de passage, ou null s'il n'existe pas de noeud à proximité du point de passage.
+     * @return un point de passage, ou null s'il n'existe pas de nœud à proximité du point de passage.
      */
     private Waypoint createWaypoint(double x, double y){
 
@@ -213,8 +213,7 @@ public final class WaypointsManager {
                 graph.nodeClosestTo(position, MAX_CLOSEST_NODE_DISTANCE);
 
         if(nodeClosestToWaypoint != -1){
-            Waypoint waypoint = new Waypoint(position, nodeClosestToWaypoint);
-            return waypoint;
+            return new Waypoint(position, nodeClosestToWaypoint);
         }
         else {
             errorConsumer.accept(ERROR_MESSAGE);
