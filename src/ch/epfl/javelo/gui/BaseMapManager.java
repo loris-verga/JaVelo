@@ -31,6 +31,12 @@ public final class BaseMapManager {
     //dimensions d'une tuile :
     private final double TILE_LENGTH = 256.0;
 
+    //Constantes:
+    private final long CURRENT_TIME_CONSTANT = 250;
+    private final int MAX_ZOOM_LEVEL = 19;
+    private final int MIN_ZOOM_LEVEL = 8;
+
+
 
     /**
      * La classe possède un constructeur public qui prend en argument :
@@ -66,13 +72,13 @@ public final class BaseMapManager {
             if (e.getDeltaY() == 0d){ return;}
             long currentTime = System.currentTimeMillis();
             if (currentTime < minimumScrollTime.get()){ return;}
-            minimumScrollTime.set(currentTime + 250);
+            minimumScrollTime.set(currentTime + CURRENT_TIME_CONSTANT);
             double zoomDelta = Math.signum(e.getDeltaY());
             MapViewParameters mapViewParameters = mapViewParametersProperty.get();
             int zoomLevel = mapViewParameters.zoomLevel();
             int newZoom = (int)Math.round(zoomLevel + zoomDelta);
-            if (newZoom > 19){newZoom = 19;}
-            else if (newZoom<8){newZoom = 8;}
+            if (newZoom > MAX_ZOOM_LEVEL){newZoom = MAX_ZOOM_LEVEL;}
+            else if (newZoom<MIN_ZOOM_LEVEL){newZoom = MIN_ZOOM_LEVEL;}
 
             //Récupération de la position de la souris :
             double mousePosX = e.getX(), mousePosY = e.getY();
@@ -154,7 +160,7 @@ public final class BaseMapManager {
      */
     private double diffX(){
         //Coordonnée haut gauche de la carte.
-        double minX = mapViewParametersProperty.get().minX();
+        double minX = mapViewParametersProperty.get().topLeft().getX();
         //Index de la tuile en haut gauche :
         int indexX = (int) Math.floor(minX / TILE_LENGTH);
         //Coordonnée haute-gauche de cette tuile :
@@ -169,7 +175,7 @@ public final class BaseMapManager {
      */
     private double diffY(){
         //Coordonnée haut gauche de la carte.
-        double minY = mapViewParametersProperty.get().minY();
+        double minY = mapViewParametersProperty.get().topLeft().getY();
         //Index de la tuile en haut gauche :
         int indexY = (int) Math.floor(minY / TILE_LENGTH);
         //Coordonnée haute-gauche de cette tuile :
@@ -243,7 +249,6 @@ public final class BaseMapManager {
         }
 
         redrawOnNextPulse();
-
     }
 
     /**
