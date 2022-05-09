@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 import java.nio.file.Path;
 
 public final class Stage10Test extends Application {
-    public static void main(String[] args) { launch(args); }
+    public static void main(String[] args) { launch(args);}
 
     @Override
     public void start(Stage primaryStage) throws Exception {

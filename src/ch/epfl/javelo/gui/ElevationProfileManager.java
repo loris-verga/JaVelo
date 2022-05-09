@@ -112,15 +112,16 @@ public final class ElevationProfileManager {
             newS.addPreLayoutPulseListener(this::redraw);
         });
 
+        /*
         line.layoutXProperty().bind(Bindings.createDoubleBinding(
                 () -> highlightedPositionProperty.get(), highlightedPositionProperty));
-
         line.startYProperty().bind(Bindings.createDoubleBinding(
                 () -> blueRectangleProperty.get().getMinY()));
         line.endYProperty().bind(Bindings.createDoubleBinding(
                 () -> blueRectangleProperty.get().getMaxY()));
-        line.visibleProperty().bind(highlightedPositionProperty.greaterThanOrEqualTo(0));
+        line.visibleProperty().bind(highlightedPositionProperty.greaterThanOrEqualTo(0)); */
 
+        createBlueRectangleProperty();
 
 
     }
@@ -276,6 +277,12 @@ public final class ElevationProfileManager {
                 path.getElements().addAll(moveTo, lineTo);
             }
         }
+        ElevationProfile elevationProfile = elevationProfileProperty.get();
+        textVbox.setText(String.format("Longueur : %.1f km" +
+                "     Montée : %.0f m" +
+                "     Descente : %.0f m" +
+                "     Altitude : de %.0f m à %.0f m", elevationProfile.length(), elevationProfile.totalAscent(),
+                elevationProfile.totalDescent(), elevationProfile.minElevation(), elevationProfile.maxElevation()));
     }
 
     private void createProfilGraph(){
