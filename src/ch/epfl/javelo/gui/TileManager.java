@@ -75,7 +75,7 @@ public final class TileManager {
             //Récupération de l'image sur le serveur :
 
             //Création de l'URL
-            StringBuilder urlBuilder = new StringBuilder(tileServerName +"/");
+            StringBuilder urlBuilder = new StringBuilder("https://" + tileServerName +"/");
             urlBuilder.append(zoomLevel).append("/").
                     append(indexX).append("/").
                     append(indexY);
