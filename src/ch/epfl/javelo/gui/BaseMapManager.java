@@ -32,7 +32,7 @@ public final class BaseMapManager {
     private final double TILE_LENGTH = 256.0;
 
     //Constantes:
-    private final long CURRENT_TIME_CONSTANT = 250;
+    private final long CURRENT_TIME_CONSTANT = 200;
     private final int MAX_ZOOM_LEVEL = 19;
     private final int MIN_ZOOM_LEVEL = 8;
 
@@ -67,16 +67,16 @@ public final class BaseMapManager {
 
 
         //Changement du niveau de zoom :
-        SimpleLongProperty minimumScrollTime = new SimpleLongProperty();
+        SimpleLongProperty minScrollTime = new SimpleLongProperty();
         pane.setOnScroll(e -> {
             if (e.getDeltaY() == 0d){ return;}
             long currentTime = System.currentTimeMillis();
-            if (currentTime < minimumScrollTime.get()){ return;}
-            minimumScrollTime.set(currentTime + CURRENT_TIME_CONSTANT);
-            double zoomDelta = Math.signum(e.getDeltaY());
+            if (currentTime < minScrollTime.get()){ return;}
+            minScrollTime.set(currentTime + CURRENT_TIME_CONSTANT);
+            int zoomDelta = (int)Math.signum(e.getDeltaY());
             MapViewParameters mapViewParameters = mapViewParametersProperty.get();
             int zoomLevel = mapViewParameters.zoomLevel();
-            int newZoom = (int)Math.round(zoomLevel + zoomDelta);
+            int newZoom = Math.round(zoomLevel + zoomDelta);
             if (newZoom > MAX_ZOOM_LEVEL){newZoom = MAX_ZOOM_LEVEL;}
             else if (newZoom<MIN_ZOOM_LEVEL){newZoom = MIN_ZOOM_LEVEL;}
 

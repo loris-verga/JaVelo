@@ -126,7 +126,6 @@ public final class ElevationProfileManager {
 
     }
 
-    }
 
     private void redraw(){
         //if (pane.getHeight() != 0 && pane.getWidth() != 0) {
