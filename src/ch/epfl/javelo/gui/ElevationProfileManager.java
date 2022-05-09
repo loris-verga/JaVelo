@@ -126,7 +126,7 @@ public final class ElevationProfileManager {
     }
 
     private void redraw(){
-        if (pane.getHeight() != 0 && pane.getWidth() != 0) {
+        //if (pane.getHeight() != 0 && pane.getWidth() != 0) {
             createBlueRectangleProperty();
             try {
                 createTransformationsProperty();
@@ -134,7 +134,8 @@ public final class ElevationProfileManager {
                 e.printStackTrace();
             }
             createGrid();
-        }
+            createProfilGraph();
+        //}
     }
 
     /**
@@ -169,9 +170,9 @@ public final class ElevationProfileManager {
         double p2 = borderPane.getHeight();
 
         tx = blueRectangleProperty.get().getWidth()
-                / (borderPane.getWidth() - (inset.getLeft() + inset.getRight()));
+                / (pane.getWidth() - (inset.getLeft() + inset.getRight()));
         ty = - blueRectangleProperty.get().getHeight()
-                /(borderPane.getHeight() - (inset.getTop() + inset.getBottom()));
+                /(pane.getHeight() - (inset.getTop() + inset.getBottom()));
         screenToWorld.prependScale( tx, ty);
 
         tx = blueRectangleProperty.get().getMinX();
@@ -201,7 +202,7 @@ public final class ElevationProfileManager {
         double pixelsBetweenHorizontalLines;
         int horizontalStep = 0;
 
-        for(int i = 0; i < POSITION_STEPS.length; i++) {
+        for(int i = 0; i < POSITION_STEPS.length && verticalStep == 0; i++) {
             Point2D point = worldToScreenProperty.get()
                     .deltaTransform(
                             new Point2D(POSITION_STEPS[i], 0));
@@ -212,14 +213,13 @@ public final class ElevationProfileManager {
             }
         }
 
-        for(int i = 0; i < ELEVATION_STEPS.length; i++) {
+        for(int i = 0; i < ELEVATION_STEPS.length && horizontalStep == 0; i++) {
             Point2D point = worldToScreenProperty.get()
                                 .deltaTransform(
                                     new Point2D(0,ELEVATION_STEPS[i]));
             pixelsBetweenHorizontalLines = Math.abs(point.getY());
             if(pixelsBetweenHorizontalLines > 25){
                 horizontalStep = ELEVATION_STEPS[i];
-                break;
             }
         }
         if(verticalStep!=0 && horizontalStep!=0) {
@@ -276,6 +276,23 @@ public final class ElevationProfileManager {
                 path.getElements().addAll(moveTo, lineTo);
             }
         }
+    }
+
+    private void createProfilGraph(){
+        polygon.getPoints().clear();
+        double minX = worldToScreenProperty.get().transform(blueRectangleProperty.get().getMinX(), 0.0).getX();
+        double maxX = worldToScreenProperty.get().transform(blueRectangleProperty.get().getMaxX(),0.0).getX();
+        double minY = worldToScreenProperty.get().transform(0.0,blueRectangleProperty.get().getMinY()).getY();
+
+        polygon.getPoints().addAll(minX,minY);
+        for(double screenX = minX; screenX <= maxX; screenX++) {
+            double positionX = screenToWorldProperty.get().transform(screenX, 0).getX();
+            double elevationY = elevationProfileProperty.get().elevationAt(positionX);
+
+            double screenY = worldToScreenProperty.get().transform(0.0, elevationY).getY();
+            polygon.getPoints().addAll(screenX, screenY);
+        }
+        polygon.getPoints().addAll(maxX,minY);
     }
 
     public double mousePositionOnProfileProperty() {
