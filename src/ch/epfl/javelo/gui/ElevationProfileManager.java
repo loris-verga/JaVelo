@@ -46,7 +46,7 @@ public final class ElevationProfileManager {
     private final VBox vBox;
     private final Text textVbox;
 
-    private final Insets inset = new Insets(10, 10, 20, 40); //TODO utiliser pour part 2
+    private final Insets inset = new Insets(10, 10, 20, 40);
 
     private ObjectProperty<Rectangle2D> blueRectangleProperty;
     private ObjectProperty<Transform> screenToWorldProperty;
@@ -126,6 +126,8 @@ public final class ElevationProfileManager {
 
     }
 
+    }
+
     private void redraw(){
         //if (pane.getHeight() != 0 && pane.getWidth() != 0) {
             createBlueRectangleProperty();
@@ -157,6 +159,7 @@ public final class ElevationProfileManager {
      */
     public ReadOnlyDoubleProperty mousePositionProfileProperty(){
         return this.mousePositionOnProfileProperty; //TODO check que la la valeur soit arrondie à l'entier le plus proche.
+        //TODO check Double.Nan
     }
 
     private void createTransformationsProperty() throws NonInvertibleTransformException {
@@ -302,9 +305,6 @@ public final class ElevationProfileManager {
         polygon.getPoints().addAll(maxX,minY);
     }
 
-    public double mousePositionOnProfileProperty() {
-        return mousePositionOnProfileProperty.get();
-    }
 
 
 }
