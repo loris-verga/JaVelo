@@ -18,6 +18,7 @@ import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Transform;
 
+
 /**
  * La classe ElevationProfileManager gère l'affichage et l'interaction avec le profil
  * en long d'un itinéraire.
@@ -95,6 +96,15 @@ public final class ElevationProfileManager {
         this.line = new Line();
         pane.getChildren().add(line);
 
+        //todo verify that this replaces the previous commented message
+        pane.widthProperty().addListener((p,o,n) -> redraw());
+        pane.heightProperty().addListener((p,o,n) -> redraw());
+
+        //pane.sceneProperty().addListener((p, oldS, newS) -> {
+            //assert oldS == null;
+            //newS.addPreLayoutPulseListener(this::redraw);
+        //});
+
         this.vBox = new VBox();
         vBox.setId("profile_data");
         borderPane.setBottom(vBox);
@@ -102,40 +112,47 @@ public final class ElevationProfileManager {
         vBox.getChildren().add(textVbox);
 
 
-        screenToWorldProperty = new SimpleObjectProperty<>();
-        worldToScreenProperty = new SimpleObjectProperty<>();
-
         blueRectangleProperty = new SimpleObjectProperty<>();
 
-        pane.sceneProperty().addListener((p, oldS, newS) -> {
-            assert oldS == null;
-            newS.addPreLayoutPulseListener(this::redraw);
-        });
+        blueRectangleProperty.bind(Bindings.createObjectBinding(
+                () -> createBlueRectangle(),
+                pane.widthProperty(),
+                pane.heightProperty()
+        ));
 
-        redraw();
+        screenToWorldProperty = new SimpleObjectProperty<>();
+
+        screenToWorldProperty.bind(Bindings.createObjectBinding(
+                () -> createScreenToWorldProperty(),
+                pane.widthProperty(),
+                pane.heightProperty()
+        ));
+
+        worldToScreenProperty = new SimpleObjectProperty<>();
+
+        worldToScreenProperty.bind(Bindings.createObjectBinding(
+                () -> createScreenToWorldProperty().createInverse(),
+                pane.widthProperty(),
+                pane.heightProperty()
+        ));
 
         line.layoutXProperty().bind(Bindings.createDoubleBinding(
-                () -> highlightedPositionProperty.get(), highlightedPositionProperty));
+                () -> highlightedPositionProperty.get(),
+                highlightedPositionProperty));
         line.startYProperty().bind(Bindings.createDoubleBinding(
-                () -> worldToScreenProperty.get().deltaTransform(0.0,blueRectangleProperty.get().getMinY()).getY()));
+                () -> blueRectangleProperty.get().getMinY(),
+                blueRectangleProperty));
         line.endYProperty().bind(Bindings.createDoubleBinding(
-                () -> worldToScreenProperty.get().deltaTransform(0.0,blueRectangleProperty.get().getMaxY()).getY()));
+                () -> blueRectangleProperty.get().getMaxY(),
+                blueRectangleProperty));
         line.visibleProperty().bind(highlightedPositionProperty.greaterThanOrEqualTo(0));
 
 
     }
 
-
     private void redraw(){
-            createBlueRectangleProperty();
-            try {
-                createTransformationsProperty();
-            } catch (NonInvertibleTransformException e) {
-                e.printStackTrace();
-            }
             createGrid();
             createProfilGraph();
-
     }
 
     /**
@@ -159,35 +176,39 @@ public final class ElevationProfileManager {
         //TODO check Double.Nan
     }
 
-    private void createTransformationsProperty() throws NonInvertibleTransformException {
+    private Rectangle2D createBlueRectangle(){
+        double width = pane.getWidth() - (inset.getLeft() + inset.getRight());
+        double height = pane.getHeight() - (inset.getTop() + inset.getBottom());
 
-        Affine screenToWorld = new Affine();
-
-        double tx = - inset.getLeft();
-        double ty = - inset.getTop();
-        screenToWorld.prependTranslation( tx, ty);
-
-        tx = blueRectangleProperty.get().getWidth()
-                / (pane.getWidth() - (inset.getLeft() + inset.getRight()));
-        ty = - blueRectangleProperty.get().getHeight()
-                /(pane.getHeight() - (inset.getTop() + inset.getBottom()));
-        screenToWorld.prependScale( tx, ty);
-
-        tx = blueRectangleProperty.get().getMinX();
-        ty = blueRectangleProperty.get().getMaxY();
-        screenToWorld.prependTranslation( tx, ty);
-
-        screenToWorldProperty.set(screenToWorld);
-        worldToScreenProperty.set(screenToWorld.createInverse());
+        if(!(width >= 0 && height >= 0)){
+            width = 0;
+            height = 0;
+        }
+        return new Rectangle2D(inset.getLeft(), inset.getTop(), width, height);
     }
 
-    private void createBlueRectangleProperty(){
+    private Transform createScreenToWorldProperty() throws NonInvertibleTransformException {
+
+        Affine screenToWorld = new Affine();
 
         double minX = 0;
         double minY = elevationProfileProperty.get().minElevation();
         double width = elevationProfileProperty.get().length();
         double height = elevationProfileProperty.get().maxElevation() - elevationProfileProperty.get().minElevation();
-        blueRectangleProperty.set(new Rectangle2D(minX, minY,width, height));
+
+        double tx = - inset.getLeft();
+        double ty = - inset.getTop();
+        screenToWorld.prependTranslation( tx, ty);
+
+        double sx = width / blueRectangleProperty.get().getWidth();
+        double sy = - height / blueRectangleProperty.get().getHeight();
+        screenToWorld.prependScale( sx, sy);
+
+        tx = minX;
+        ty = minY + height;
+        screenToWorld.prependTranslation( tx, ty);
+
+        return screenToWorld;
     }
 
     private void createGrid(){
@@ -202,78 +223,87 @@ public final class ElevationProfileManager {
 
         for(int i = 0; i < POSITION_STEPS.length && verticalStep == 0; i++) {
             Point2D point = worldToScreenProperty.get()
-                    .deltaTransform(
-                            new Point2D(POSITION_STEPS[i], 0));
+                                .deltaTransform(POSITION_STEPS[i], 0);
             pixelsBetweenVerticalLines = point.getX();
             if(pixelsBetweenVerticalLines > 50){
                 verticalStep = POSITION_STEPS[i];
-                break;
             }
         }
 
         for(int i = 0; i < ELEVATION_STEPS.length && horizontalStep == 0; i++) {
             Point2D point = worldToScreenProperty.get()
-                                .deltaTransform(
-                                    new Point2D(0,ELEVATION_STEPS[i]));
+                                .deltaTransform(0,ELEVATION_STEPS[i]);
             pixelsBetweenHorizontalLines = Math.abs(point.getY());
             if(pixelsBetweenHorizontalLines > 25){
                 horizontalStep = ELEVATION_STEPS[i];
             }
         }
-        if(verticalStep!=0 && horizontalStep!=0) {
-            int numberOfVerticalLines = (int) blueRectangleProperty.get().getWidth() / verticalStep;
-            int numberOfHorizontalLines = (int) blueRectangleProperty.get().getHeight() / horizontalStep;
+        if(verticalStep != 0 && horizontalStep != 0) {
+            double minX = 0;
+            double minY = elevationProfileProperty.get().minElevation();
+            double width = elevationProfileProperty.get().length();
+            double height = elevationProfileProperty.get().maxElevation() - elevationProfileProperty.get().minElevation();
 
+            int numberOfVerticalLines = (int) width / verticalStep;
+            int numberOfHorizontalLines = (int) height / horizontalStep;
 
             for (int i = 0; i <= numberOfVerticalLines; i++) {
                 int valueOfPosition = i * verticalStep;
 
                 Point2D point2DMoveTo = worldToScreenProperty.get()
-                        .transform(valueOfPosition, blueRectangleProperty.get().getMinY());
+                        .transform(valueOfPosition, minY);
                 PathElement moveTo = new MoveTo(point2DMoveTo.getX(), point2DMoveTo.getY());
 
                 Point2D point2DLineTo = worldToScreenProperty.get()
-                        .transform(valueOfPosition, blueRectangleProperty.get().getMaxY());
+                        .transform(valueOfPosition, minY + height);
                 PathElement lineTo = new LineTo(point2DLineTo.getX(), point2DLineTo.getY());
 
                 Text positionText = new Text();
+
+                positionText.getStyleClass().addAll("grid_label", "vertical");
+                positionText.setFont(Font.font("Avenir", 10));
                 positionText.setTextOrigin(VPos.TOP);
+
                 positionText.setText(String.valueOf(valueOfPosition / 1000));
                 positionText.setX(point2DMoveTo.getX() - positionText.prefWidth(0) / 2);
                 positionText.setY(point2DMoveTo.getY());
 
-                positionText.getStyleClass().addAll("grid_label", "vertical");
-                positionText.setFont(Font.font("Avenir", 10));
                 group.getChildren().add(positionText);
 
                 path.getElements().addAll(moveTo, lineTo);
             }
 
-            double firstHorizontalLineY = blueRectangleProperty.get().getMinY() - blueRectangleProperty.get().getMinY() % horizontalStep + horizontalStep;
+            double firstHorizontalLineY = minY + horizontalStep - (minY % horizontalStep);
             for (int i = 0; i <= numberOfHorizontalLines; i++) {
+
+                //TODO fix error where text moves up and down when windown chnages...
+
                 int valueOfElevation = i * horizontalStep + (int) firstHorizontalLineY;
 
                 Point2D point2DMoveTo = worldToScreenProperty.get()
-                        .transform(blueRectangleProperty.get().getMinX(), valueOfElevation);
+                        .transform(minX, valueOfElevation);
                 PathElement moveTo = new MoveTo(point2DMoveTo.getX(), point2DMoveTo.getY());
 
                 Point2D point2DLineTo = worldToScreenProperty.get()
-                        .transform(blueRectangleProperty.get().getMaxX(), valueOfElevation);
+                        .transform(minX + width, valueOfElevation);
                 PathElement lineTo = new LineTo(point2DLineTo.getX(), point2DLineTo.getY());
 
-                Text positionText = new Text();
-                positionText.setTextOrigin(VPos.CENTER);
-                positionText.setText(String.valueOf(valueOfElevation));
-                positionText.setX(point2DMoveTo.getX() - (positionText.prefWidth(0) + 2));
-                positionText.setY(point2DMoveTo.getY());
+                Text elevationText = new Text();
 
-                positionText.getStyleClass().addAll("grid_label", "horizontal");
-                positionText.setFont(Font.font("Avenir", 10));
-                group.getChildren().add(positionText);
+                elevationText.getStyleClass().addAll("grid_label", "horizontal");
+                elevationText.setFont(Font.font("Avenir", 10));
+                elevationText.setTextOrigin(VPos.CENTER);
+
+                elevationText.setText(String.valueOf(valueOfElevation));
+                elevationText.setX(point2DMoveTo.getX() - ( elevationText.prefWidth(0) + 2));
+                elevationText.setY(point2DMoveTo.getY());
+
+                group.getChildren().add(elevationText);
 
                 path.getElements().addAll(moveTo, lineTo);
             }
         }
+
         ElevationProfile elevationProfile = elevationProfileProperty.get();
         textVbox.setText(String.format("Longueur : %.1f km" +
                 "     Montée : %.0f m" +
@@ -284,13 +314,14 @@ public final class ElevationProfileManager {
 
     private void createProfilGraph(){
         polygon.getPoints().clear();
-        double minX = worldToScreenProperty.get().transform(blueRectangleProperty.get().getMinX(), 0.0).getX();
-        double maxX = worldToScreenProperty.get().transform(blueRectangleProperty.get().getMaxX(),0.0).getX();
-        double minY = worldToScreenProperty.get().transform(0.0,blueRectangleProperty.get().getMinY()).getY();
+
+        double minX = blueRectangleProperty.get().getMinX();
+        double maxX = blueRectangleProperty.get().getMaxX();
+        double minY = blueRectangleProperty.get().getMaxY();
 
         polygon.getPoints().addAll(minX,minY);
         for(double screenX = minX; screenX <= maxX; screenX++) {
-            double positionX = screenToWorldProperty.get().transform(screenX, 0).getX();
+            double positionX = screenToWorldProperty.get().transform(screenX, 0.0).getX();
             double elevationY = elevationProfileProperty.get().elevationAt(positionX);
 
             double screenY = worldToScreenProperty.get().transform(0.0, elevationY).getY();
