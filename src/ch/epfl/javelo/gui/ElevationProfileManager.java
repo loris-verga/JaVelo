@@ -112,23 +112,21 @@ public final class ElevationProfileManager {
             newS.addPreLayoutPulseListener(this::redraw);
         });
 
-        /*
+        redraw();
+
         line.layoutXProperty().bind(Bindings.createDoubleBinding(
                 () -> highlightedPositionProperty.get(), highlightedPositionProperty));
         line.startYProperty().bind(Bindings.createDoubleBinding(
-                () -> blueRectangleProperty.get().getMinY()));
+                () -> worldToScreenProperty.get().deltaTransform(0.0,blueRectangleProperty.get().getMinY()).getY()));
         line.endYProperty().bind(Bindings.createDoubleBinding(
-                () -> blueRectangleProperty.get().getMaxY()));
-        line.visibleProperty().bind(highlightedPositionProperty.greaterThanOrEqualTo(0)); */
-
-        createBlueRectangleProperty();
+                () -> worldToScreenProperty.get().deltaTransform(0.0,blueRectangleProperty.get().getMaxY()).getY()));
+        line.visibleProperty().bind(highlightedPositionProperty.greaterThanOrEqualTo(0));
 
 
     }
 
 
     private void redraw(){
-        //if (pane.getHeight() != 0 && pane.getWidth() != 0) {
             createBlueRectangleProperty();
             try {
                 createTransformationsProperty();
@@ -137,7 +135,7 @@ public final class ElevationProfileManager {
             }
             createGrid();
             createProfilGraph();
-        //}
+
     }
 
     /**
@@ -168,9 +166,6 @@ public final class ElevationProfileManager {
         double tx = - inset.getLeft();
         double ty = - inset.getTop();
         screenToWorld.prependTranslation( tx, ty);
-
-        double p1 = borderPane.getWidth() ;
-        double p2 = borderPane.getHeight();
 
         tx = blueRectangleProperty.get().getWidth()
                 / (pane.getWidth() - (inset.getLeft() + inset.getRight()));
