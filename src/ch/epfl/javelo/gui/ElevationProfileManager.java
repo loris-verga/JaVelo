@@ -8,6 +8,7 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.VPos;
 import javafx.scene.Group;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -101,8 +102,8 @@ public final class ElevationProfileManager {
         pane.heightProperty().addListener((p,o,n) -> redraw());
 
         //pane.sceneProperty().addListener((p, oldS, newS) -> {
-            //assert oldS == null;
-            //newS.addPreLayoutPulseListener(this::redraw);
+        //assert oldS == null;
+        //newS.addPreLayoutPulseListener(this::redraw);
         //});
 
         this.vBox = new VBox();
@@ -147,12 +148,23 @@ public final class ElevationProfileManager {
                 blueRectangleProperty));
         line.visibleProperty().bind(highlightedPositionProperty.greaterThanOrEqualTo(0));
 
+        borderPane.setOnMouseMoved(e-> mousePositionUpdate(e));
+
 
     }
 
+    private void mousePositionUpdate(MouseEvent e){
+        double posX = e.getX();
+        double maxX = blueRectangleProperty.get().getMaxX();
+        double minX = blueRectangleProperty.get().getMinX();
+        if (posX > maxX) { mousePositionOnProfileProperty.set(maxX);}
+        else if (posX <minX) {mousePositionOnProfileProperty.set(minX);}
+        else{mousePositionOnProfileProperty.set(posX);
+    }}
+
     private void redraw(){
-            createGrid();
-            createProfilGraph();
+        createGrid();
+        createProfilGraph();
     }
 
     /**
@@ -223,7 +235,7 @@ public final class ElevationProfileManager {
 
         for(int i = 0; i < POSITION_STEPS.length && verticalStep == 0; i++) {
             Point2D point = worldToScreenProperty.get()
-                                .deltaTransform(POSITION_STEPS[i], 0);
+                    .deltaTransform(POSITION_STEPS[i], 0);
             pixelsBetweenVerticalLines = point.getX();
             if(pixelsBetweenVerticalLines > 50){
                 verticalStep = POSITION_STEPS[i];
@@ -232,7 +244,7 @@ public final class ElevationProfileManager {
 
         for(int i = 0; i < ELEVATION_STEPS.length && horizontalStep == 0; i++) {
             Point2D point = worldToScreenProperty.get()
-                                .deltaTransform(0,ELEVATION_STEPS[i]);
+                    .deltaTransform(0,ELEVATION_STEPS[i]);
             pixelsBetweenHorizontalLines = Math.abs(point.getY());
             if(pixelsBetweenHorizontalLines > 25){
                 horizontalStep = ELEVATION_STEPS[i];
@@ -306,9 +318,9 @@ public final class ElevationProfileManager {
 
         ElevationProfile elevationProfile = elevationProfileProperty.get();
         textVbox.setText(String.format("Longueur : %.1f km" +
-                "     Montée : %.0f m" +
-                "     Descente : %.0f m" +
-                "     Altitude : de %.0f m à %.0f m", elevationProfile.length(), elevationProfile.totalAscent(),
+                        "     Montée : %.0f m" +
+                        "     Descente : %.0f m" +
+                        "     Altitude : de %.0f m à %.0f m", elevationProfile.length(), elevationProfile.totalAscent(),
                 elevationProfile.totalDescent(), elevationProfile.minElevation(), elevationProfile.maxElevation()));
     }
 
