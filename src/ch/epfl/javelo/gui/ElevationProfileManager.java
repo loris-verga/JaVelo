@@ -16,7 +16,6 @@ import javafx.scene.shape.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Affine;
-import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Transform;
 
 
@@ -97,14 +96,8 @@ public final class ElevationProfileManager {
         this.line = new Line();
         pane.getChildren().add(line);
 
-        //todo verify that this replaces the previous commented message
         pane.widthProperty().addListener((p,o,n) -> redraw());
         pane.heightProperty().addListener((p,o,n) -> redraw());
-
-        //pane.sceneProperty().addListener((p, oldS, newS) -> {
-        //assert oldS == null;
-        //newS.addPreLayoutPulseListener(this::redraw);
-        //});
 
         this.vBox = new VBox();
         vBox.setId("profile_data");
@@ -199,7 +192,7 @@ public final class ElevationProfileManager {
         return new Rectangle2D(inset.getLeft(), inset.getTop(), width, height);
     }
 
-    private Transform createScreenToWorldProperty() throws NonInvertibleTransformException {
+    private Transform createScreenToWorldProperty() {
 
         Affine screenToWorld = new Affine();
 
@@ -253,26 +246,29 @@ public final class ElevationProfileManager {
         if(verticalStep != 0 && horizontalStep != 0) {
             double minX = 0;
             double minY = elevationProfileProperty.get().minElevation();
-            double width = elevationProfileProperty.get().length();
-            double height = elevationProfileProperty.get().maxElevation() - elevationProfileProperty.get().minElevation();
+            double maxX = elevationProfileProperty.get().length();
+            double maxY = elevationProfileProperty.get().maxElevation();
 
-            int numberOfVerticalLines = (int) width / verticalStep;
-            int numberOfHorizontalLines = (int) height / horizontalStep;
+            double firstHorizontalLineY = horizontalStep * Math.ceil(minY / horizontalStep);
+            double firstVerticalLineX = verticalStep * Math.ceil(minX / verticalStep);
+
+            int numberOfVerticalLines = (int) Math.floor((maxX - firstVerticalLineX)/ verticalStep);
+            int numberOfHorizontalLines = (int) Math.floor((maxY - firstHorizontalLineY)/ horizontalStep);
 
             for (int i = 0; i <= numberOfVerticalLines; i++) {
-                int valueOfPosition = i * verticalStep;
+                int valueOfPosition = i * verticalStep + (int) firstVerticalLineX;
 
                 Point2D point2DMoveTo = worldToScreenProperty.get()
                         .transform(valueOfPosition, minY);
                 PathElement moveTo = new MoveTo(point2DMoveTo.getX(), point2DMoveTo.getY());
 
                 Point2D point2DLineTo = worldToScreenProperty.get()
-                        .transform(valueOfPosition, minY + height);
+                        .transform(valueOfPosition, maxY);
                 PathElement lineTo = new LineTo(point2DLineTo.getX(), point2DLineTo.getY());
 
                 Text positionText = new Text();
 
-                positionText.getStyleClass().addAll("grid_label", "vertical");
+                positionText.getStyleClass().addAll("grid_label", "horizontal");
                 positionText.setFont(Font.font("Avenir", 10));
                 positionText.setTextOrigin(VPos.TOP);
 
@@ -285,10 +281,7 @@ public final class ElevationProfileManager {
                 path.getElements().addAll(moveTo, lineTo);
             }
 
-            double firstHorizontalLineY = minY + horizontalStep - (minY % horizontalStep);
             for (int i = 0; i <= numberOfHorizontalLines; i++) {
-
-                //TODO fix error where text moves up and down when windown chnages...
 
                 int valueOfElevation = i * horizontalStep + (int) firstHorizontalLineY;
 
@@ -297,12 +290,12 @@ public final class ElevationProfileManager {
                 PathElement moveTo = new MoveTo(point2DMoveTo.getX(), point2DMoveTo.getY());
 
                 Point2D point2DLineTo = worldToScreenProperty.get()
-                        .transform(minX + width, valueOfElevation);
+                        .transform(maxX, valueOfElevation);
                 PathElement lineTo = new LineTo(point2DLineTo.getX(), point2DLineTo.getY());
 
                 Text elevationText = new Text();
 
-                elevationText.getStyleClass().addAll("grid_label", "horizontal");
+                elevationText.getStyleClass().addAll("grid_label", "vertical");
                 elevationText.setFont(Font.font("Avenir", 10));
                 elevationText.setTextOrigin(VPos.CENTER);
 
