@@ -6,6 +6,7 @@ import ch.epfl.javelo.projection.PointCh;
 import ch.epfl.javelo.projection.PointWebMercator;
 import ch.epfl.javelo.routing.RoutePoint;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 
 import javafx.geometry.Point2D;
@@ -28,11 +29,10 @@ public final class AnnotatedMapManager {
 
     private final StackPane stackPane;
 
-    private ObjectProperty<Point2D> mousePositionP;
+    private SimpleObjectProperty<Point2D> mousePositionP;
 
     private final DoubleProperty highlightedPosP;
 
-    private final DoubleProperty temporary = new SimpleDoubleProperty(Double.NaN);
 
 
 
@@ -78,6 +78,11 @@ public final class AnnotatedMapManager {
 
         highlightedPosP = new SimpleDoubleProperty(Double.NaN);
 
+        routeBean.getHighlightedPositionProperty().bind(mousePositionOnRouteProperty());
+
+
+
+
 
 
         mousePositionP = new SimpleObjectProperty<>();
@@ -86,20 +91,17 @@ public final class AnnotatedMapManager {
         stackPane.setOnMouseMoved(e-> {
             Point2D point = new Point2D(e.getX(), e.getY());
             mousePositionP.set(point);
-            System.out.println(point.getX());
+            System.out.println(highlightedPosP.get());
         });
 
         stackPane.setOnMouseExited(e-> highlightedPosP.set(Double.NaN));
 
 
 
-        mousePositionP.addListener(e->{
-            System.out.println("a");
+        mousePositionP.addListener((p, o, n)-> {
             if (routeBean.getRoute() != null) {
                 Point2D point2D= mousePositionP.get();
-                int zoomLevel = mapViewParameters.zoomLevel();
-                PointCh pointUnderMouse = PointWebMercator.of(zoomLevel,
-                        point2D.getX(), point2D.getY()).toPointCh();
+                PointCh pointUnderMouse = mapViewParameters.pointAt(point2D.getX(), point2D.getY()).toPointCh();
                 RoutePoint pointClosestToOnRouteRP = routeBean.getRoute().pointClosestTo(
                         pointUnderMouse);
                 PointCh pointClosestToOnRoute = pointClosestToOnRouteRP.point();
@@ -148,7 +150,6 @@ public final class AnnotatedMapManager {
      * @return une DoubleProperty.
      */
     public ReadOnlyDoubleProperty mousePositionOnRouteProperty(){
-        //TODO (really to do lol)
-        return temporary;
+        return highlightedPosP;
     }
 }
