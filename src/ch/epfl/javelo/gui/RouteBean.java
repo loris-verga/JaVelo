@@ -148,28 +148,30 @@ public final class RouteBean {
 
         List<Route> listOfSinglesRoutes = new ArrayList<>();
 
-        int firstWaypointToLink = waypoints.get(0).nodeIdClosestTo();
+        int nodeIdOfFirstWaypointToLink = waypoints.get(0).nodeIdClosestTo();
         Iterator<Waypoint> iterator = waypoints.listIterator(1);
 
         while (iterator.hasNext()){
-            int secondWayPointToLink = iterator.next().nodeIdClosestTo();
+            int nodeIdOfSecondWaypointToLink = iterator.next().nodeIdClosestTo();
 
-            Pair<Integer, Integer> itineraryPair = new Pair<>(firstWaypointToLink, secondWayPointToLink);
+            if (nodeIdOfFirstWaypointToLink != nodeIdOfSecondWaypointToLink){
+                Pair<Integer, Integer> itineraryPair = new Pair<>(nodeIdOfFirstWaypointToLink, nodeIdOfSecondWaypointToLink);
 
-            if (cacheMemory.containsKey(itineraryPair)){
-                listOfSinglesRoutes.add(cacheMemory.get(itineraryPair));
-            }
-            else{
-                Route newRoute = routeComputer.bestRouteBetween(firstWaypointToLink, secondWayPointToLink);
-                if (newRoute == null){
-                    setNullItinerary();
-                    return;
-
+                if (cacheMemory.containsKey(itineraryPair)){
+                    listOfSinglesRoutes.add(cacheMemory.get(itineraryPair));
                 }
-                listOfSinglesRoutes.add(newRoute);
-                cacheMemoryAdd(new Pair<>(itineraryPair, newRoute));
+                else{
+                    Route newRoute = routeComputer.bestRouteBetween(nodeIdOfFirstWaypointToLink, nodeIdOfSecondWaypointToLink);
+                    if (newRoute == null){
+                        setNullItinerary();
+                        return;
+
+                    }
+                    listOfSinglesRoutes.add(newRoute);
+                    cacheMemoryAdd(new Pair<>(itineraryPair, newRoute));
+                }
             }
-            firstWaypointToLink = secondWayPointToLink;
+            nodeIdOfFirstWaypointToLink = nodeIdOfSecondWaypointToLink;
         }
 
         MultiRoute newItinerary = new MultiRoute(listOfSinglesRoutes);
