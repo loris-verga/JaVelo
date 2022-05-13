@@ -22,8 +22,17 @@ import javafx.scene.transform.Transform;
 /**
  * La classe ElevationProfileManager gère l'affichage et l'interaction avec le profil
  * en long d'un itinéraire.
+ *
+ *  @author Juan Bautista Iaconucci (342153)
+ * @author Loris Verga (345661)
  */
 public final class ElevationProfileManager {
+
+    private static final int MINIMAL_STEP_LENGTH_OF_VERTICAL_LINES = 50;
+    private static final int MINIMAL_STEP_LENGTH_OF_HORIZONTAL_LINES = 25;
+    private static final int SIZE_OF_LABELS = 10;
+    private static final int RATIO_OF_KILOMETERS_AND_METERS = 1000;
+    private static final String FONT_FAMILY_OF_LABELS = "Avenir";
 
     private final ReadOnlyObjectProperty<ElevationProfile> elevationProfileProperty;
     private final ReadOnlyDoubleProperty highlightedPositionProperty;
@@ -32,17 +41,11 @@ public final class ElevationProfileManager {
 
     private final DoubleProperty mousePositionOnProfileProperty;
 
-    //Le panneau sert à organiser ses enfants.
     private final Pane pane;
-    //Le chemin représente la grille.
     private final Path path;
-    //le groupe contient les étiquettes textuelles de la grille.
     private final Group group;
-    //Le polygone représente le graphe du profil.
     private final Polygon polygon;
-    //La ligne représente la position en évidence.
     private final Line line;
-
 
     private final VBox vBox;
     private final Text textVbox;
@@ -117,7 +120,7 @@ public final class ElevationProfileManager {
         screenToWorldProperty = new SimpleObjectProperty<>();
 
         screenToWorldProperty.bind(Bindings.createObjectBinding(
-                () -> createScreenToWorldProperty(),
+                () -> createScreenToWorldTransformation(),
                 pane.widthProperty(),
                 pane.heightProperty()
         ));
@@ -125,7 +128,7 @@ public final class ElevationProfileManager {
         worldToScreenProperty = new SimpleObjectProperty<>();
 
         worldToScreenProperty.bind(Bindings.createObjectBinding(
-                () -> createScreenToWorldProperty().createInverse(),
+                () -> createScreenToWorldTransformation().createInverse(),
                 pane.widthProperty(),
                 pane.heightProperty()
         ));
@@ -146,6 +149,10 @@ public final class ElevationProfileManager {
 
     }
 
+    /**
+     * La méthode mousePositionUpdate privée permet positionner la ligne de mise en évidence au bon endroit sur le graph.
+     * @param e l'événement crée par la souris quand elle est déplacé.
+     */
     private void mousePositionUpdate(MouseEvent e){
         double posX = e.getX();
         double maxX = blueRectangleProperty.get().getMaxX();
@@ -155,6 +162,9 @@ public final class ElevationProfileManager {
         else{mousePositionOnProfileProperty.set(posX);
     }}
 
+    /**
+     * La méthode redraw privée permet de dessiner la grille et le profil du graph d'élévation.
+     */
     private void redraw(){
         createGrid();
         createProfilGraph();
@@ -185,14 +195,19 @@ public final class ElevationProfileManager {
         double width = pane.getWidth() - (inset.getLeft() + inset.getRight());
         double height = pane.getHeight() - (inset.getTop() + inset.getBottom());
 
-        if(!(width >= 0 && height >= 0)){
+        if(width < 0 || height < 0){
             width = 0;
             height = 0;
         }
         return new Rectangle2D(inset.getLeft(), inset.getTop(), width, height);
     }
 
-    private Transform createScreenToWorldProperty() {
+    /**
+     * La méthode createScreenToWorldTransformation privée, permet de crée la transformation entre le repère du monde du graph
+     * au repère centrer au coin en haut à gauche du panneau d'affichage en pixel.
+     * @return la transformation qui permet le changement entre ces deux repères.
+     */
+    private Transform createScreenToWorldTransformation() {
 
         Affine screenToWorld = new Affine();
 
@@ -216,6 +231,9 @@ public final class ElevationProfileManager {
         return screenToWorld;
     }
 
+    /**
+     * La méthode createGrid privée, permet de créer la grille et les étiquettes sur le graph du profil.
+     */
     private void createGrid(){
         path.getElements().clear();
         group.getChildren().clear();
@@ -226,23 +244,29 @@ public final class ElevationProfileManager {
         double pixelsBetweenHorizontalLines;
         int horizontalStep = 0;
 
+        //On calcule l'espacement en pixel entre les lignes verticales pour chaque espacement dans la liste,
+        //pour trouver le plus petit qui plus grand que 50 pixels s'il n'y en a pas l'espacement reste à 0.
         for(int i = 0; i < POSITION_STEPS.length && verticalStep == 0; i++) {
             Point2D point = worldToScreenProperty.get()
                     .deltaTransform(POSITION_STEPS[i], 0);
             pixelsBetweenVerticalLines = point.getX();
-            if(pixelsBetweenVerticalLines > 50){
+            if(pixelsBetweenVerticalLines > MINIMAL_STEP_LENGTH_OF_VERTICAL_LINES){
                 verticalStep = POSITION_STEPS[i];
             }
         }
 
+        //On calcule l'espacement en pixel entre les lignes horizontales pour chaque espacement dans la liste,
+        //pour trouver le plus petit qui plus grand que 25 pixels, s'il n'y en a pas l'espacement reste à 0.
         for(int i = 0; i < ELEVATION_STEPS.length && horizontalStep == 0; i++) {
             Point2D point = worldToScreenProperty.get()
                     .deltaTransform(0,ELEVATION_STEPS[i]);
             pixelsBetweenHorizontalLines = Math.abs(point.getY());
-            if(pixelsBetweenHorizontalLines > 25){
+            if(pixelsBetweenHorizontalLines > MINIMAL_STEP_LENGTH_OF_HORIZONTAL_LINES){
                 horizontalStep = ELEVATION_STEPS[i];
             }
         }
+
+        //Vérification qu'un espacement vertical et horizontal a été trouver.
         if(verticalStep != 0 && horizontalStep != 0) {
             double minX = 0;
             double minY = elevationProfileProperty.get().minElevation();
@@ -255,6 +279,8 @@ public final class ElevationProfileManager {
             int numberOfVerticalLines = (int) Math.floor((maxX - firstVerticalLineX)/ verticalStep);
             int numberOfHorizontalLines = (int) Math.floor((maxY - firstHorizontalLineY)/ horizontalStep);
 
+            //Pour chaque ligne verticale, on la place au bon endroit sur le panneau d'affichage
+            // et on place l'étiquette associer.
             for (int i = 0; i <= numberOfVerticalLines; i++) {
                 int valueOfPosition = i * verticalStep + (int) firstVerticalLineX;
 
@@ -266,21 +292,23 @@ public final class ElevationProfileManager {
                         .transform(valueOfPosition, maxY);
                 PathElement lineTo = new LineTo(point2DLineTo.getX(), point2DLineTo.getY());
 
-                Text positionText = new Text();
+                Text positionLabel = new Text();
 
-                positionText.getStyleClass().addAll("grid_label", "horizontal");
-                positionText.setFont(Font.font("Avenir", 10));
-                positionText.setTextOrigin(VPos.TOP);
+                positionLabel.getStyleClass().addAll("grid_label", "horizontal");
+                positionLabel.setFont(Font.font(FONT_FAMILY_OF_LABELS, SIZE_OF_LABELS));
+                positionLabel.setTextOrigin(VPos.TOP);
 
-                positionText.setText(String.valueOf(valueOfPosition / 1000));
-                positionText.setX(point2DMoveTo.getX() - positionText.prefWidth(0) / 2);
-                positionText.setY(point2DMoveTo.getY());
+                positionLabel.setText(String.valueOf(valueOfPosition / RATIO_OF_KILOMETERS_AND_METERS));
+                positionLabel.setX(point2DMoveTo.getX() - positionLabel.prefWidth(0) / 2);
+                positionLabel.setY(point2DMoveTo.getY());
 
-                group.getChildren().add(positionText);
+                group.getChildren().add(positionLabel);
 
                 path.getElements().addAll(moveTo, lineTo);
             }
 
+            //Pour chaque ligne horizontale, on la place au bon endroit sur le panneau d'affichage
+            // et on place l'étiquette associer.
             for (int i = 0; i <= numberOfHorizontalLines; i++) {
 
                 int valueOfElevation = i * horizontalStep + (int) firstHorizontalLineY;
@@ -296,7 +324,7 @@ public final class ElevationProfileManager {
                 Text elevationText = new Text();
 
                 elevationText.getStyleClass().addAll("grid_label", "vertical");
-                elevationText.setFont(Font.font("Avenir", 10));
+                elevationText.setFont(Font.font(FONT_FAMILY_OF_LABELS, SIZE_OF_LABELS));
                 elevationText.setTextOrigin(VPos.CENTER);
 
                 elevationText.setText(String.valueOf(valueOfElevation));
@@ -309,6 +337,7 @@ public final class ElevationProfileManager {
             }
         }
 
+        //Enfin on affiche les statistiques correspondant à l'itinéraire.
         ElevationProfile elevationProfile = elevationProfileProperty.get();
         textVbox.setText(String.format("Longueur : %.1f km" +
                         "     Montée : %.0f m" +
@@ -317,6 +346,10 @@ public final class ElevationProfileManager {
                 elevationProfile.totalDescent(), elevationProfile.minElevation(), elevationProfile.maxElevation()));
     }
 
+
+    /**
+     * La méthode createProfilGraph privée, permet de créer le graph du profil de l'itinéraire.
+     */
     private void createProfilGraph(){
         polygon.getPoints().clear();
 
@@ -326,15 +359,13 @@ public final class ElevationProfileManager {
 
         polygon.getPoints().addAll(minX,minY);
         for(double screenX = minX; screenX <= maxX; screenX++) {
-            double positionX = screenToWorldProperty.get().transform(screenX, 0.0).getX();
-            double elevationY = elevationProfileProperty.get().elevationAt(positionX);
 
-            double screenY = worldToScreenProperty.get().transform(0.0, elevationY).getY();
+            double positionX = screenToWorldProperty.get().transform(screenX, 0).getX();
+            double elevationY = elevationProfileProperty.get().elevationAt(positionX);
+            double screenY = worldToScreenProperty.get().transform(0, elevationY).getY();
+
             polygon.getPoints().addAll(screenX, screenY);
         }
         polygon.getPoints().addAll(maxX,minY);
     }
-
-
-
 }
