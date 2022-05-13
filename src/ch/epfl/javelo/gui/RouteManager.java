@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 /**
  * La classe RouteManager gère l'affichage de l'itinéraire et (une partie de) l'interaction avec lui.
  *
- * @author Juan Bautista Iaconucci (342153)
+ * @<author Juan Bautista Iaconucci (342153)
  */
 public final class RouteManager {
 
@@ -56,9 +56,11 @@ public final class RouteManager {
 
         this.line = new Polyline();
         line.setId(ITINERARY_LINE_ID);
+        line.setVisible(false);
 
         this.disk = new Circle(HIGHLIGHT_DISK_RADIUS);
         disk.setId(HIGHLIGHT_DISK_ID);
+        disk.setVisible(false);
 
         //Quand on clique sur le disque,
         //on regarde s'il y a déjà un point de passage qui contient le nœud situer à la position de la souris,

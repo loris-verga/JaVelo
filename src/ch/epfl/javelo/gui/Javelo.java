@@ -160,7 +160,10 @@ public final class Javelo extends Application {
     private static final class ErrorConsumer //TODO CHANGE !
             implements Consumer<String> {
         @Override
-        public void accept(String s) { System.out.println(s); }
+        public void accept(String s) {
+            ErrorManager rm = new ErrorManager();
+            rm.displayError(s);
+        }
     }
 
 }
