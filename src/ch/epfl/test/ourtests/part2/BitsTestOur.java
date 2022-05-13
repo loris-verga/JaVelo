@@ -101,7 +101,6 @@ class BitsTestOur {
     @Test
     void extractUnsignedThrowOn32Size(){
         assertThrows(IllegalArgumentException.class, () -> {
-            //todo ask if this is correct
             Bits.extractUnsigned(0b11001010111111101011101010111110, 0,32);
         });
     }
@@ -125,7 +124,7 @@ class BitsTestOur {
         var expected4 = 0b1100;
         assertEquals(expected4,actual4);
 
-        //todo check if this is correct
+
         var actual5 = Bits.extractUnsigned(0b11001010111111101011101010111110, 0,31);
         var expected5 = 0b01001010111111101011101010111110;
         assertEquals(expected5,actual5);

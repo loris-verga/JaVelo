@@ -155,10 +155,14 @@ public final class ElevationProfileManager {
      */
     private void mousePositionUpdate(MouseEvent e){
         double posX = e.getX();
+        double posY = e.getY();
         double maxX = blueRectangleProperty.get().getMaxX();
         double minX = blueRectangleProperty.get().getMinX();
-        if (posX > maxX) { mousePositionOnProfileProperty.set(maxX);}
-        else if (posX <minX) {mousePositionOnProfileProperty.set(minX);}
+        double maxY = blueRectangleProperty.get().getMaxY();
+        double minY = blueRectangleProperty.get().getMinY();
+        if (posX > maxX || posX < minX || posY > maxY || posY < minY){
+            mousePositionOnProfileProperty.set(Double.NaN);
+        }
         else{mousePositionOnProfileProperty.set(posX);
     }}
 
@@ -187,8 +191,7 @@ public final class ElevationProfileManager {
      * @return
      */
     public ReadOnlyDoubleProperty mousePositionProfileProperty(){
-        return this.mousePositionOnProfileProperty; //TODO check que la la valeur soit arrondie à l'entier le plus proche.
-        //TODO check Double.Nan
+        return this.mousePositionOnProfileProperty;
     }
 
     private Rectangle2D createBlueRectangle(){

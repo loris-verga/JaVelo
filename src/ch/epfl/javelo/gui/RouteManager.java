@@ -163,17 +163,19 @@ public final class RouteManager {
      */
     private void drawHighlightDisk() {
 
-        disk.setVisible(true);
 
-        double positionOnRouteOfCircle = routeBean.getHighlightedPosition();
+        if (!(Double.isNaN(routeBean.getHighlightedPosition()))){
+            disk.setVisible(true);
 
-        PointCh positionOfCircleCh = routeBean.getRoute().pointAt(positionOnRouteOfCircle);
-        PointWebMercator positionOfCircleWM = PointWebMercator.ofPointCh(positionOfCircleCh);
+            double positionOnRouteOfCircle = routeBean.getHighlightedPosition();
 
-        double x = mapViewParametersProperty.get().viewX(positionOfCircleWM);
-        double y = mapViewParametersProperty.get().viewY(positionOfCircleWM);
+            PointCh positionOfCircleCh = routeBean.getRoute().pointAt(positionOnRouteOfCircle);
+            PointWebMercator positionOfCircleWM = PointWebMercator.ofPointCh(positionOfCircleCh);
 
-        disk.setCenterX(x);
-        disk.setCenterY(y);
+            double x = mapViewParametersProperty.get().viewX(positionOfCircleWM);
+            double y = mapViewParametersProperty.get().viewY(positionOfCircleWM);
+
+            disk.setCenterX(x);
+            disk.setCenterY(y);}
     }
 }

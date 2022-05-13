@@ -117,7 +117,7 @@ public final class RouteBean {
      * La méthode elevationProfileProperty
      * @return retourne la propriété qui contient le profil.
      */
-    public ReadOnlyObjectProperty<ElevationProfile> elevationProfileProperty() {
+    public ReadOnlyObjectProperty<ElevationProfile> getElevationProfileProperty() {
         return elevationProfile;
     }
 
