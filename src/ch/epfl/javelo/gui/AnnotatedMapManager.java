@@ -65,7 +65,7 @@ public final class AnnotatedMapManager {
         waypointsManager = new WaypointsManager(graph, mapViewParametersProperty, waypoints, errorConsumer);
         baseMapManager = new BaseMapManager(tileManager, waypointsManager, mapViewParametersProperty);
 
-        routeManager = new RouteManager(routeBean, mapViewParametersProperty, errorConsumer);
+        routeManager = new RouteManager(routeBean, mapViewParametersProperty);
 
         this.stackPane = new StackPane();
         stackPane.getStylesheets().add("map.css");

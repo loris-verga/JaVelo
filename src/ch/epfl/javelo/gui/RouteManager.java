@@ -24,7 +24,8 @@ public final class RouteManager {
     private static final int HIGHLIGHT_DISK_RADIUS = 5;
     private static final String HIGHLIGHT_DISK_ID = "highlight";
 
-    private static final String ERROR_CONSUMER_MESSAGE ="Un point de passage est déjà présent à cet endroit !";
+    //Todo this too
+    //private static final String ERROR_CONSUMER_MESSAGE ="Un point de passage est déjà présent à cet endroit !";
 
     private final Polyline line;
     private final Circle disk;
@@ -32,7 +33,8 @@ public final class RouteManager {
     private final Pane pane;
     private final RouteBean routeBean;
     private final ReadOnlyObjectProperty<MapViewParameters> mapViewParametersProperty;
-    private final Consumer<String> errorConsumer;
+    //todo here too
+    //private final Consumer<String> errorConsumer;
 
     /**
      * Le constructeur de RouteManager permet d'initialiser ses attributs, et ajoute un auditeur à l'itinéraire du routeBean
@@ -41,13 +43,13 @@ public final class RouteManager {
      * et un dernier sur le disque, pour pouvoir ajouter des points de passages intermédiaires sur l'itinéraire.
      * @param routeBean le bean de l'itinéraire.
      * @param mapViewParametersProperty les paramètres de la carte affichée.
-     * @param errorConsumer le consommateur d'erreurs.
      */
-    public RouteManager(RouteBean routeBean, ReadOnlyObjectProperty<MapViewParameters> mapViewParametersProperty, Consumer<String> errorConsumer){
+    public RouteManager(RouteBean routeBean, ReadOnlyObjectProperty<MapViewParameters> mapViewParametersProperty){
 
         this.routeBean = routeBean;
         this.mapViewParametersProperty = mapViewParametersProperty;
-        this.errorConsumer = errorConsumer;
+        //todo this too
+        //this.errorConsumer = errorConsumer;
 
         this.pane = new Pane();
         pane.setPickOnBounds(false);
@@ -67,20 +69,23 @@ public final class RouteManager {
             Point2D position2D = pane.localToParent(e.getX(),e.getY());
             PointCh positionCH = mapViewParametersProperty.get().pointAt(position2D.getX() , position2D.getY()).toPointCh();
 
-            int index = routeBean.getRoute().indexOfSegmentAt(routeBean.getHighlightedPosition());
+            //TODO verify this change is correct
+            int index = routeBean.indexOfNonEmptySegmentAt(routeBean.getHighlightedPosition());
+            //int index = routeBean.getRoute().indexOfSegmentAt(routeBean.getHighlightedPosition());
             int nodeClosestToWaypoint = routeBean.getRoute().nodeClosestTo(routeBean.getHighlightedPosition());
 
             Waypoint newWaypoint = new Waypoint(positionCH, nodeClosestToWaypoint);
 
-            for(Waypoint waypoint : routeBean.getWaypoints()) {
-                if(nodeClosestToWaypoint == waypoint.nodeIdClosestTo()){
-                    errorConsumer.accept(ERROR_CONSUMER_MESSAGE);
-                    newWaypoint = null;
-                }
-            }
-            if(newWaypoint != null ) {
+            //Todo delete this if works
+            //for(Waypoint waypoint : routeBean.getWaypoints()) {
+            //    if(nodeClosestToWaypoint == waypoint.nodeIdClosestTo()){
+            //        errorConsumer.accept(ERROR_CONSUMER_MESSAGE);
+            //        newWaypoint = null;
+            //    }
+            //}
+            //if(newWaypoint != null ) {
                 routeBean.getWaypoints().add(index + 1, newWaypoint);
-            }
+            //}
         });
 
         //Quand l'itinéraire change,
@@ -162,12 +167,10 @@ public final class RouteManager {
      * La méthode drawHighlightDisk privée, permet de placer et dessiner le disque de mise en évidence.
      */
     private void drawHighlightDisk() {
+        double positionOnRouteOfCircle = routeBean.getHighlightedPosition();
 
-
-        if (!(Double.isNaN(routeBean.getHighlightedPosition()))){
+        if (!(Double.isNaN(positionOnRouteOfCircle)) && routeBean.getHighlightedPositionProperty() != null){
             disk.setVisible(true);
-
-            double positionOnRouteOfCircle = routeBean.getHighlightedPosition();
 
             PointCh positionOfCircleCh = routeBean.getRoute().pointAt(positionOnRouteOfCircle);
             PointWebMercator positionOfCircleWM = PointWebMercator.ofPointCh(positionOfCircleCh);
@@ -176,6 +179,10 @@ public final class RouteManager {
             double y = mapViewParametersProperty.get().viewY(positionOfCircleWM);
 
             disk.setCenterX(x);
-            disk.setCenterY(y);}
+            disk.setCenterY(y);
+        }
+        else{
+            disk.setVisible(false);
+        }
     }
 }

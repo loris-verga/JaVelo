@@ -184,4 +184,20 @@ public final class RouteBean {
         route.set(null);
         elevationProfile.set(null);
     }
+
+    /**
+     * La méthode indexOfNonEmptySegmentAt privée, variante d'indexOfSegmentAt de Route,
+     * permet de retourner l'index du segment contenant la position donner.
+     * @param position la position que l'on cherche l'index.
+     * @return l'index du segment ou se trouve la position.
+     */
+    public int indexOfNonEmptySegmentAt(double position) {
+        int index = route.get().indexOfSegmentAt(position);
+        for (int i = 0; i <= index; i += 1) {
+            int n1 = waypoints.get(i).nodeIdClosestTo();
+            int n2 = waypoints.get(i + 1).nodeIdClosestTo();
+            if (n1 == n2) index += 1;
+        }
+        return index;
+    }
 }
