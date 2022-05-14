@@ -29,7 +29,7 @@ public final class ErrorManager {
      */
     ErrorManager(){
         pane = new VBox();
-        pane.getStyleClass().add("error.css");
+        pane.getStylesheets().add("error.css");
         pane.setMouseTransparent(true);
 
         animation = createAnimation();

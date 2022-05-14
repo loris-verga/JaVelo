@@ -12,6 +12,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.w3c.dom.Document;
 
@@ -35,7 +36,6 @@ public final class Javelo extends Application {
     private final String WINDOW_NAME = "Javelo";
     private final String GPX_FILE_NAME = "javelo.gpx";
 
-    private AnnotatedMapManager test;
 
 
 
@@ -59,12 +59,12 @@ public final class Javelo extends Application {
 
         RouteBean routeBean = new RouteBean(new RouteComputer(graph, new CityBikeCF(graph)));
 
-        Consumer<String> errorConsumer =  new ErrorConsumer();
+        ErrorManager errorManager =  new ErrorManager();
 
 
 
         AnnotatedMapManager annotatedMapManager = new AnnotatedMapManager(
-                graph, tileManager, routeBean,errorConsumer );
+                graph, tileManager, routeBean,errorManager );
 
 
 
@@ -77,17 +77,12 @@ public final class Javelo extends Application {
         SplitPane splitPane = new SplitPane(mapPane);
         splitPane.orientationProperty().set(VERTICAL);
 
-
-        //TODO add ErrorPane
         SplitPane.setResizableWithParent(splitPane, false);
 
         ReadOnlyObjectProperty elevationProfileP = routeBean.getElevationProfileProperty();
 
 
         elevationProfileP.addListener(e->{
-
-
-
 
             if (elevationProfileP.get() == null){
                 if (splitPane.getItems().size() == 2){
@@ -107,12 +102,8 @@ public final class Javelo extends Application {
             }
         }});
 
-
-
-//TODO remove
-        splitPane.setOnScroll(e-> test());
-
-        test = annotatedMapManager;
+        StackPane paneWithErrorManager = new StackPane(splitPane);
+        paneWithErrorManager.getChildren().add(errorManager.pane());
 
 
         ReadOnlyObjectProperty routeP = routeBean.routeProperty();
@@ -137,7 +128,7 @@ public final class Javelo extends Application {
         menuBar.setUseSystemMenuBar(true);
 
         BorderPane javeloPane = new BorderPane();
-        javeloPane.setCenter(splitPane);
+        javeloPane.setCenter(paneWithErrorManager);
         javeloPane.setTop(menuBar);
 
 
@@ -148,22 +139,6 @@ public final class Javelo extends Application {
 
 
 
-    }
-
-
-    private void test(){
-        System.out.println("e");
-    }
-
-
-
-    private static final class ErrorConsumer //TODO CHANGE !
-            implements Consumer<String> {
-        @Override
-        public void accept(String s) {
-            ErrorManager rm = new ErrorManager();
-            rm.displayError(s);
-        }
     }
 
 }

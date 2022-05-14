@@ -46,11 +46,11 @@ public final class AnnotatedMapManager {
      * @param graph le graph du réseau routier.
      * @param tileManager le gestionnaire de tuiles OpenStreetMap
      * @param routeBean le bean de l'itinéraire.
-     * @param errorConsumer un consommateur d'erreurs, permettant
+     * @param errorManager un consommateur d'erreurs, permettant
      *                      de signaler une erreur.
      */
     public AnnotatedMapManager(Graph graph, TileManager tileManager, RouteBean routeBean,
-                               Consumer<String> errorConsumer){
+                               ErrorManager errorManager){
 
         MapViewParameters mapViewParameters = new MapViewParameters(ZOOM_LEVEL_BEGINNING,
                 TOP_LEFT_X_BEGINNING,
@@ -62,7 +62,7 @@ public final class AnnotatedMapManager {
 
         ObservableList<Waypoint> waypoints = routeBean.getWaypoints();
 
-        waypointsManager = new WaypointsManager(graph, mapViewParametersProperty, waypoints, errorConsumer);
+        waypointsManager = new WaypointsManager(graph, mapViewParametersProperty, waypoints, errorManager);
         baseMapManager = new BaseMapManager(tileManager, waypointsManager, mapViewParametersProperty);
 
         routeManager = new RouteManager(routeBean, mapViewParametersProperty);
@@ -76,9 +76,8 @@ public final class AnnotatedMapManager {
         stackPane.getChildren().add(itineraryPane);
         stackPane.getChildren().add(waypointsPane);
 
-        highlightedPosP = new SimpleDoubleProperty(Double.NaN);
+        highlightedPosP = routeBean.getHighlightedPositionProperty();
 
-        routeBean.getHighlightedPositionProperty().bind(mousePositionOnRouteProperty());
 
 
 
@@ -91,24 +90,28 @@ public final class AnnotatedMapManager {
         stackPane.setOnMouseMoved(e-> {
             Point2D point = new Point2D(e.getX(), e.getY());
             mousePositionP.set(point);
-            System.out.println(highlightedPosP.get());
         });
 
         stackPane.setOnMouseExited(e-> highlightedPosP.set(Double.NaN));
 
 
 
+
         mousePositionP.addListener((p, o, n)-> {
+
             if (routeBean.getRoute() != null) {
+
+                MapViewParameters actualMapView = mapViewParametersProperty.get();
+
                 Point2D point2D= mousePositionP.get();
-                PointCh pointUnderMouse = mapViewParameters.pointAt(point2D.getX(), point2D.getY()).toPointCh();
+                PointCh pointUnderMouse = actualMapView.pointAt(point2D.getX(), point2D.getY()).toPointCh();
                 RoutePoint pointClosestToOnRouteRP = routeBean.getRoute().pointClosestTo(
                         pointUnderMouse);
                 PointCh pointClosestToOnRoute = pointClosestToOnRouteRP.point();
                 PointWebMercator pointClosestToWM = PointWebMercator.ofPointCh(pointClosestToOnRoute);
                 Point2D pointClosestTo2D = new Point2D(
-                        mapViewParameters.viewX(pointClosestToWM),
-                         mapViewParameters.viewY(pointClosestToWM));
+                        actualMapView.viewX(pointClosestToWM),
+                         actualMapView.viewY(pointClosestToWM));
                 Double distance = Math2.norm(
                         pointClosestTo2D.getX()-point2D.getX(),
                         pointClosestTo2D.getY()-point2D.getY());
@@ -121,14 +124,6 @@ public final class AnnotatedMapManager {
                 }
             }
  });
-
-
-
-
-
-
-
-
 
 
 

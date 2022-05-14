@@ -35,13 +35,13 @@ public final class Stage8Test extends Application {
                 FXCollections.observableArrayList(
                         new Waypoint(new PointCh(2532697, 1152350), 159049),
                         new Waypoint(new PointCh(2538659, 1154350), 117669));
-        Consumer<String> errorConsumer = new ErrorConsumer();
+        ErrorManager errorManager = new ErrorManager();
 
         WaypointsManager waypointsManager =
                 new WaypointsManager(graph,
                         mapViewParametersP,
                         waypoints,
-                        errorConsumer);
+                        errorManager);
         BaseMapManager baseMapManager =
                 new BaseMapManager(tileManager,
                         waypointsManager,

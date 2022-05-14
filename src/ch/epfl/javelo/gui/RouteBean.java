@@ -33,6 +33,8 @@ public final class RouteBean {
     private final double MAX_STEP_LENGTH = 5;
 
 
+
+
     /**
      * L'unique constructeur prend en argument un RouteComputer afin de déterminer le meilleur itinéraire reliant
      * deux points de passage.

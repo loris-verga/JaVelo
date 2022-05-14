@@ -42,7 +42,7 @@ public final class WaypointsManager {
     private final Graph graph;
     private final ObjectProperty<MapViewParameters> mapViewParametersProperty;
     private final ObservableList<Waypoint> waypointList;
-    private final Consumer<String> errorConsumer;
+    private final ErrorManager errorManager;
     private final Pane pane;
 
     /**
@@ -52,14 +52,14 @@ public final class WaypointsManager {
      * @param graph le graph ou se trouve les points de passage.
      * @param mapViewParametersProperty les paramètres du fond de la carte.
      * @param waypointList la liste des points de passage initiale.
-     * @param errorConsumer error à signaler en cas d'erreur.
+     * @param errorManager error à signaler en cas d'erreur.
      */
     public WaypointsManager(Graph graph, ObjectProperty<MapViewParameters> mapViewParametersProperty,
-                            ObservableList<Waypoint> waypointList, Consumer<String> errorConsumer){
+                            ObservableList<Waypoint> waypointList, ErrorManager errorManager){
         this.graph = graph;
         this.mapViewParametersProperty = mapViewParametersProperty;
         this.waypointList = waypointList;
-        this.errorConsumer = errorConsumer;
+        this.errorManager = errorManager;
         this.pane = new Pane();
 
         pane.setPickOnBounds(false);
@@ -216,7 +216,7 @@ public final class WaypointsManager {
             return new Waypoint(position, nodeClosestToWaypoint);
         }
         else {
-            errorConsumer.accept(ERROR_MESSAGE);
+            errorManager.displayError(ERROR_MESSAGE);
             return null;
         }
     }

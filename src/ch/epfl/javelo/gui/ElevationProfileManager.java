@@ -134,15 +134,15 @@ public final class ElevationProfileManager {
         ));
 
         line.layoutXProperty().bind(Bindings.createDoubleBinding(
-                () -> highlightedPositionProperty.get(),
-                highlightedPositionProperty));
+                () -> worldToScreenProperty.get().transform(mousePositionOnProfileProperty.get(), 0).getX(),
+                mousePositionOnProfileProperty));
         line.startYProperty().bind(Bindings.createDoubleBinding(
                 () -> blueRectangleProperty.get().getMinY(),
                 blueRectangleProperty));
         line.endYProperty().bind(Bindings.createDoubleBinding(
                 () -> blueRectangleProperty.get().getMaxY(),
                 blueRectangleProperty));
-        line.visibleProperty().bind(highlightedPositionProperty.greaterThanOrEqualTo(0));
+        line.visibleProperty().bind(mousePositionOnProfileProperty.greaterThanOrEqualTo(0));
 
         borderPane.setOnMouseMoved(e-> mousePositionUpdate(e));
 
@@ -153,7 +153,9 @@ public final class ElevationProfileManager {
      * La méthode mousePositionUpdate privée permet positionner la ligne de mise en évidence au bon endroit sur le graph.
      * @param e l'événement crée par la souris quand elle est déplacé.
      */
+
     private void mousePositionUpdate(MouseEvent e){
+
         double posX = e.getX();
         double posY = e.getY();
         double maxX = blueRectangleProperty.get().getMaxX();
@@ -163,7 +165,8 @@ public final class ElevationProfileManager {
         if (posX > maxX || posX < minX || posY > maxY || posY < minY){
             mousePositionOnProfileProperty.set(Double.NaN);
         }
-        else{mousePositionOnProfileProperty.set(posX);
+        else{mousePositionOnProfileProperty.set(
+                screenToWorldProperty.get().transform(posX, 0).getX());
     }}
 
     /**
@@ -191,7 +194,7 @@ public final class ElevationProfileManager {
      * @return
      */
     public ReadOnlyDoubleProperty mousePositionProfileProperty(){
-        return this.mousePositionOnProfileProperty;
+        return mousePositionOnProfileProperty;
     }
 
     private Rectangle2D createBlueRectangle(){
@@ -345,7 +348,8 @@ public final class ElevationProfileManager {
         textVbox.setText(String.format("Longueur : %.1f km" +
                         "     Montée : %.0f m" +
                         "     Descente : %.0f m" +
-                        "     Altitude : de %.0f m à %.0f m", elevationProfile.length(), elevationProfile.totalAscent(),
+                        "     Altitude : de %.0f m à %.0f m", elevationProfile.length()/RATIO_OF_KILOMETERS_AND_METERS
+                , elevationProfile.totalAscent(),
                 elevationProfile.totalDescent(), elevationProfile.minElevation(), elevationProfile.maxElevation()));
     }
 

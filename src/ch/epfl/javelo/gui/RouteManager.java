@@ -128,6 +128,16 @@ public final class RouteManager {
             }
         } );
 
+
+         //On dessine le disque quand la position mise en évidence change.
+        routeBean.getHighlightedPositionProperty().addListener(
+                (p,o, n) -> {
+                    if (routeBean.getRoute() != null) {
+                        drawHighlightDisk();
+                    }
+                }
+        );
+
         pane.getChildren().addAll(line,disk);
 
         if(routeBean.getRoute() != null) {
