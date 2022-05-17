@@ -1,6 +1,7 @@
-package ch.epfl.javelo.gui;
+package ch.epfl.test.newPartsTests;
 
 import ch.epfl.javelo.data.Graph;
+import ch.epfl.javelo.gui.ElevationProfileManager;
 import ch.epfl.javelo.routing.*;
 import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;

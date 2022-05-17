@@ -4,7 +4,7 @@ import ch.epfl.javelo.data.Graph;
 import ch.epfl.javelo.routing.*;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.*;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -36,6 +36,7 @@ public final class Javelo extends Application {
     private final String WINDOW_NAME = "Javelo";
     private final String GPX_FILE_NAME = "javelo.gpx";
 
+    private BooleanProperty paneOnProfile;
 
 
 
@@ -90,17 +91,32 @@ public final class Javelo extends Application {
                 }
             }
             else {
+
                 ElevationProfileManager elevationProfileManager = new ElevationProfileManager(
                         elevationProfileP
-                        , routeBean.getHighlightedPositionProperty()
+                        , annotatedMapManager.mousePositionOnRouteProperty()
                 );
+
+                BooleanProperty b = new SimpleBooleanProperty();
+                b.bind(Bindings.createBooleanBinding(() -> !Double.isNaN(elevationProfileManager.mousePositionProfileProperty().get()), elevationProfileManager.mousePositionProfileProperty()));
+
+                routeBean.getHighlightedPositionProperty().bind(Bindings.when(b).then(elevationProfileManager.mousePositionProfileProperty()).otherwise(
+                        annotatedMapManager.mousePositionOnRouteProperty()));
+
+
 
                 Pane elevationProfilePane = elevationProfileManager.pane();
                 if (splitPane.getItems().size() == 1){ //TODO SIMPLIFY
                     splitPane.getItems().add(elevationProfilePane);}
                 else {splitPane.getItems().set(1, elevationProfilePane);
             }
+
+
+
         }});
+
+
+
 
         StackPane paneWithErrorManager = new StackPane(splitPane);
         paneWithErrorManager.getChildren().add(errorManager.pane());

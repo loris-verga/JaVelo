@@ -40,6 +40,8 @@ public final class ElevationProfileManager {
     private final BorderPane borderPane;
 
     private final DoubleProperty mousePositionOnProfileProperty;
+    private final DoubleProperty linePosition;
+    private final BooleanProperty isValid; //TODO rename
 
     private final Pane pane;
     private final Path path;
@@ -133,20 +135,34 @@ public final class ElevationProfileManager {
                 pane.heightProperty()
         ));
 
+        isValid = new SimpleBooleanProperty();
+        isValid.bind(Bindings.createBooleanBinding( () -> !Double.isNaN(highlightedPositionProperty.get()), highlightedPositionProperty));
+
+
+        linePosition = new SimpleDoubleProperty(Double.NaN);
+        linePosition.bind(highlightedPositionProperty);
+        linePosition.bind(Bindings.when(isValid).then(highlightedPositionProperty).otherwise(mousePositionOnProfileProperty));
+
+
         line.layoutXProperty().bind(Bindings.createDoubleBinding(
-                () -> worldToScreenProperty.get().transform(mousePositionOnProfileProperty.get(), 0).getX(),
-                mousePositionOnProfileProperty));
+                () -> worldToScreenProperty.get().transform(linePosition.get(), 0).getX(),
+                linePosition));
         line.startYProperty().bind(Bindings.createDoubleBinding(
                 () -> blueRectangleProperty.get().getMinY(),
                 blueRectangleProperty));
         line.endYProperty().bind(Bindings.createDoubleBinding(
                 () -> blueRectangleProperty.get().getMaxY(),
                 blueRectangleProperty));
-        line.visibleProperty().bind(mousePositionOnProfileProperty.greaterThanOrEqualTo(0));
+        line.visibleProperty().bind(linePosition.greaterThanOrEqualTo(0));
 
         borderPane.setOnMouseMoved(e-> mousePositionUpdate(e));
 
 
+
+    }
+
+    private void test(){//TODO remove
+        System.out.println("test");
     }
 
     /**
@@ -375,4 +391,7 @@ public final class ElevationProfileManager {
         }
         polygon.getPoints().addAll(maxX,minY);
     }
+
+
+
 }

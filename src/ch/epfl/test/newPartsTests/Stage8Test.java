@@ -1,7 +1,8 @@
-package ch.epfl.javelo.gui;
+package ch.epfl.test.newPartsTests;
 
 
 import ch.epfl.javelo.data.Graph;
+import ch.epfl.javelo.gui.*;
 import ch.epfl.javelo.projection.PointCh;
 import javafx.application.Application;
 import javafx.beans.property.ObjectProperty;

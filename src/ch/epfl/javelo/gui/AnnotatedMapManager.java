@@ -5,15 +5,13 @@ import ch.epfl.javelo.data.Graph;
 import ch.epfl.javelo.projection.PointCh;
 import ch.epfl.javelo.projection.PointWebMercator;
 import ch.epfl.javelo.routing.RoutePoint;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 
 import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-
-import java.util.function.Consumer;
 
 /**
  * La classe AnnotatedMapManager gère l'affichage de la carte annotée,
@@ -31,7 +29,11 @@ public final class AnnotatedMapManager {
 
     private SimpleObjectProperty<Point2D> mousePositionP;
 
-    private final DoubleProperty highlightedPosP;
+    private final DoubleProperty calculatedHighlightedPositionP;
+
+    private final DoubleProperty highlightedPositionP;
+
+    private final BooleanProperty isValid;
 
 
 
@@ -76,7 +78,13 @@ public final class AnnotatedMapManager {
         stackPane.getChildren().add(itineraryPane);
         stackPane.getChildren().add(waypointsPane);
 
-        highlightedPosP = routeBean.getHighlightedPositionProperty();
+        calculatedHighlightedPositionP = new SimpleDoubleProperty(Double.NaN);
+
+        isValid = new SimpleBooleanProperty();
+
+        highlightedPositionP = new SimpleDoubleProperty();
+
+        highlightedPositionP.bind(Bindings.when(isValid).then(routeBean.getHighlightedPositionProperty()).otherwise(calculatedHighlightedPositionP));
 
 
 
@@ -92,7 +100,7 @@ public final class AnnotatedMapManager {
             mousePositionP.set(point);
         });
 
-        stackPane.setOnMouseExited(e-> highlightedPosP.set(Double.NaN));
+        stackPane.setOnMouseExited(e-> calculatedHighlightedPositionP.set(Double.NaN));
 
 
 
@@ -116,10 +124,10 @@ public final class AnnotatedMapManager {
                         pointClosestTo2D.getX()-mousePoint2D.getX(),
                         pointClosestTo2D.getY()-mousePoint2D.getY());
                 if (distance <= 15){
-                    highlightedPosP.set(pointClosestToOnRouteRP.position());
+                    calculatedHighlightedPositionP.set(pointClosestToOnRouteRP.position());
                 }
                 else{
-                    highlightedPosP.set(Double.NaN);
+                    calculatedHighlightedPositionP.set(Double.NaN);
                 }
             }
  });
@@ -144,6 +152,6 @@ public final class AnnotatedMapManager {
      * @return une DoubleProperty.
      */
     public ReadOnlyDoubleProperty mousePositionOnRouteProperty(){
-        return highlightedPosP;
+        return calculatedHighlightedPositionP;
     }
 }

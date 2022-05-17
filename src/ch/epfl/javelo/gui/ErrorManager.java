@@ -27,7 +27,7 @@ public final class ErrorManager {
      * Le constructeur de ErrorManager initialise juste son panneau d'affichage
      * et l'animation utiliser pour afficher les erreurs.
      */
-    ErrorManager(){
+    public ErrorManager(){
         pane = new VBox();
         pane.getStylesheets().add("error.css");
         pane.setMouseTransparent(true);

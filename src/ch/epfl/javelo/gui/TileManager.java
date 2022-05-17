@@ -98,11 +98,11 @@ public final class TileManager {
                         addImageCacheMemory(image, tileId);
                         return image;
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        return null;
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                return null;
             }
         }
         return null;
