@@ -124,7 +124,7 @@ public final class MultiRoute implements Route{
      * de référence donnée.
      * @param point Le pointCh de référence.
      * @return le RoutePoint le plus proche du point de référence.
-     */
+
     public RoutePoint pointClosestTo(PointCh point){
         RoutePoint pointClosestTo = segments.get(0).pointClosestTo(point);
         double distanceToRefPointClosest = pointClosestTo.distanceToReference();
@@ -147,7 +147,18 @@ public final class MultiRoute implements Route{
         }
         return pointClosestTo.withPositionShiftedBy(positionToShift);
     }
-
+        */
+    //todo remove comment here to check for errors
+    public RoutePoint pointClosestTo(PointCh point){
+        RoutePoint bestPoint = RoutePoint.NONE;
+        double length = 0;
+        for(Route segment : segments){
+            RoutePoint relativePoint = segment.pointClosestTo(point);
+            bestPoint = bestPoint.min(relativePoint.point(),relativePoint.position() + length, relativePoint.distanceToReference());
+            length += segment.length();
+        }
+        return bestPoint;
+    }
 
     /**
      * La méthode elevationAt retourne l'altitude à la position donnée le long de l'itinéraire.

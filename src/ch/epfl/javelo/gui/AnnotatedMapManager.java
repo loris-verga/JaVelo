@@ -103,19 +103,18 @@ public final class AnnotatedMapManager {
 
                 MapViewParameters actualMapView = mapViewParametersProperty.get();
 
-                Point2D point2D= mousePositionP.get();
-                PointCh pointUnderMouse = actualMapView.pointAt(point2D.getX(), point2D.getY()).toPointCh();
+                Point2D mousePoint2D= mousePositionP.get();
+                PointCh pointChUnderMouse = actualMapView.pointAt(mousePoint2D.getX(), mousePoint2D.getY()).toPointCh();
                 RoutePoint pointClosestToOnRouteRP = routeBean.getRoute().pointClosestTo(
-                        pointUnderMouse);
+                        pointChUnderMouse);
                 PointCh pointClosestToOnRoute = pointClosestToOnRouteRP.point();
                 PointWebMercator pointClosestToWM = PointWebMercator.ofPointCh(pointClosestToOnRoute);
                 Point2D pointClosestTo2D = new Point2D(
                         actualMapView.viewX(pointClosestToWM),
                          actualMapView.viewY(pointClosestToWM));
                 Double distance = Math2.norm(
-                        pointClosestTo2D.getX()-point2D.getX(),
-                        pointClosestTo2D.getY()-point2D.getY());
-
+                        pointClosestTo2D.getX()-mousePoint2D.getX(),
+                        pointClosestTo2D.getY()-mousePoint2D.getY());
                 if (distance <= 15){
                     highlightedPosP.set(pointClosestToOnRouteRP.position());
                 }
