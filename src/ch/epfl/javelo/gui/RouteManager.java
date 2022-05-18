@@ -24,17 +24,12 @@ public final class RouteManager {
     private static final int HIGHLIGHT_DISK_RADIUS = 5;
     private static final String HIGHLIGHT_DISK_ID = "highlight";
 
-    //Todo this too
-    //private static final String ERROR_CONSUMER_MESSAGE ="Un point de passage est déjà présent à cet endroit !";
-
     private final Polyline line;
     private final Circle disk;
 
     private final Pane pane;
     private final RouteBean routeBean;
     private final ReadOnlyObjectProperty<MapViewParameters> mapViewParametersProperty;
-    //todo here too
-    //private final Consumer<String> errorConsumer;
 
     /**
      * Le constructeur de RouteManager permet d'initialiser ses attributs, et ajoute un auditeur à l'itinéraire du routeBean
@@ -48,8 +43,6 @@ public final class RouteManager {
 
         this.routeBean = routeBean;
         this.mapViewParametersProperty = mapViewParametersProperty;
-        //todo this too
-        //this.errorConsumer = errorConsumer;
 
         this.pane = new Pane();
         pane.setPickOnBounds(false);
@@ -71,23 +64,12 @@ public final class RouteManager {
             Point2D position2D = pane.localToParent(e.getX(),e.getY());
             PointCh positionCH = mapViewParametersProperty.get().pointAt(position2D.getX() , position2D.getY()).toPointCh();
 
-            //TODO verify this change is correct
             int index = routeBean.indexOfNonEmptySegmentAt(routeBean.getHighlightedPosition());
-            //int index = routeBean.getRoute().indexOfSegmentAt(routeBean.getHighlightedPosition());
             int nodeClosestToWaypoint = routeBean.getRoute().nodeClosestTo(routeBean.getHighlightedPosition());
 
             Waypoint newWaypoint = new Waypoint(positionCH, nodeClosestToWaypoint);
 
-            //Todo delete this if works
-            //for(Waypoint waypoint : routeBean.getWaypoints()) {
-            //    if(nodeClosestToWaypoint == waypoint.nodeIdClosestTo()){
-            //        errorConsumer.accept(ERROR_CONSUMER_MESSAGE);
-            //        newWaypoint = null;
-            //    }
-            //}
-            //if(newWaypoint != null ) {
-                routeBean.getWaypoints().add(index + 1, newWaypoint);
-            //}
+            routeBean.getWaypoints().add(index + 1, newWaypoint);
         });
 
         //Quand l'itinéraire change,
