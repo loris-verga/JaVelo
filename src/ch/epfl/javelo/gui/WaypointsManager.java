@@ -32,6 +32,7 @@ public final class WaypointsManager {
     private static final String LAST_WAYPOINT_PIN_STYLE_CLASS = "last";
 
     private static final int MAX_CLOSEST_NODE_DISTANCE = 500;
+    private static final int VALUE_IF_NO_NODES_ARE_IN_PROXIMITY_OF_WAYPOINT = -1;
     private static final String ERROR_MESSAGE = "Aucune route à proximité";
 
     //Création d'une map privé qui permet de renvoyer l'index au quelle se trouve un point de passage,
@@ -211,7 +212,7 @@ public final class WaypointsManager {
         int nodeClosestToWaypoint =
                 graph.nodeClosestTo(position, MAX_CLOSEST_NODE_DISTANCE);
 
-        if(nodeClosestToWaypoint != -1){
+        if(nodeClosestToWaypoint != VALUE_IF_NO_NODES_ARE_IN_PROXIMITY_OF_WAYPOINT){
             return new Waypoint(position, nodeClosestToWaypoint);
         }
         else {

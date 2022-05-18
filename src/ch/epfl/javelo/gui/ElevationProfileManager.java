@@ -188,7 +188,7 @@ public final class ElevationProfileManager {
     }}
 
     /**
-     * La méthode redraw privée permet de dessiner la grille et le profil du graph d'élévation.
+     * La méthode redraw privée, permet de dessiner la grille et le profil du graph d'élévation.
      */
     private void redraw(){
         createGrid();
@@ -197,7 +197,7 @@ public final class ElevationProfileManager {
 
     /**
      * La méthode pane retourne le panneau contenant le dessin du profil.
-     * @return un Pane JavaFX.
+     * @return un panneau JavaFX.
      */
     public Pane pane(){
         return this.borderPane;
@@ -209,12 +209,17 @@ public final class ElevationProfileManager {
      * contenant la position du pointeur de la souris le long du profil(en mètres, arrondie
      * à l'entier le plus proche), ou NaN si le pointeur de la souris ne se trouve pas
      * au-dessus du profil.
-     * @return
+     * @return la propriété en lecture seule de la position du pointeur de la souris le long du profil.
      */
     public ReadOnlyDoubleProperty mousePositionProfileProperty(){
         return mousePositionOnProfileProperty;
     }
 
+    /**
+     * La méthode createBlueRectangle privée, permet de créer le rectangle bleu qui représente le graphe du profil
+     * le long de l'itinéraire, par rapport au repère de l'écran avec l'origine le coin en haut à gauche.
+     * @return le rectangle bleu qui représente le graphe du profil le long de l'itinéraire.
+     */
     private Rectangle2D createBlueRectangle(){
         double width = pane.getWidth() - (inset.getLeft() + inset.getRight());
         double height = pane.getHeight() - (inset.getTop() + inset.getBottom());
@@ -393,7 +398,4 @@ public final class ElevationProfileManager {
         }
         polygon.getPoints().addAll(maxX,minY);
     }
-
-
-
 }

@@ -21,8 +21,8 @@ public class GpxGenerator {
 
     /**
      * La méthode createGpx permet de créer un document de type GPX.
-     * @param route l'itinéraire que l'on veut convertir en GPX
-     * @param profile le profile associer à l'itinéraire
+     * @param route l'itinéraire que l'on veut convertir en GPX.
+     * @param profile le profile associer à l'itinéraire.
      * @return le document GPX.
      */
     public static Document createGpx(Route route, ElevationProfile profile){
@@ -83,9 +83,9 @@ public class GpxGenerator {
 
     /**
      * La méthode writeGpx permet d'écrire un document gpx sur un fichier donné.
-     * @param fileName le fichier donné
-     * @param route l'itinéraire que l'on veut convertir en GPX
-     * @param profile le profile associer à l'itinéraire
+     * @param fileName le fichier donné.
+     * @param route l'itinéraire que l'on veut convertir en GPX.
+     * @param profile le profile associer à l'itinéraire.
      */
     public static void writeGpx(String fileName, Route route, ElevationProfile profile){
 
@@ -108,7 +108,7 @@ public class GpxGenerator {
     }
 
     /**
-     * La méthode private newDocument permet de faciliter la création de Document.
+     * La méthode newDocument privée, permet de faciliter la création de Document.
      * @return un document.
      */
     private static Document newDocument() {

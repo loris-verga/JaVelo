@@ -42,8 +42,8 @@ public final class ErrorManager {
     public Pane pane(){return pane;}
 
     /**
-     * La méthode displayError permet d'afficher à l'écran le message d'erreur donné en argument.
-     * @param errorMessage le message qu'on l'on veut afficher a l'écran.
+     * La méthode displayError permet d'afficher à l'écran le message d'erreur passé en argument.
+     * @param errorMessage le message que l'on veut afficher à l'écran.
      */
     public void displayError(String errorMessage){
 
@@ -59,7 +59,8 @@ public final class ErrorManager {
     }
 
     /**
-     * La méthode createAnimation privée, permet de créer l'animation que l'on utilise pour afficher les messages d'erreurs.
+     * La méthode createAnimation privée, permet de créer l'animation
+     * que l'on utilise pour afficher les messages d'erreurs.
      * @return l'animation du panneau.
      */
     private SequentialTransition createAnimation(){
