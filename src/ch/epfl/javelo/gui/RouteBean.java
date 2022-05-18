@@ -176,6 +176,12 @@ public final class RouteBean {
             nodeIdOfFirstWaypointToLink = nodeIdOfSecondWaypointToLink;
         }
 
+        //On gère le cas où il y a uniquement deux waypoints appartenant au même nœud.
+        if (listOfSinglesRoutes.isEmpty()){
+            setNullItinerary();
+            return;
+        }
+
         MultiRoute newItinerary = new MultiRoute(listOfSinglesRoutes);
         route.set(newItinerary);
         elevationProfile.set(ElevationProfileComputer.elevationProfile(newItinerary, MAX_STEP_LENGTH));
