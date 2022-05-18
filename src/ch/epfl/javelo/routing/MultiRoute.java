@@ -124,40 +124,19 @@ public final class MultiRoute implements Route{
      * de référence donnée.
      * @param point Le pointCh de référence.
      * @return le RoutePoint le plus proche du point de référence.
-
+    */
     public RoutePoint pointClosestTo(PointCh point){
-        RoutePoint pointClosestTo = segments.get(0).pointClosestTo(point);
-        double distanceToRefPointClosest = pointClosestTo.distanceToReference();
-
-        int indexOfSegment = 0;
-        ListIterator<Route> iterator = segments.listIterator(1);
-        while (iterator.hasNext()){
-            RoutePoint pointCandidate = iterator.next().pointClosestTo(point);
-            double distanceToRefCandidate = pointCandidate.distanceToReference();
-            if (distanceToRefCandidate<distanceToRefPointClosest){
-                indexOfSegment++;
-                pointClosestTo = pointCandidate;
-                distanceToRefPointClosest = distanceToRefCandidate;
-            }
+        RoutePoint pointClosest = RoutePoint.NONE;
+        double length = 0.0;
+        for(Route route : segments){
+            RoutePoint pointToCompare = route.pointClosestTo(point);
+            Double distanceToRef = pointToCompare.distanceToReference();
+            pointClosest = pointClosest.min(pointToCompare.point(),
+                    pointToCompare.position() + length,
+                    distanceToRef);
+            length += route.length();
         }
-        double positionToShift = 0;
-        for (int i = 0; i<indexOfSegment; ++i){
-            positionToShift += segments.get(i).length();
-
-        }
-        return pointClosestTo.withPositionShiftedBy(positionToShift);
-    }
-        */
-    //todo remove comment here to check for errors
-    public RoutePoint pointClosestTo(PointCh point){
-        RoutePoint bestPoint = RoutePoint.NONE;
-        double length = 0;
-        for(Route segment : segments){
-            RoutePoint relativePoint = segment.pointClosestTo(point);
-            bestPoint = bestPoint.min(relativePoint.point(),relativePoint.position() + length, relativePoint.distanceToReference());
-            length += segment.length();
-        }
-        return bestPoint;
+        return pointClosest;
     }
 
     /**

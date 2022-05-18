@@ -24,11 +24,14 @@ public final class TileManager {
     private final String tileServerName;
     private final LinkedHashMap<TileId, Image> cacheMemory;
 
+    private final int INITIAL_CAPACITY = 100;
+    private final float LOAD_FACTOR = 0.75F;
+
 
     public TileManager(Path path, String tileServerName){
         this.path = path;
         this.tileServerName = tileServerName;
-        this.cacheMemory = new LinkedHashMap<>(100, 0.75F, true);
+        this.cacheMemory = new LinkedHashMap<>(INITIAL_CAPACITY, LOAD_FACTOR, true);
     }
 
 
@@ -67,7 +70,7 @@ public final class TileManager {
                 addImageCacheMemory(image, tileId);
                 return image;
             } catch (IOException e) {
-                e.printStackTrace();
+                return null;
             }
         } else {
 
@@ -105,10 +108,14 @@ public final class TileManager {
                 return null;
             }
         }
-        return null;
     }
 
 
+    /**
+     * La méthode privée addImageCacheMemory permet de mettre à jour le cache disque.
+     * @param image l'image à ajouter.
+     * @param tileId l'identité de la tuile.
+     */
     private void addImageCacheMemory(Image image, TileId tileId){
         if (cacheMemory.size()<100){
             cacheMemory.put(tileId, image);

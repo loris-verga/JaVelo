@@ -98,7 +98,8 @@ public final class Javelo extends Application {
                 );
 
                 BooleanProperty b = new SimpleBooleanProperty();
-                b.bind(Bindings.createBooleanBinding(() -> !Double.isNaN(elevationProfileManager.mousePositionProfileProperty().get()), elevationProfileManager.mousePositionProfileProperty()));
+                b.bind(Bindings.createBooleanBinding(() -> !Double.isNaN(elevationProfileManager.mousePositionProfileProperty().get()),
+                        elevationProfileManager.mousePositionProfileProperty()));
 
                 routeBean.getHighlightedPositionProperty().bind(Bindings.when(b).then(elevationProfileManager.mousePositionProfileProperty()).otherwise(
                         annotatedMapManager.mousePositionOnRouteProperty()));

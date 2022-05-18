@@ -44,7 +44,9 @@ public final class BaseMapManager {
      *                    le gestionnaire des points de passage
      *                    une propriété JavaFX contenant les paramètres de la carte affichée.
      */
-    public BaseMapManager(TileManager tileManager,WaypointsManager waypointsManager,   ObjectProperty<MapViewParameters> mapViewParametersProperty){
+    public BaseMapManager(TileManager tileManager,WaypointsManager waypointsManager,
+                          ObjectProperty<MapViewParameters> mapViewParametersProperty){
+
         this.tileManager = tileManager;
         this.mapViewParametersProperty = mapViewParametersProperty;
         this.waypointsManager = waypointsManager;

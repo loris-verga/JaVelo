@@ -12,7 +12,6 @@ import javafx.scene.shape.SVGPath;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
 /**
  * La classe WaypointsManager gère l'affichage et l'interaction avec les points de passage.
@@ -35,7 +34,7 @@ public final class WaypointsManager {
     private static final int MAX_CLOSEST_NODE_DISTANCE = 500;
     private static final String ERROR_MESSAGE = "Aucune route à proximité";
 
-    //creation d'une map privé qui permet de renvoyer l'index au quelle se trouve un point de passage,
+    //Création d'une map privé qui permet de renvoyer l'index au quelle se trouve un point de passage,
     //dans la liste de point de passage en ayant seulement accès son marqueur associer.
     private final Map<Group,Integer> mapWaypointPinToIndex = new HashMap<>();
 
