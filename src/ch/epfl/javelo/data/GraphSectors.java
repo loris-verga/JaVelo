@@ -6,9 +6,6 @@ import ch.epfl.javelo.projection.SwissBounds;
 
 import java.nio.ByteBuffer;
 import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * GraphSectors représente le tableau contenant les 16384 secteurs de JaVelo.
  *
