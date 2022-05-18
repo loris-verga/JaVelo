@@ -14,7 +14,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import org.w3c.dom.Document;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -26,7 +25,7 @@ import static javafx.geometry.Orientation.VERTICAL;
  *
  * @author Loris Verga (345661)
  */
-public final class Javelo extends Application {
+public final class JaVelo extends Application {
 
     private final String DIRECTORY_NAME = "javelo-data";
     private final String CACHE_DIRECTORY_NAME = "osm-cache";
