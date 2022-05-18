@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 /**
  * La classe RouteManager gère l'affichage de l'itinéraire et (une partie de) l'interaction avec lui.
  *
- * @<author Juan Bautista Iaconucci (342153)
+ * @author Juan Bautista Iaconucci (342153)
  */
 public final class RouteManager {
 

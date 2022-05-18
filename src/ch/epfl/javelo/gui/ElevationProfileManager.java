@@ -23,7 +23,7 @@ import javafx.scene.transform.Transform;
  * La classe ElevationProfileManager gère l'affichage et l'interaction avec le profil
  * en long d'un itinéraire.
  *
- *  @author Juan Bautista Iaconucci (342153)
+ * @author Juan Bautista Iaconucci (342153)
  * @author Loris Verga (345661)
  */
 public final class ElevationProfileManager {
@@ -35,13 +35,13 @@ public final class ElevationProfileManager {
     private static final String FONT_FAMILY_OF_LABELS = "Avenir";
 
     private final ReadOnlyObjectProperty<ElevationProfile> elevationProfileProperty;
-    private final ReadOnlyDoubleProperty highlightedPositionProperty;
+    private final ReadOnlyDoubleProperty mapHighlightedPositionProperty;
 
     private final BorderPane borderPane;
 
     private final DoubleProperty mousePositionOnProfileProperty;
     private final DoubleProperty linePosition;
-    private final BooleanProperty isValid; //TODO rename
+    private final BooleanProperty isPositionFromMapValid;
 
     private final Pane pane;
     private final Path path;
@@ -54,9 +54,9 @@ public final class ElevationProfileManager {
 
     private final Insets inset = new Insets(10, 10, 20, 40);
 
-    private ObjectProperty<Rectangle2D> blueRectangleProperty;
-    private ObjectProperty<Transform> screenToWorldProperty;
-    private ObjectProperty<Transform> worldToScreenProperty;
+    private final ObjectProperty<Rectangle2D> blueRectangleProperty;
+    private final ObjectProperty<Transform> screenToWorldProperty;
+    private final ObjectProperty<Transform> worldToScreenProperty;
 
     private static final int[] POSITION_STEPS =
             { 1000, 2000, 5000, 10_000, 25_000, 50_000, 100_000 };
@@ -77,10 +77,6 @@ public final class ElevationProfileManager {
     public ElevationProfileManager(ReadOnlyObjectProperty<ElevationProfile> elevationProfile,
                                    ReadOnlyDoubleProperty highlightedPosition){
         this.elevationProfileProperty = elevationProfile;
-        this.highlightedPositionProperty = highlightedPosition;
-
-
-        this.mousePositionOnProfileProperty = new SimpleDoubleProperty(Double.NaN);
 
         //Initialisation des nœuds :
         this.borderPane = new BorderPane();
@@ -111,6 +107,7 @@ public final class ElevationProfileManager {
         vBox.getChildren().add(textVbox);
 
 
+        //Création des propriétés de transformation et d'affichage :
         blueRectangleProperty = new SimpleObjectProperty<>();
 
         blueRectangleProperty.bind(Bindings.createObjectBinding(
@@ -135,13 +132,21 @@ public final class ElevationProfileManager {
                 pane.heightProperty()
         ));
 
-        isValid = new SimpleBooleanProperty();
-        isValid.bind(Bindings.createBooleanBinding( () -> !Double.isNaN(highlightedPositionProperty.get()), highlightedPositionProperty));
+        //Création des liaisons concernant la position mise en évidence :
+
+        this.mapHighlightedPositionProperty = highlightedPosition;
+        this.mousePositionOnProfileProperty = new SimpleDoubleProperty(Double.NaN);
+
+        isPositionFromMapValid = new SimpleBooleanProperty();
+        isPositionFromMapValid.bind(Bindings.createBooleanBinding(
+                () -> !Double.isNaN(mapHighlightedPositionProperty.get()),
+                mapHighlightedPositionProperty));
 
 
         linePosition = new SimpleDoubleProperty(Double.NaN);
-        linePosition.bind(highlightedPositionProperty);
-        linePosition.bind(Bindings.when(isValid).then(highlightedPositionProperty).otherwise(mousePositionOnProfileProperty));
+        linePosition.bind(Bindings.when(isPositionFromMapValid).
+                then(mapHighlightedPositionProperty).
+                otherwise(mousePositionOnProfileProperty));
 
 
         line.layoutXProperty().bind(Bindings.createDoubleBinding(
@@ -155,15 +160,12 @@ public final class ElevationProfileManager {
                 blueRectangleProperty));
         line.visibleProperty().bind(linePosition.greaterThanOrEqualTo(0));
 
+        //Actualisation de la position de la souris lorsque celle ci bouge.
         borderPane.setOnMouseMoved(e-> mousePositionUpdate(e));
 
 
-
     }
 
-    private void test(){//TODO remove
-        System.out.println("test");
-    }
 
     /**
      * La méthode mousePositionUpdate privée permet positionner la ligne de mise en évidence au bon endroit sur le graph.
@@ -182,7 +184,7 @@ public final class ElevationProfileManager {
             mousePositionOnProfileProperty.set(Double.NaN);
         }
         else{mousePositionOnProfileProperty.set(
-                screenToWorldProperty.get().transform(posX, 0).getX());
+                Math.round(screenToWorldProperty.get().transform(posX, 0).getX()));
     }}
 
     /**
@@ -225,7 +227,7 @@ public final class ElevationProfileManager {
     }
 
     /**
-     * La méthode createScreenToWorldTransformation privée, permet de crée la transformation entre le repère du monde du graph
+     * La méthode createScreenToWorldTransformation privée, permet de créer la transformation entre le repère du monde du graph
      * au repère centrer au coin en haut à gauche du panneau d'affichage en pixel.
      * @return la transformation qui permet le changement entre ces deux repères.
      */

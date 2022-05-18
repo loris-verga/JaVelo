@@ -93,7 +93,7 @@ public class GpxGenerator {
 
         try(FileOutputStream outputStream = new FileOutputStream(fileName);
 
-            Writer w = new OutputStreamWriter(outputStream);){
+            Writer w = new OutputStreamWriter(outputStream)){
             Transformer transformer = TransformerFactory
                     .newDefaultInstance()
                     .newTransformer();
@@ -102,13 +102,7 @@ public class GpxGenerator {
                     new StreamResult(w));
 
 
-        } catch (FileNotFoundException e) {
-            throw new Error(e);
-        } catch (IOException e) {
-            throw new Error(e);
-        } catch (TransformerConfigurationException e) {
-            throw new Error(e);
-        } catch (TransformerException e) {
+        } catch (IOException | TransformerException e) {
             throw new Error(e);
         }
     }
