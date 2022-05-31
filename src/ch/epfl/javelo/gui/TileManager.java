@@ -25,14 +25,13 @@ public final class TileManager {
     private final String tileServerName;
     private final LinkedHashMap<TileId, Image> cacheMemory;
 
-    private static final int INITIAL_CAPACITY = 100;
     private static final float LOAD_FACTOR = 0.75F;
     private static final int MAXIMUM_CACHE_CAPACITY = 100;
 
     public TileManager(Path path, String tileServerName){
         this.path = path;
         this.tileServerName = tileServerName;
-        this.cacheMemory = new LinkedHashMap<>(INITIAL_CAPACITY, LOAD_FACTOR, true);
+        this.cacheMemory = new LinkedHashMap<>(MAXIMUM_CACHE_CAPACITY, LOAD_FACTOR, true);
     }
 
     /**
