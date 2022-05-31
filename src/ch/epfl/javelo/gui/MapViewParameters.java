@@ -67,12 +67,4 @@ public record MapViewParameters(int zoomLevel, double minX, double minY) {
     public double viewY(PointWebMercator point){
         return point.yAtZoomLevel(zoomLevel)-minY;
     }
-
-
-
-
-
-
-
-
 }

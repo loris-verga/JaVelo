@@ -20,22 +20,20 @@ import java.util.Map;
 public final class TileManager {
 
 
+
     private final Path path;
     private final String tileServerName;
     private final LinkedHashMap<TileId, Image> cacheMemory;
 
-    private final int INITIAL_CAPACITY = 100;
-    private final float LOAD_FACTOR = 0.75F;
-
+    private static final int INITIAL_CAPACITY = 100;
+    private static final float LOAD_FACTOR = 0.75F;
+    private static final int MAXIMUM_CACHE_CAPACITY = 100;
 
     public TileManager(Path path, String tileServerName){
         this.path = path;
         this.tileServerName = tileServerName;
         this.cacheMemory = new LinkedHashMap<>(INITIAL_CAPACITY, LOAD_FACTOR, true);
     }
-
-
-
 
     /**
      * La méthode imageForTileAt prend en argument l'identité d'une tuile et retourne son image.
@@ -110,14 +108,13 @@ public final class TileManager {
         }
     }
 
-
     /**
      * La méthode privée addImageCacheMemory permet de mettre à jour le cache disque.
      * @param image l'image à ajouter.
      * @param tileId l'identité de la tuile.
      */
     private void addImageCacheMemory(Image image, TileId tileId){
-        if (cacheMemory.size()<100){
+        if (cacheMemory.size() < MAXIMUM_CACHE_CAPACITY){
             cacheMemory.put(tileId, image);
         }
         else{

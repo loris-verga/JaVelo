@@ -31,6 +31,7 @@ public final class AnnotatedMapManager {
     private final int ZOOM_LEVEL_BEGINNING = 12;
     private final int TOP_LEFT_X_BEGINNING = 543200;
     private final int TOP_LEFT_Y_BEGINNING = 370650;
+    private final int MAXIMUM_DISTANCE_TO_PLACE_DISK = 15;
 
 
     /**
@@ -98,7 +99,7 @@ public final class AnnotatedMapManager {
                 double distance = Math2.norm(
                         pointClosestTo2D.getX()-mousePoint2D.getX(),
                         pointClosestTo2D.getY()-mousePoint2D.getY());
-                if (distance <= 15){
+                if (distance <= MAXIMUM_DISTANCE_TO_PLACE_DISK){
                     highlightedPositionP.set(pointClosestToOnRouteRP.position());
                 }
                 else{

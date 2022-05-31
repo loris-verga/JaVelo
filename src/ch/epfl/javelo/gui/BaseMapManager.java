@@ -72,13 +72,19 @@ public final class BaseMapManager {
         SimpleLongProperty minScrollTime = new SimpleLongProperty();
         pane.setOnScroll(e -> {
             if (e.getDeltaY() == 0d){ return;}
+
             long currentTime = System.currentTimeMillis();
+
             if (currentTime < minScrollTime.get()){ return;}
+
             minScrollTime.set(currentTime + CURRENT_TIME_CONSTANT);
             int zoomDelta = (int)Math.signum(e.getDeltaY());
+
             MapViewParameters mapViewParameters = mapViewParametersProperty.get();
+
             int zoomLevel = mapViewParameters.zoomLevel();
             int newZoom = Math.round(zoomLevel + zoomDelta);
+
             if (newZoom > MAX_ZOOM_LEVEL){newZoom = MAX_ZOOM_LEVEL;}
             else if (newZoom<MIN_ZOOM_LEVEL){newZoom = MIN_ZOOM_LEVEL;}
 
@@ -124,9 +130,11 @@ public final class BaseMapManager {
         pane.setOnMouseDragged(e-> {
             double vectorX = e.getX()- lastPositionMouseX;
             double vectorY = e.getY()- lastPositionMouseY;
-            mapViewParametersProperty.set(new MapViewParameters(mapViewParametersProperty.get().zoomLevel(),
+            mapViewParametersProperty.set(new MapViewParameters(
+                    mapViewParametersProperty.get().zoomLevel(),
                     mapViewParametersProperty.get().minX() - vectorX,
                     mapViewParametersProperty.get().minY() - vectorY));
+
             lastPositionMouseX = e.getX();
             lastPositionMouseY = e.getY();
         });
@@ -143,10 +151,6 @@ public final class BaseMapManager {
         });
     }
 
-
-
-
-
     /**
      * La méthode pane retourne le panneau JavaFX affichant le fond de la carte.
      * @return un panneau de type Pane
@@ -156,7 +160,7 @@ public final class BaseMapManager {
     }
 
     /**
-     * La méthode diffX permet de connaître la différence entre le coin de la tuile haut-gauche et le coin de
+     * La méthode diffX privée, permet de connaître la différence entre le coin de la tuile haut-gauche et le coin de
      * la fenêtre selon la coordonnée x.
      * @return un double.
      */
@@ -171,7 +175,7 @@ public final class BaseMapManager {
         return minX - topLeftX;
     }
     /**
-     * La méthode diffX permet de connaître la différence entre le coin de la tuile haut-gauche et le coin de
+     * La méthode diffY privée, permet de connaître la différence entre le coin de la tuile haut-gauche et le coin de
      * la fenêtre selon la coordonnée y.
      * @return un double.
      */
@@ -187,7 +191,7 @@ public final class BaseMapManager {
     }
 
     /**
-     * La méthode tilesInArea permet d'obtenir les tuiles à afficher.
+     * La méthode tilesInArea privée, permet d'obtenir les tuiles à afficher.
      * @param zoomLevel le niveau de zoom.
      * @param height la hauteur de la fenêtre.
      * @param width la largeur de la fenêtre.
@@ -219,7 +223,7 @@ public final class BaseMapManager {
 
 
     /**
-     * La méthode redrawIfNeeded permet de redessiner les tuiles.
+     * La méthode redrawIfNeeded privée, permet de redessiner les tuiles.
      */
     private void redrawIfNeeded() {
         if (!redrawNeeded) return;
@@ -254,7 +258,7 @@ public final class BaseMapManager {
     }
 
     /**
-     * La méthode redrawOnNextPulse permet de gérer la fréquence de dessin.
+     * La méthode redrawOnNextPulse privée, permet de gérer la fréquence de dessin.
      */
     private void redrawOnNextPulse() {
         redrawNeeded = true;

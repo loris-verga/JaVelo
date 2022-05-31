@@ -36,10 +36,11 @@ public final class RouteManager {
      * qui quand celle ci change on crée à nouveaux la ligne et le disque,
      * et un autre aux paramètres de la carte, pour pouvoir déplacer la line et le disque en fonctions des paramètres qui ont changée,
      * et un dernier sur le disque, pour pouvoir ajouter des points de passages intermédiaires sur l'itinéraire.
-     * @param routeBean le bean de l'itinéraire.
+     *
+     * @param routeBean                 le bean de l'itinéraire.
      * @param mapViewParametersProperty les paramètres de la carte affichée.
      */
-    public RouteManager(RouteBean routeBean, ReadOnlyObjectProperty<MapViewParameters> mapViewParametersProperty){
+    public RouteManager(RouteBean routeBean, ReadOnlyObjectProperty<MapViewParameters> mapViewParametersProperty) {
 
         this.routeBean = routeBean;
         this.mapViewParametersProperty = mapViewParametersProperty;
@@ -59,10 +60,10 @@ public final class RouteManager {
         //on regarde s'il y a déjà un point de passage qui contient le nœud situer à la position de la souris,
         //si c'est le cas l'erreur est consommé,
         //sinon on ajoute le point de passage dans la liste des points de passage.
-        disk.setOnMouseClicked(e ->{
+        disk.setOnMouseClicked(e -> {
 
-            Point2D position2D = pane.localToParent(e.getX(),e.getY());
-            PointCh positionCH = mapViewParametersProperty.get().pointAt(position2D.getX() , position2D.getY()).toPointCh();
+            Point2D position2D = pane.localToParent(e.getX(), e.getY());
+            PointCh positionCH = mapViewParametersProperty.get().pointAt(position2D.getX(), position2D.getY()).toPointCh();
 
             int index = routeBean.indexOfNonEmptySegmentAt(routeBean.getHighlightedPosition());
             int nodeClosestToWaypoint = routeBean.getRoute().nodeClosestTo(routeBean.getHighlightedPosition());
@@ -75,12 +76,11 @@ public final class RouteManager {
         //Quand l'itinéraire change,
         //si la route est définie alors on crée la ligne et le disque,
         //sinon on les rend invisible.
-        routeBean.routeProperty().addListener((o,p,n)->{
-            if(routeBean.getRoute() != null) {
+        routeBean.routeProperty().addListener((o, p, n) -> {
+            if (routeBean.getRoute() != null) {
                 drawItineraryLine();
                 drawHighlightDisk();
-            }
-            else{
+            } else {
                 line.setVisible(false);
                 disk.setVisible(false);
             }
@@ -89,11 +89,11 @@ public final class RouteManager {
         //Quand les paramètres de la carte change,
         //si le niveau de zoom a changé on crée à nouveau la ligne et le disque,
         //sinon on les repositionne aux bonnes coordonnées.
-        mapViewParametersProperty.addListener((o,p,n) ->{
+        mapViewParametersProperty.addListener((o, p, n) -> {
 
             int previousZoomLevel = p.zoomLevel();
             int currentZoomLevel = n.zoomLevel();
-            if(routeBean.getRoute() != null) {
+            if (routeBean.getRoute() != null) {
                 if (previousZoomLevel != currentZoomLevel) {
                     drawItineraryLine();
                     drawHighlightDisk();
@@ -101,28 +101,28 @@ public final class RouteManager {
                     double displacementX = n.minX() - p.minX();
                     double displacementY = n.minY() - p.minY();
 
-                    line.setLayoutX( line.getLayoutX() - displacementX);
+                    line.setLayoutX(line.getLayoutX() - displacementX);
                     line.setLayoutY(line.getLayoutY() - displacementY);
 
                     disk.setCenterX(disk.getCenterX() - displacementX);
                     disk.setCenterY(disk.getCenterY() - displacementY);
                 }
             }
-        } );
+        });
 
 
-         //On dessine le disque quand la position mise en évidence change.
+        //On dessine le disque quand la position mise en évidence change.
         routeBean.getHighlightedPositionProperty().addListener(
-                (p,o, n) -> {
+                (p, o, n) -> {
                     if (routeBean.getRoute() != null) {
                         drawHighlightDisk();
                     }
                 }
         );
 
-        pane.getChildren().addAll(line,disk);
+        pane.getChildren().addAll(line, disk);
 
-        if(routeBean.getRoute() != null) {
+        if (routeBean.getRoute() != null) {
             drawItineraryLine();
             drawHighlightDisk();
         }
@@ -130,16 +130,17 @@ public final class RouteManager {
 
     /**
      * La méthode pane retourne le panneau contenant la ligne représentant l'itinéraire et le disque de mise en évidence.
+     *
      * @return le panneau contenant la ligne représentant l'itinéraire et le disque de mise en évidence.
      */
-    public Pane pane(){
+    public Pane pane() {
         return pane;
     }
 
     /**
      * La méthode createLine privée, permet de créer et dessiner la ligne représentant l'itinéraire.
      */
-    private void drawItineraryLine(){
+    private void drawItineraryLine() {
         line.setVisible(true);
         line.getPoints().clear();
 
@@ -153,7 +154,7 @@ public final class RouteManager {
             double x = mapViewParametersProperty.get().viewX(pointWM);
             double y = mapViewParametersProperty.get().viewY(pointWM);
 
-            line.getPoints().addAll(x,y);
+            line.getPoints().addAll(x, y);
         }
     }
 
@@ -163,20 +164,19 @@ public final class RouteManager {
     private void drawHighlightDisk() {
         double positionOnRouteOfCircle = routeBean.getHighlightedPosition();
 
-        if (!(Double.isNaN(positionOnRouteOfCircle)) && routeBean.getHighlightedPositionProperty() != null){
-            disk.setVisible(true);
-
-            PointCh positionOfCircleCh = routeBean.getRoute().pointAt(positionOnRouteOfCircle);
-            PointWebMercator positionOfCircleWM = PointWebMercator.ofPointCh(positionOfCircleCh);
-
-            double x = mapViewParametersProperty.get().viewX(positionOfCircleWM);
-            double y = mapViewParametersProperty.get().viewY(positionOfCircleWM);
-
-            disk.setCenterX(x);
-            disk.setCenterY(y);
-        }
-        else{
+        if (Double.isNaN(positionOnRouteOfCircle) || routeBean.getHighlightedPositionProperty() == null) {
             disk.setVisible(false);
+            return;
         }
+        disk.setVisible(true);
+
+        PointCh positionOfCircleCh = routeBean.getRoute().pointAt(positionOnRouteOfCircle);
+        PointWebMercator positionOfCircleWM = PointWebMercator.ofPointCh(positionOfCircleCh);
+
+        double x = mapViewParametersProperty.get().viewX(positionOfCircleWM);
+        double y = mapViewParametersProperty.get().viewY(positionOfCircleWM);
+
+        disk.setCenterX(x);
+        disk.setCenterY(y);
     }
 }

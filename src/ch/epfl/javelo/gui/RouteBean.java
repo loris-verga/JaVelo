@@ -30,10 +30,9 @@ public final class RouteBean {
     //Cette LinkedHashMap représente le cache mémoire qui contient les 
     private final LinkedHashMap <Pair<Integer, Integer>, Route> cacheMemory;
 
-    private final double MAX_STEP_LENGTH = 5;
-
-
-
+    private static final double MAX_STEP_LENGTH = 5;
+    private static final int NUMBER_OF_WAYPOINTS_TO_MAKE_AN_ITINERARY = 2;
+    private static final int MAXIMUM_MEMORY_CAPACITY = 100;
 
     /**
      * L'unique constructeur prend en argument un RouteComputer afin de déterminer le meilleur itinéraire reliant
@@ -129,7 +128,7 @@ public final class RouteBean {
      *             l'autre part de la route.
      */
     private void cacheMemoryAdd(Pair<Pair<Integer, Integer>, Route> pair){
-        if (cacheMemory.size()<100){
+        if (cacheMemory.size() < MAXIMUM_MEMORY_CAPACITY){
             cacheMemory.put(pair.getKey(), pair.getValue());
         }
         Iterator<Map.Entry<Pair<Integer,Integer>, Route>> iterator = cacheMemory.entrySet().iterator();
@@ -143,7 +142,7 @@ public final class RouteBean {
      * La méthode recalculateItinerary permet de recalculer l'itinéraire.
      */
     private void recalculateItinerary(){
-        if (waypoints.size() < 2){
+        if (waypoints.size() < NUMBER_OF_WAYPOINTS_TO_MAKE_AN_ITINERARY){
             setNullItinerary();
             return;
         }

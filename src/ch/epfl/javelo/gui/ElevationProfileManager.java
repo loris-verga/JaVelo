@@ -88,8 +88,10 @@ public final class ElevationProfileManager {
         this.path = new Path();
         path.setId("grid");
         pane.getChildren().add(path);
+
         this.group = new Group();
         pane.getChildren().add(group);
+
         this.polygon = new Polygon();
         this.polygon.setId("profile");
         pane.getChildren().add(polygon);
@@ -168,7 +170,7 @@ public final class ElevationProfileManager {
 
 
     /**
-     * La méthode mousePositionUpdate privée permet positionner la ligne de mise en évidence au bon endroit sur le graph.
+     * La méthode mousePositionUpdate privée, permet positionner la ligne de mise en évidence au bon endroit sur le graphe.
      * @param e l'événement crée par la souris quand elle est déplacé.
      */
 
@@ -183,12 +185,14 @@ public final class ElevationProfileManager {
         if (posX > maxX || posX < minX || posY > maxY || posY < minY){
             mousePositionOnProfileProperty.set(Double.NaN);
         }
-        else{mousePositionOnProfileProperty.set(
+        else{
+            mousePositionOnProfileProperty.set(
                 Math.round(screenToWorldProperty.get().transform(posX, 0).getX()));
-    }}
+        }
+    }
 
     /**
-     * La méthode redraw privée, permet de dessiner la grille et le profil du graph d'élévation.
+     * La méthode redraw privée, permet de dessiner la grille et le profil du graphe d'élévation.
      */
     private void redraw(){
         createGrid();
@@ -202,7 +206,6 @@ public final class ElevationProfileManager {
     public Pane pane(){
         return this.borderPane;
     }
-
 
     /**
      * La méthode mousePositionOnProfileProperty retourne une propriété en lecture seule
