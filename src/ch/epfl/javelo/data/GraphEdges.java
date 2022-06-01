@@ -6,7 +6,6 @@ import ch.epfl.javelo.Q28_4;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
-import java.util.Collections;
 
 /**
  * L'enregistrement GraphEdge représente le tableau de toutes les arêtes du graphe JaVelo.

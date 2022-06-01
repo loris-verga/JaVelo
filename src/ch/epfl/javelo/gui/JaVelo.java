@@ -72,7 +72,7 @@ public final class JaVelo extends Application {
         splitPane.orientationProperty().set(VERTICAL);
         SplitPane.setResizableWithParent(splitPane, false);
 
-        ReadOnlyObjectProperty elevationProfileP = routeBean.getElevationProfileProperty();
+        ReadOnlyObjectProperty<ElevationProfile> elevationProfileP = routeBean.getElevationProfileProperty();
 
 
         //Actualisation de la fenêtre contenant le profile de l'itinéraire.
@@ -113,7 +113,7 @@ public final class JaVelo extends Application {
         StackPane paneWithErrorManager = new StackPane(splitPane);
         paneWithErrorManager.getChildren().add(errorManager.pane());
 
-        ReadOnlyObjectProperty routeP = routeBean.routeProperty();
+        ReadOnlyObjectProperty<Route> routeP = routeBean.routeProperty();
 
         MenuItem menuItem = new MenuItem("Exporter GPX");
         menuItem.disableProperty().bind(Bindings.createBooleanBinding(
@@ -121,8 +121,8 @@ public final class JaVelo extends Application {
 
 
         menuItem.setOnAction(e-> {
-            Route route = (Route)routeP.get();
-            ElevationProfile elevationProfile = (ElevationProfile) elevationProfileP.get();
+            Route route = routeP.get();
+            ElevationProfile elevationProfile = elevationProfileP.get();
             GpxGenerator.createGpx(route, elevationProfile);
             GpxGenerator.writeGpx(GPX_FILE_NAME, route, elevationProfile);
         });

@@ -13,7 +13,7 @@ package ch.epfl.javelo.projection;
 public final class Ch1903 {
 
     //Constructeur privé de sorte que la classe ne soit pas instantiable.
-    private Ch1903(){};
+    private Ch1903(){}
 
     /**
      * Cette méthode retourne la coordonnée E (est) dans le système suisse

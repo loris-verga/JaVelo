@@ -130,7 +130,7 @@ public final class MultiRoute implements Route{
         double length = 0.0;
         for(Route route : segments){
             RoutePoint pointToCompare = route.pointClosestTo(point);
-            Double distanceToRef = pointToCompare.distanceToReference();
+            double distanceToRef = pointToCompare.distanceToReference();
             pointClosest = pointClosest.min(pointToCompare.point(),
                     pointToCompare.position() + length,
                     distanceToRef);

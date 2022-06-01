@@ -74,7 +74,7 @@ public final class WaypointsManager {
 
         //Quand la liste des points de passage change,
         //on récrée tous les marqueurs de point de passage.
-        waypointList.addListener((ListChangeListener)e -> createAllWaypointPins());
+        waypointList.addListener((ListChangeListener<Waypoint>)e -> createAllWaypointPins());
 
         createAllWaypointPins();
     }

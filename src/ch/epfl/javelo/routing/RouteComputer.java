@@ -37,10 +37,10 @@ public final class RouteComputer {
      */
     public Route bestRouteBetween(int startNodeId, int endNodeId) {
 
-        /**
-         * Le record WeightedNode imbriquer à l'intérieur de bestRouteBetween, permet de contenir
-         * l'identité d'un nœud et sa distance.
-         * @param nodeId L'identité du nœud
+        /*
+          Le record WeightedNode imbriquer à l'intérieur de bestRouteBetween, permet de contenir
+          l'identité d'un nœud et sa distance.
+          @param nodeId L'identité du nœud
          * @param distance La distance la plus courte entre ce nœud et le nœud de départ.
          */
         record WeightedNode(int nodeId, float distance)
@@ -146,7 +146,7 @@ public final class RouteComputer {
 
             }
             //Le nœud a été explorer donc sa distance devient -infini
-            //pour que l'on ne le parcourt pas une 2ème fois.
+            //pour que l'on ne le parcourt pas une deuxième fois.
             distance[nodeWithMinDistance.nodeId] = Float.NEGATIVE_INFINITY;
         }
         //Si on sort de la boucle,

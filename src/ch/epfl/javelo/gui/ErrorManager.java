@@ -20,8 +20,8 @@ public final class ErrorManager {
     private static final double VALUE_OF_TRANSPARENT_OPACITY = 0;
     private static final double VALUE_OF_OPAQUE_OPACITY = 0.8;
 
-    private VBox pane;
-    private SequentialTransition animation;
+    private final VBox pane;
+    private final SequentialTransition animation;
 
     /**
      * Le constructeur de ErrorManager initialise juste son panneau d'affichage

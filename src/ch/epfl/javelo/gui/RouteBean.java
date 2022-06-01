@@ -51,7 +51,7 @@ public final class RouteBean {
 
         this.highlightedPosition.set(Double.NaN);
 
-        waypoints.addListener((ListChangeListener) e -> recalculateItinerary());
+        waypoints.addListener((ListChangeListener<Waypoint>) e -> recalculateItinerary());
 
         recalculateItinerary();
 

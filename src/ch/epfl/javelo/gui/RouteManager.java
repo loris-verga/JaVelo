@@ -8,7 +8,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polyline;
 
-import java.util.function.Consumer;
 
 /**
  * La classe RouteManager gère l'affichage de l'itinéraire et (une partie de) l'interaction avec lui.
