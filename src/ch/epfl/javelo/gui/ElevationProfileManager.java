@@ -164,6 +164,7 @@ public final class ElevationProfileManager {
 
         //Actualisation de la position de la souris lorsque celle ci bouge.
         borderPane.setOnMouseMoved(e-> mousePositionUpdate(e));
+        borderPane.setOnMouseExited(e-> mousePositionOnProfileProperty.set(Double.NaN));
 
 
     }
