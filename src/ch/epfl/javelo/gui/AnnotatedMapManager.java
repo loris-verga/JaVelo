@@ -16,6 +16,8 @@ import javafx.scene.layout.StackPane;
  * La classe AnnotatedMapManager gère l'affichage de la carte annotée,
  * c'est-à-dire le fond de carte au-dessus duquel sont superposé l'itinéraire
  * et les points de passages.
+ *
+ * @author Loris Verga (345661)
  */
 public final class AnnotatedMapManager {
 

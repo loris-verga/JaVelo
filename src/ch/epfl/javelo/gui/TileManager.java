@@ -19,8 +19,6 @@ import java.util.Map;
  */
 public final class TileManager {
 
-
-
     private final Path path;
     private final String tileServerName;
     private final LinkedHashMap<TileId, Image> cacheMemory;
@@ -58,7 +56,6 @@ public final class TileManager {
         //Création du path de l'image pour la trouver/créer dans les fichiers.
         Path pathOfImage = path.resolve(zoomLevel).
                 resolve(indexX).resolve(indexY);
-
 
         //Si l'image existe dans la mémoire disque, on retourne l'image et on met à jour la mémoire cache.
         if (Files.exists(pathOfImage)) {
@@ -142,6 +139,7 @@ public final class TileManager {
          * @param zoomLevel le niveau de zoom de la tuile,
          * @param indexX    l'index X de la tuile,
          * @param indexY    et l'index Y de la tuile.
+         * @throw IllegalArgumentException si l'index de la tuile est valide.
          */
         public TileId {
             if (!isValid(zoomLevel, indexX, indexY)) {
